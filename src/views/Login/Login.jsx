@@ -8,7 +8,7 @@ import visibilityOff from "./../../assets/visibility-off.svg";
 import validationsLogin from '../../utils/validations';
 
 const Login = () => {
-
+ const navigate = useNavigate()
   /* States*/
   const [user, setUser] = useState({
     email: "",
@@ -22,7 +22,7 @@ const Login = () => {
 
   /* Handlers */
   const handleButtonSignUp = () => {
-   
+    navigate('/sign-up')
   };
   const handleRestorePassword = () => {
     
@@ -106,10 +106,6 @@ const Login = () => {
           </div>
           <div className="forgot">
             <section className="section-login">
-              <input type="checkbox" id="check" />
-              <label htmlFor="check">Recordarme</label>
-            </section>
-            <section className="section-login">
               <a href="#" className="a-link-forgot-password" onClick={handleRestorePassword}>
                 Olvidé mi contraseña
               </a>
@@ -124,9 +120,9 @@ const Login = () => {
           disabled={
             !user.email || errors.email || !user.password ||
             errors.password
-          }></button>
+          }>Ingresar</button>
           <label htmlFor="submit"
-        >Ingresar</label>
+        ></label>
         </div>
         <div className="sign-up-link">
           <p>
