@@ -3,11 +3,15 @@ import { useState } from "react";
 import visibilityOff from "./../../assets/visibility-off.svg";
 import visibilityOn from "./../../assets/visibility-on.svg";
 import warning from './../../assets/warning.svg';
+import alert from './../../assets/alert.svg';
+import { useNavigate } from "react-router-dom";
+import { validationsSignUp } from "../../utils/validations";
 
 const SignUp = () => {
+  const navigate = useNavigate()
   /* States */
   const [newUser, setNewUser] = useState({
-    name: "",
+    username: "",
     lastname: "",
     email: "",
     password: "",
@@ -34,12 +38,15 @@ const SignUp = () => {
       [event.target.name]: event.target.value,
     });
     setErrors(
-      validationsLogin({
-        ...user,
+      validationsSignUp({
+        ...newUser,
         [event.target.name]: event.target.value,
       })
     );
   };
+  const handleLogin = () => {
+    navigate('/')
+  }
   return (
     <section className="container-sign-up">
       <form className="sign-up-box">
@@ -51,16 +58,38 @@ const SignUp = () => {
             <div className="input-box">
               <input
                 type="text"
-                name="name"
+                name="username"
                 className="input-field"
                 placeholder=""
                 autoComplete="off"
-                value={newUser.name}
+                value={newUser.username}
                 onChange={handleChange}
-                onBlur={() => handleTouched("name")}
+                onBlur={() => handleTouched("username")}
               />
               <label className="label-input">Nombre*</label>
+              {errors.username && touchedInput.username && (
+                  <span className="span">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      fill="currentColor"
+                      className="bi bi-exclamation-circle"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                      <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+                    </svg>
+                  </span>
+                )}
             </div>
+            {errors.username && touchedInput.username && (
+                <p
+                  style={{ color: "red", marginTop: "4px", marginLeft: "20px" }}
+                >
+                  {errors.username}
+                </p>
+              )}
           </div>
           <div>
             <div className="input-box">
@@ -75,7 +104,29 @@ const SignUp = () => {
                 onBlur={() => handleTouched("lastname")}
               />
               <label className="label-input">Apellido*</label>
+              {errors.username && touchedInput.username && (
+                  <span className="span">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      fill="currentColor"
+                      className="bi bi-exclamation-circle"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                      <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+                    </svg>
+                  </span>
+                )}
             </div>
+            {errors.lastname && touchedInput.lastname && (
+                <p
+                  style={{ color: "red", marginTop: "4px", marginLeft: "20px" }}
+                >
+                  {errors.lastname}
+                </p>
+              )}
           </div>
           <div>
             <div className="input-box">
@@ -90,7 +141,29 @@ const SignUp = () => {
                 onBlur={() => handleTouched("email")}
               />
               <label className="label-input">Email*</label>
+              {errors.email && touchedInput.email && (
+                  <span className="span">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      fill="currentColor"
+                      className="bi bi-exclamation-circle"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                      <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+                    </svg>
+                  </span>
+                )}
             </div>
+            {errors.email && touchedInput.email && (
+                <p
+                  style={{ color: "red", marginTop: "4px", marginLeft: "20px" }}
+                >
+                  {errors.email}
+                </p>
+              )}
           </div>
           <div>
             <div className="input-box password">
@@ -106,6 +179,21 @@ const SignUp = () => {
                   onBlur={() => handleTouched("password")}
                 />
                 <label className="label-input">Contraseña*</label>
+                {errors.password && touchedInput.password && (
+                  <span className="span password">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      fill="currentColor"
+                      className="bi bi-exclamation-circle"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                      <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+                    </svg>
+                  </span>
+                )}
                 {isVisibilityPassword === false ? (
                   <img
                     src={visibilityOff}
@@ -142,6 +230,13 @@ const SignUp = () => {
                   </div>
                 </ul>
               </div>
+              {errors.password && touchedInput.password && (
+                <p
+                  style={{ color: "red", marginTop: "4px", marginLeft: "20px" }}
+                >
+                  {errors.password}
+                </p>
+              )}
           </div>
         </div>
         <div className="input-submit">
@@ -159,7 +254,7 @@ const SignUp = () => {
         <div className="sign-up-link">
             <p>
               ¿Ya tienes una cuenta?{" "}
-              <a  className="a-link-login">
+              <a className="a-link-login" onClick={handleLogin}>
                 Ingresa acá
               </a>
             </p>

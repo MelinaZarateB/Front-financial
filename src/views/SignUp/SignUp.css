@@ -69,3 +69,13 @@
 .input-box.password:focus-within + .section-password-request {
   display: block;
 }
+.span{
+  position: absolute;
+  color: red;
+  right: 25px; 
+  top: 50%; 
+  transform: translateY(-50%); 
+}
+.span.password{
+  right: 75px;
+}

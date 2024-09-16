@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 /* Icons */
 import visibilityOn from "./../../assets/visibility-on.svg";
 import visibilityOff from "./../../assets/visibility-off.svg";
-import validationsLogin from '../../utils/validations';
+import {validationsLogin} from '../../utils/validations';
+
 
 const Login = () => {
  const navigate = useNavigate()
@@ -22,7 +23,7 @@ const Login = () => {
 
   /* Handlers */
   const handleButtonSignUp = () => {
-    navigate('/sign-up')
+    navigate('/sign-up');
   };
   const handleRestorePassword = () => {
     
