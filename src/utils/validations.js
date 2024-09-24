@@ -32,16 +32,20 @@ const validationsSignUp = (inputs) => {
       errors.lastname = "Solo se permiten letras";
     }
   }
-
-  if (inputs.email.trim() === "") {
+  if (!regexEmail.test(inputs.email) || inputs.email.trim() === "") {
     errors.email = "Campo requerido";
-  } else if (!regexEmail.test(inputs.email)) {
-    errors.email = "Email inválido";
   }
-  if (inputs.password.trim() === "") {
+  if (!regexPassword.test(inputs.password)) {
     errors.password = "Campo requerido";
   }
   return errors;
-
 }
-export {validationsLogin, validationsSignUp};
+const changePassword = (input) => {
+  const errors = {};
+
+  if(!regexPassword.test(input.password) || input.password.trim() === "") {
+    errors.password = 'Campo requerido';
+  };
+  return errors;
+}
+export {validationsLogin, validationsSignUp, changePassword};
