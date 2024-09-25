@@ -9,7 +9,7 @@ import visibilityOff from "./../../assets/visibility-off.svg";
 import { validationsLogin } from "../../utils/validations";
 import Spinner from "../../utils/Spinner/Spinner";
 import { useDispatch } from "react-redux";
-import { login, activateAccount } from "../../redux/actions";
+import { login, activateAccount, cleanMessage } from "../../redux/actions";
 
 const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,14 +25,19 @@ const Login = () => {
       navigate("/dashboard");
     }
   }, [loginMessage]);
-  
+
   const token = getQueryParams("token");
+
   useEffect(() => {
     if (token) {
       dispatch(activateAccount(token));
     }
   }, [token]);
-
+  useEffect(() => {
+    return () => {
+      dispatch(cleanMessage());
+    };
+  }, []);
   /* States*/
   const [user, setUser] = useState({
     email: "",

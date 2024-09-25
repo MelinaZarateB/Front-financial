@@ -6,7 +6,7 @@ import warning from "./../../assets/warning.svg";
 import alert from "./../../assets/alert.svg";
 import { useNavigate } from "react-router-dom";
 import { validationsSignUp } from "../../utils/validations";
-import { signUp } from "../../redux/actions";
+import { signUp, cleanMessage } from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../../utils/Spinner/Spinner";
 import queryString from "query-string";
@@ -81,7 +81,7 @@ const SignUp = () => {
 
   useEffect(() => {
     return () => {
-      //dispatch(cleanMessage());
+      dispatch(cleanMessage());
     };
   }, []);
 

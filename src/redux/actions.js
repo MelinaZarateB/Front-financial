@@ -114,3 +114,25 @@ export const changePasswordAction = (token, password) => {
     }
   };
 };
+export const cleanMessage = () => {
+  return {
+    type: CLEAN_MESSAGE,
+    payload: "",
+  };
+};
+export const activateAccount = (token) => {
+  return async (dispatch) => {
+    try {
+      const response = axios.get(
+        `http://localhost:3000/auth/activate?token=${token}`
+      );
+      console.log(response);
+    } catch (error) {
+      const message = error.response && error.response.data.message;
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : "Ocurrio un error inesperado";
+      console.log(message);
+    }
+  };
+};
