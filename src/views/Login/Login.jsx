@@ -1,6 +1,6 @@
 import "./Login.css";
 /* Hooks */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 /* Icons */
@@ -9,14 +9,30 @@ import visibilityOff from "./../../assets/visibility-off.svg";
 import { validationsLogin } from "../../utils/validations";
 import Spinner from "../../utils/Spinner/Spinner";
 import { useDispatch } from "react-redux";
-import { login } from "../../redux/actions";
+import { login, activateAccount } from "../../redux/actions";
 
 const Login = () => {
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const loginMessage = useSelector((state) => state.loginMessage);
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
+  const getQueryParams = (param) => {
+    return new URLSearchParams(location.search).get(param);
+  };
+  useEffect(() => {
+    if (loginMessage === true) {
+      navigate("/dashboard");
+    }
+  }, [loginMessage]);
+  
+  const token = getQueryParams("token");
+  useEffect(() => {
+    if (token) {
+      dispatch(activateAccount(token));
+    }
+  }, [token]);
+
   /* States*/
   const [user, setUser] = useState({
     email: "",
@@ -142,8 +158,7 @@ const Login = () => {
             disabled={
               !user.email || errors.email || !user.password || errors.password
             }
-          >
-          </button>
+          ></button>
           <label htmlFor="submit">
             {" "}
             {isSubmitting ? <Spinner /> : "Ingresar"}

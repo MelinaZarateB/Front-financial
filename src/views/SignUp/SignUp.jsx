@@ -81,7 +81,7 @@ const SignUp = () => {
 
   useEffect(() => {
     return () => {
-      dispatch(cleanMessage());
+      //dispatch(cleanMessage());
     };
   }, []);
 

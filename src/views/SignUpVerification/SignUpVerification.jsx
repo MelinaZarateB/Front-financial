@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import queryString from "query-string";
 import { useNavigate } from "react-router-dom";
 
+
 const SignUpVerification = () => {
   const location = useLocation();
   const navigate = useNavigate();
