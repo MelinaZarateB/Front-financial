@@ -9,6 +9,7 @@ import { validationsSignUp } from "../../utils/validations";
 import { signUp } from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../../utils/Spinner/Spinner";
+import queryString from "query-string";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -77,6 +78,13 @@ const SignUp = () => {
       handleCheckEmail();
     }
   }, [signUpMessage]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(cleanMessage());
+    };
+  }, []);
+
   return (
     <section className="container-sign-up">
       <form className="sign-up-box">
