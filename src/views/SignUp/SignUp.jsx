@@ -285,7 +285,7 @@ const SignUp = () => {
               errors.password
             }
           ></button>
-          <label htmlFor="submit">
+          <label htmlFor="submit" className="label">
             {isSubmitting ? <Spinner /> : "Regístrarse"}
           </label>
         </div>

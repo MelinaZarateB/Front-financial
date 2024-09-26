@@ -8,6 +8,7 @@ import { changePasswordAction } from "../../redux/actions";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Spinner from "../../utils/Spinner/Spinner";
 
 const ChangePassword = () => {
@@ -62,7 +63,9 @@ const ChangePassword = () => {
       })
     );
   };
-
+  const handleLogin = () => {
+    navigate("/");
+  };
   return (
     <section className="container-change-password">
       <div className="change-password-box">
@@ -85,7 +88,6 @@ const ChangePassword = () => {
                   autoComplete="off"
                   value={setPassword.password}
                   onChange={handleChange}
-                  onBlur={() => handleTouched("password")}
                 />
                 <label className="label-input">Contraseña*</label>
                 {errors.password && touchedInput.password && (
@@ -146,7 +148,7 @@ const ChangePassword = () => {
             onClick={handleChangePassword}
             disabled={!password.password || errors.password}
           ></button>
-          <label htmlFor="submit">
+          <label htmlFor="submit" className="label">
             {" "}
             {isSubmitting ? <Spinner /> : "Cambiar contraseña"}
           </label>
@@ -177,6 +179,15 @@ const ChangePassword = () => {
             ) : ''}
           </p>
         )}
+      <div className="sign-up-link" style={{marginTop: 0}}>
+            <p>
+            ¿Volver al inicio de sesión?
+            {" "}
+              <a className="a-link-login" onClick={handleLogin}>
+                Click aquí
+              </a>
+            </p>
+          </div>
       </div>
     </section>
   );

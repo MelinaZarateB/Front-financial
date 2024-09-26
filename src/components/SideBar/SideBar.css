@@ -1,0 +1,63 @@
+#sidebar{
+    height: 100vh;
+    width: 250px;
+    padding: 5px 1em;
+    border-right: 1px solid grey;
+    position: sticky;
+    top: 0;
+    align-self: start;
+    /*background-color: #06571f;*/
+}
+#sidebar ul{
+    list-style: none;
+}
+#sidebar > ul > li:first-child{
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+    .logo{
+        font-weight: 600;
+    }
+}
+#sidebar ul li.active a{
+    color: #06571f;
+    svg{
+        fill: #06571f;
+    }
+}
+#sidebar a, #sidebar .dropdown-btn, #sidebar .logo{
+    border-radius: .5em;
+    padding: .85em;
+    text-decoration: none;
+    color: black;
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+.dropdown-btn{
+    width: 100%;
+    text-align: left;
+    background-color: none;
+    border: none;
+    font: inherit;
+    cursor: pointer;
+    background: transparent;
+}
+#sidebar svg{
+    flex-shrink: 0;
+
+}
+#sidebar a span, #sidebar .dropdown-btn span{
+    flex-grow: 1; /*No importa el tamaño de la palabra, la flecha se ubicara a la misma distancia lugar siempre */
+}
+#sidebar a:hover, #sidebar .dropdown-btn:hover {
+    background-color:#d5ffe1
+}
+#sidebar .sub-menu{
+    /*display: none;*/
+    display: grid;
+    transition: 0.3s ease-in-out;
+}
+#sidebar .sub-menu.show{
+    display: block;
+}

@@ -1,10 +1,11 @@
 import "./RestorePassword.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-//import { validationRestorePassword } from "../../utils/validations";
+import { validationRestorePassword } from "../../utils/validations";
 import queryString from 'query-string';
-//import { restorePassword } from "../../redux/actions";
+import { restorePassword } from "../../redux/actions";
 import { useDispatch } from "react-redux";
+
 
 const RestorePassword = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const RestorePassword = () => {
 
   /* Handlers */
   const handleLogin = () => {
-    navigate("/login");
+    navigate("/");
   };
   const handleVerificationEmail = () => {
     const query = queryString.stringify({ email: email.email });

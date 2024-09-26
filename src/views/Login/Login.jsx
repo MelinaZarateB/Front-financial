@@ -65,7 +65,9 @@ const Login = () => {
   const handleButtonSignUp = () => {
     navigate("/sign-up");
   };
-  const handleRestorePassword = () => {};
+  const handleRestorePassword = () => {
+    navigate("/restore-password");
+  };
   const handleTouched = (inputName) => {
     setTouchedInput({
       ...touchedInput,
@@ -90,7 +92,7 @@ const Login = () => {
       setIsVisibilityPassword(false);
     }
   };
-
+ 
   return (
     <section className="container-login-box">
       <form className="login-box">
@@ -164,7 +166,7 @@ const Login = () => {
               !user.email || errors.email || !user.password || errors.password
             }
           ></button>
-          <label htmlFor="submit">
+          <label htmlFor="submit" className="label">
             {" "}
             {isSubmitting ? <Spinner /> : "Ingresar"}
           </label>

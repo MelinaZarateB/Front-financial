@@ -48,4 +48,12 @@ const changePassword = (input) => {
   };
   return errors;
 }
-export {validationsLogin, validationsSignUp, changePassword};
+const validationRestorePassword = (input) => {
+  const errors = {};
+  if (!regexEmail.test(input.email) || input.email.trim() === "") {
+    errors.email = "Campo requerido";
+  }
+  return errors;
+};
+
+export {validationsLogin, validationsSignUp, changePassword, validationRestorePassword};
