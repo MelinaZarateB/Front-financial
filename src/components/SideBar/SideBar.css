@@ -7,6 +7,13 @@
     top: 0;
     align-self: start;
     /*background-color: #06571f;*/
+    transition: 0.3s ease-in-out;
+    overflow: hidden; /* Para que se oculten las palabras al replegarse la barra */
+    text-wrap: nowrap; /* Para que el texto no se ponga en dos lineas al replegarse la barra */
+}
+#sidebar.close{
+    padding: 5px;
+    width: 60px;
 }
 #sidebar ul{
     list-style: none;
@@ -55,9 +62,40 @@
 }
 #sidebar .sub-menu{
     /*display: none;*/
-    display: grid;
     transition: 0.3s ease-in-out;
+    display: grid;
+    grid-template-rows: 0fr;
+    > div{
+        overflow: hidden;
+
+    }
 }
 #sidebar .sub-menu.show{
     display: block;
+    transition: 0.3s ease-in-out;
+    grid-template-rows: 1fr;
+}
+.dropdown-btn svg{
+    transition: 0.2s ease-in-out;
+}
+.rotate{
+    rotate: -180deg;
+}
+#sidebar .sub-menu a{
+    padding-left: 2em;
+}
+#toggle-btn{
+    margin-left: auto;
+    padding: 1em;
+    border: none;
+    border-radius: .5em;
+    background: none;
+    cursor: pointer;
+    svg{
+        rotate: 150ms ease;
+    }
+}
+#toggle-btn:hover{
+    background-color: #d5ffe1
+
 }
