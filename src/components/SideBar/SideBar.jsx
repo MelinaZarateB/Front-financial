@@ -8,32 +8,32 @@ const SideBar = () => {
   const [closedSide, setClosedSide] = useState(false);
 
   const toggleSubMenu = (menuName) => {
-
     setSubMenus((prevSubMenus) => ({
       ...prevSubMenus,
       [menuName]: !prevSubMenus[menuName], // Cambia el estado solo del submenú específico
     }));
-
   };
   const toggleSideBar = () => {
-      const toggleButton = document.getElementById('toggle-btn')
-      const sideBar = document.getElementById('sidebar')
-     // setSideBarClose(true)
-    toggleSideBar2(sideBar, toggleButton)
-  }
+    const toggleButton = document.getElementById("toggle-btn");
+    const sideBar = document.getElementById("sidebar");
+    // setSideBarClose(true)
+    toggleSideBar2(sideBar, toggleButton);
+  };
   const toggleSideBar2 = (sideBar, toggleButton) => {
-    sideBar.classList.toggle('close')
-    toggleButton.classList.toggle('rotate')
-  }
+    sideBar.classList.toggle("close");
+    toggleButton.classList.toggle("rotate");
+  };
   const handleOpenSide = () => {
-   //setClosedSide(true)
-   const sideBar = document.getElementById('sidebar')
-   if(sideBar.classList.contains('close')){
-    sideBar.classList.remove('close');
-   }
-  }
+    //setClosedSide(true)
+    const sideBar = document.getElementById("sidebar");
+    const toggleButton = document.getElementById("toggle-btn");
+    if (sideBar.classList.contains("close")) {
+      sideBar.classList.remove("close");
+      toggleButton.classList.toggle("rotate");
+    }
+  };
   return (
-    <aside id="sidebar" >
+    <aside id="sidebar">
       <ul>
         <li>
           <span className="logo">Servicios Financieros</span>
@@ -63,11 +63,12 @@ const SideBar = () => {
             <span>Transacciones</span>
           </a>
         </li>
-        <li onClick={() => {
-  setRotated(!rotated);  // Primero cambia el estado de rotated
-  handleOpenSide();      // Luego llama a handleOpenSide
-}}
->
+        <li
+          onClick={() => {
+            setRotated(!rotated); // Primero cambia el estado de rotated
+            handleOpenSide(); // Luego llama a handleOpenSide
+          }}
+        >
           <button
             onClick={() => toggleSubMenu("caja")}
             className="dropdown-btn"
