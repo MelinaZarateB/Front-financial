@@ -14,6 +14,8 @@ import Spinner from "../../utils/Spinner/Spinner";
 const ChangePassword = () => {
   const location = useLocation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
   const [touchedInput, setTouchedInput] = useState({});
   const changePasswordMessage = useSelector(
     (state) => state.changePasswordMessage

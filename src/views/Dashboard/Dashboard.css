@@ -5,3 +5,11 @@
 .main{
     
 }
+@media screen and (max-width: 800px) {
+    .container-dashboard{
+        grid-template-columns: 1fr;
+    }
+    .main{
+        padding: 2em 1em 60px 1em;
+    }
+}
