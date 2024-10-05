@@ -39,6 +39,8 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
     }
   };
   const isActiveLink = () => {
+    if(!isActive) setIsActive(true);
+    
 
   }
     return (

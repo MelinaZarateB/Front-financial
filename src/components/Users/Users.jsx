@@ -49,16 +49,16 @@ const Users = () => {
             />
             <img src={imgLupa} alt="" className="lupa" />
           </div>
-          <div>
+          <div className="container-table">
             <div className="tbl-container">
-              <table>
+              <table className="tbl">
                 <thead>
                   <tr>
                     <th>Nombre</th>
                     <th>Apellido</th>
                     <th>Email</th>
-                    <th>Status</th>
-                    <th></th>
+                    <th>Estado</th>
+                    <th colSpan='2'></th>
                   </tr>
                   </thead>
                   <tbody>
@@ -69,8 +69,8 @@ const Users = () => {
                           <td>{user.lastname}</td>
                           <td>{user.email}</td>
                           <td>{user.isActive ? "Activo" : "Inactivo"}</td>
-                          <td><button><img src={imgPencil} alt="" /></button></td>
-                          <td><button><img src={imgBlock} alt="" /></button></td>
+                          <td><button className="btn-edit">Editar</button></td>
+                          <td><button className="btn-trash">Desactivar</button></td>
                         </tr>
                       ))
                     ) : (

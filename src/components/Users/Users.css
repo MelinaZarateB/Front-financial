@@ -3,7 +3,8 @@
   height: 100vh;
   padding-left: 2rem;
   padding-top: 2rem;
-  padding-left: 2rem;
+  padding-right: 2rem;
+
 }
 
 .input-search-user {
@@ -43,4 +44,71 @@
 }
 .btn-create-user:hover {
   background-color: rgba(41, 229, 94, 0.776);
+}
+.container-table{
+  max-width: 1440px;
+  width: 100%;
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
+}
+.tbl{
+  width: 100%;
+  border-collapse: collapse;
+}
+.tbl-container{
+  padding-right: 1.2rem;
+  padding-left: 1.2rem;
+  padding-top: 1.2rem;
+}
+th, td {
+  padding: 10px;
+  text-align: left;
+  white-space: nowrap; /* Evita que el contenido se envuelva */
+}
+
+th:nth-child(1), td:nth-child(1) {
+  width: 20%; /* Ajusta según sea necesario */
+}
+
+th:nth-child(2), td:nth-child(2) {
+  width: 20%;
+}
+
+th:nth-child(3), td:nth-child(3) {
+  width: 30%; /* Puedes darle más espacio al email si es necesario */
+}
+
+th:nth-child(4), td:nth-child(4) {
+  width: 15%;
+}
+
+th:nth-child(5), td:nth-child(5) {
+  width: 15%;
+}
+.tbl tbody tr td{
+  color: #666;
+  padding: 0.8rem;
+}
+.tbl tbody tr td{
+  border-top: 1px solid #ddd;
+}
+.tbl tr:nth-child(even) {
+  background-color: #F9F9F9
+}
+.btn-edit{
+  display: inline-block;
+  border: none;
+  padding: 0.4rem;
+  cursor: pointer;
+  background-color: #73C9F2;
+  color: #002140;
+  border-radius: 4px;
+}
+.btn-trash{
+  display: inline-block;
+  border: none;
+  padding: 0.4rem;
+  cursor: pointer;
+  background-color: #E4A5AD;
+  color: #A43042;
+  border-radius: 4px;
 }
