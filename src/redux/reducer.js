@@ -6,6 +6,7 @@ import {
   SIGN_UP_SUCCESS,
   LOGIN_FAILURE,
   LOGIN_SUCCESS,
+  GET_ALL_USERS
 } from "./action-types";
 
 let initialState = {
@@ -13,10 +14,16 @@ let initialState = {
   signUpMessage: "",
   loginMessage: "",
   changePasswordMessage: {},
+  users: []
 };
 
 const Reducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_ALL_USERS:
+      return{
+        ...state,
+        users: action.payload
+      }
     case CHANGE_PASSWORD_FAILURE:
       return {
         ...state,

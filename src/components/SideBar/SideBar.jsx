@@ -1,11 +1,12 @@
 import "./SideBar.css";
 import { useState } from "react";
 
-const SideBar = () => {
+const SideBar = ({ onNavItemChange, selectedNavItem }) => {
   const [subMenus, setSubMenus] = useState({});
   const [rotated, setRotated] = useState(false);
   const [sideBarClose, setSideBarClose] = useState(false);
   const [closedSide, setClosedSide] = useState(false);
+  const [isActive, setIsActive] = useState(false);
 
   const toggleSubMenu = (menuName) => {
     setSubMenus((prevSubMenus) => ({
@@ -37,7 +38,10 @@ const SideBar = () => {
       toggleButton.classList.toggle("rotate");
     }
   };
-  return (
+  const isActiveLink = () => {
+
+  }
+    return (
     <aside id="sidebar">
       <ul>
         <li>
@@ -54,8 +58,11 @@ const SideBar = () => {
             </svg>
           </button>
         </li>
-        <li className="active" onClick={handleOpenSide}>
-          <a href="">
+        <li className="active" onClick={() => {
+          handleOpenSide();
+          isActiveLink();
+        }}>
+          <a href="" >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="24px"
@@ -113,7 +120,7 @@ const SideBar = () => {
             </div>
           </ul>
         </li>
-        <li>
+        <li onClick={(e) => onNavItemChange(e, 'offices')}>
           <a href="">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -127,7 +134,7 @@ const SideBar = () => {
             <span>Sucursales</span>
           </a>
         </li>
-        <li>
+        <li onClick={(e) => onNavItemChange(e, 'users')}>
           <a href="">
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -8,9 +8,38 @@ import {
   RESTORE_PASSWORD,
   CHANGE_PASSWORD_SUCCESS,
   CHANGE_PASSWORD_FAILURE,
+  SEARCH_USER_BY_EMAIL,
+  GET_ALL_USERS
 } from "./action-types";
 import axios from "axios";
 
+export const getAllUsers = () => {
+  return async(dispatch) => {
+    try{
+      const {data} = await axios.get('http://localhost:3000/users/');
+      console.log("try", data);
+      if (data) {
+        dispatch({
+          type: GET_ALL_USERS,
+          payload: data,
+        });
+      }
+    }catch(error){
+      console.log(error)
+    }
+  }
+}
+
+export const searchUserByEmail = (email) => {
+  return async(dispatch) => {
+    try{
+    }
+    catch(error){
+
+    }
+  }
+
+}
 export const signUp = (newUser) => {
     console.log(newUser)
   return async (dispatch) => {
