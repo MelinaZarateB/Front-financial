@@ -65,10 +65,10 @@ const Users = () => {
                     {users && users.length > 0 ? (
                       users.map((user) => (
                         <tr key={user._id}>
-                          <td>{user.username}</td>
-                          <td>{user.lastname}</td>
-                          <td>{user.email}</td>
-                          <td>{user.isActive ? "Activo" : "Inactivo"}</td>
+                          <td data-table='Nombre'>{user.username}</td>
+                          <td data-table='Apellido'>{user.lastname}</td>
+                          <td data-table='Email'>{user.email}</td>
+                          <td data-table='Estado'>{user.isActive ? "Activo" : "Inactivo"}</td>
                           <td><button className="btn-edit">Editar</button></td>
                           <td><button className="btn-trash">Desactivar</button></td>
                         </tr>
