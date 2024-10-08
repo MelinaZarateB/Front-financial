@@ -4,11 +4,16 @@
   padding-left: 2rem;
   padding-top: 2rem;
   padding-right: 2rem;
-
+}
+.container-second-section-users{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  gap: 2rem;
 }
 
 .input-search-user {
-  font-size: 17px;
+  font-size: 14px;
   padding-left: 1rem;
   border-right: none;
   border-left: none;
@@ -21,9 +26,6 @@
 .input-search-user:focus {
   border-bottom: 1px solid blue;
 }
-.lupa {
-  cursor: pointer;
-}
 .container-search-purchase {
   display: flex;
   flex-direction: column;
@@ -32,18 +34,24 @@
 .btn-create-user {
   background-color: inherit;
   border: none;
-  background-color: #00e841;
-  border: 1px solid #003710;
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
+  color: #003710;
   cursor: pointer;
   transition: 0.3s;
   font-weight: 500;
-  font-size: 15px;
+  font-size: 17px;
   height: 60px;
   width: 30%;
+  text-align: left;
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
 }
 .btn-create-user:hover {
-  background-color: rgba(41, 229, 94, 0.776);
+  background-color: #d5ffe1;
 }
 .container-table{
   max-width: 1440px;
@@ -136,5 +144,28 @@ th, td {
   .btn-create-user{
     width: 100%;
   }
-
+}
+.btn-clean{
+  border: none;
+  background-color: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #06571f;
+  color: white;
+  padding: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-search-users{
+  border: none;
+  background-color: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #06571f;
+  color: white;
+  padding: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

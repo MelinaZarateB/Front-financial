@@ -9,14 +9,55 @@ import {
   CHANGE_PASSWORD_SUCCESS,
   CHANGE_PASSWORD_FAILURE,
   SEARCH_USER_BY_EMAIL,
-  GET_ALL_USERS
+  GET_ALL_USERS,
+  CLEAN_FILTER_USER_BY_EMAIL,
+  DELETE_USER,
+  REGISTER_USER_SUCCESS,
+  REGISTER_USER_FAILURE,
 } from "./action-types";
 import axios from "axios";
 
+export const registerUser = (newUser) => {
+  console.log(newUser)
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.post(`http://localhost:3000/users`, newUser);
+      if (data) {
+        dispatch({
+          type: REGISTER_USER_SUCCESS,
+          payload: true,
+        });
+      }
+    } catch (error) {
+      const message = error.response && error.response.data.message;
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : "Ocurrio un error inesperado";
+      dispatch({
+        type: REGISTER_USER_FAILURE,
+        payload: message,
+      });
+      console.log(message);
+    }
+  };
+};
+
+export const deleteUser = () => {
+  try {
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const cleanFilterUserByEmail = () => {
+  return {
+    type: CLEAN_FILTER_USER_BY_EMAIL,
+    payload: {},
+  };
+};
 export const getAllUsers = () => {
-  return async(dispatch) => {
-    try{
-      const {data} = await axios.get('http://localhost:3000/users/');
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get("http://localhost:3000/users/");
       console.log("try", data);
       if (data) {
         dispatch({
@@ -24,24 +65,32 @@ export const getAllUsers = () => {
           payload: data,
         });
       }
-    }catch(error){
-      console.log(error)
+    } catch (error) {
+      console.log(error);
     }
-  }
-}
+  };
+};
 
 export const searchUserByEmail = (email) => {
-  return async(dispatch) => {
-    try{
+  console.log(email, "action email");
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:3000/users/email/${email}`
+      );
+      if (data) {
+        dispatch({
+          type: SEARCH_USER_BY_EMAIL,
+          payload: data,
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
-    catch(error){
-
-    }
-  }
-
-}
+  };
+};
 export const signUp = (newUser) => {
-    console.log(newUser)
+  console.log(newUser);
   return async (dispatch) => {
     try {
       const response = await axios.post(
@@ -69,7 +118,7 @@ export const signUp = (newUser) => {
 };
 
 export const login = (user) => {
-    console.log(user)
+  console.log(user);
   return async (dispatch) => {
     try {
       const response = await axios.post(

@@ -6,7 +6,11 @@ import {
   SIGN_UP_SUCCESS,
   LOGIN_FAILURE,
   LOGIN_SUCCESS,
-  GET_ALL_USERS
+  GET_ALL_USERS,
+  SEARCH_USER_BY_EMAIL,
+  CLEAN_FILTER_USER_BY_EMAIL,
+  REGISTER_USER_SUCCESS,
+  REGISTER_USER_FAILURE
 } from "./action-types";
 
 let initialState = {
@@ -14,11 +18,39 @@ let initialState = {
   signUpMessage: "",
   loginMessage: "",
   changePasswordMessage: {},
-  users: []
+  users: [],
+  userByEmail: {},
+  registerUser: {}
 };
 
 const Reducer = (state = initialState, action) => {
   switch (action.type) {
+    case REGISTER_USER_SUCCESS: 
+    return{
+      ...state,
+      registerUser: {
+        success: true,
+        message: 'Usuario registrado con exito'
+      }
+    }
+    case REGISTER_USER_FAILURE:
+      return{
+        ...state,
+        registerUser: {
+          success: false,
+          message: action.payload
+        }
+      }
+    case CLEAN_FILTER_USER_BY_EMAIL: 
+    return{
+      ...state,
+      userByEmail: action.payload
+    }
+    case SEARCH_USER_BY_EMAIL: 
+    return{
+      ...state,
+      userByEmail: action.payload
+    }
     case GET_ALL_USERS:
       return{
         ...state,
