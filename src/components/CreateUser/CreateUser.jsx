@@ -1,10 +1,19 @@
 import "./CreateUser.css";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { registerUser } from "../../redux/actions";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser, cleanMessage } from "../../redux/actions";
+import Spinner from "../../utils/Spinner/Spinner";
 
-const CreateUser = ({handleCreateUser}) => {
+const CreateUser = ({ handleCreateUser }) => {
   const dispatch = useDispatch();
+  const stateRegisterUser = useSelector((state) => state.registerUser);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      dispatch(cleanMessage());
+    };
+  }, []);
 
   const [newUser, setNewUser] = useState({
     username: "",
@@ -23,12 +32,20 @@ const CreateUser = ({handleCreateUser}) => {
       [event.target.name]: event.target.value,
     });
   };
-  const handleSendInputs = () => {
-    dispatch(registerUser(newUser));
+  const handleSendInputs = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await dispatch(registerUser(newUser));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <section>
+    <section className="container-parent-create-user">
       <div className="container-create-user">
         <div className="input-create-user">
           <label htmlFor="" className="label-create-user">
@@ -91,6 +108,34 @@ const CreateUser = ({handleCreateUser}) => {
             onChange={handleChange}
           />
         </div>
+        <div style={{ paddingTop: "7px" }}>
+          {stateRegisterUser.success ? (
+            <p style={{ color: "green", marginTop: "-20px" }}>
+              {stateRegisterUser.message}
+            </p>
+          ) : (
+            <p style={{ color: "red", marginTop: "-20px" }}>
+              {stateRegisterUser.message}
+              {stateRegisterUser.message ? (
+                <span style={{ marginLeft: "5px" }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    className="bi bi-exclamation-circle"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                    <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+                  </svg>
+                </span>
+              ) : (
+                ""
+              )}
+            </p>
+          )}
+        </div>
         <div className="container-buttons-create-user">
           <button
             className="btn-submit-create-user"
@@ -103,7 +148,14 @@ const CreateUser = ({handleCreateUser}) => {
               !newUser.phone
             }
           >
-            Registrar usuario
+            <label htmlFor="submit" className="label">
+              {" "}
+              {isSubmitting ? (
+                <Spinner style={{ width: "20px", height: "20px" }} />
+              ) : (
+                "Registrar usuario"
+              )}
+            </label>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="20px"
@@ -114,7 +166,10 @@ const CreateUser = ({handleCreateUser}) => {
               <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
             </svg>
           </button>
-          <button className="btn-submit-create-user" onClick={() => handleCreateUser()}>
+          <button
+            className="btn-submit-create-user"
+            onClick={() => handleCreateUser()}
+          >
             Volver{" "}
             <svg
               xmlns="http://www.w3.org/2000/svg"

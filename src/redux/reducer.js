@@ -25,6 +25,11 @@ let initialState = {
 
 const Reducer = (state = initialState, action) => {
   switch (action.type) {
+    case CLEAN_MESSAGE:
+      return{
+        ...state,
+        registerUser: {}
+      }
     case REGISTER_USER_SUCCESS: 
     return{
       ...state,

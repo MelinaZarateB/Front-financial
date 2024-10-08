@@ -11,12 +11,12 @@ const Users = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.users);
   const userByEmail = useSelector((state) => state.userByEmail);
+  const stateRegisterUser = useSelector((state) => state.registerUser)
   console.log(userByEmail);
-
+  
   useEffect(() => {
     dispatch(getAllUsers());
-  }, []);
-
+  }, [stateRegisterUser]);
   /* Handlers */
   const handleCreateUser = () => {
     if (!createUser) setCreateUser(true);
