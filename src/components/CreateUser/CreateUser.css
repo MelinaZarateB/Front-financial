@@ -32,9 +32,9 @@
 .input-create-user:focus-within .label-create-user {
   color: blue;
 }
-.container-buttons-create-user{
-    display: flex;
-    gap: 15px;
+.container-buttons-create-user {
+  display: flex;
+  gap: 15px;
 }
 .btn-submit-create-user:disabled {
   background-color: #ebebeb;
@@ -42,6 +42,12 @@
   cursor: not-allowed;
   opacity: 0.6;
   border: none;
+}
+.btn-submit-create-user:disabled:hover {
+  background-color: #ebebeb;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 .btn-submit-create-user {
   border: none;
@@ -54,13 +60,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 5px
+  gap: 5px;
+}
+.btn-submit-create-user:hover{
+  background-color: rgb(13, 98, 37);
 }
 @media screen and (width < 800px) {
-    .container-parent-create-user{
-        display: flex;
-        justify-content: center;
-    }
-
-    
+  .container-parent-create-user {
+    display: flex;
+    justify-content: center;
+  }
 }

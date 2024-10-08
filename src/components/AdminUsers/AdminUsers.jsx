@@ -13,6 +13,10 @@ const AdminUsers = ({ handleCreateUser }) => {
   const users = useSelector((state) => state.users);
   const userByEmail = useSelector((state) => state.userByEmail);
 
+  useEffect(() => {
+    dispatch(getAllUsers());
+  }, []);
+
   /* Handlers */
   const handleChange = (event) => {
     setEmail(event.target.value);
