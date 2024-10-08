@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../../redux/actions";
 
-const createUser = () => {
+const CreateUser = ({handleCreateUser}) => {
   const dispatch = useDispatch();
 
   const [newUser, setNewUser] = useState({
@@ -37,7 +37,7 @@ const createUser = () => {
           <input
             type="text"
             name="username"
-            value={createUser.username}
+            value={newUser.username}
             className="input-create-user-principal"
             onChange={handleChange}
           />
@@ -49,7 +49,7 @@ const createUser = () => {
           <input
             type="text"
             name="lastname"
-            value={createUser.lastname}
+            value={newUser.lastname}
             className="input-create-user-principal"
             onChange={handleChange}
           />
@@ -61,7 +61,7 @@ const createUser = () => {
           <input
             type="text"
             name="phone"
-            value={createUser.phone}
+            value={newUser.phone}
             className="input-create-user-principal"
             onChange={handleChange}
           />
@@ -74,7 +74,7 @@ const createUser = () => {
           <input
             type="text"
             name="email"
-            value={createUser.email}
+            value={newUser.email}
             className="input-create-user-principal"
             onChange={handleChange}
           />
@@ -86,7 +86,7 @@ const createUser = () => {
           <input
             type="text"
             name="password"
-            value={createUser.password}
+            value={newUser.password}
             className="input-create-user-principal"
             onChange={handleChange}
           />
@@ -114,7 +114,7 @@ const createUser = () => {
               <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
             </svg>
           </button>
-          <button className="btn-submit-create-user">
+          <button className="btn-submit-create-user" onClick={() => handleCreateUser()}>
             Volver{" "}
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -131,4 +131,4 @@ const createUser = () => {
     </section>
   );
 };
-export default createUser;
+export default CreateUser;
