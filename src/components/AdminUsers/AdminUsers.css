@@ -1,0 +1,19 @@
+[data-editable-input],
+[data-editable] {
+    padding-left: 4px;
+    padding-right: 4px;
+    border: 1px solid transparent;
+    cursor: text;
+    transition: all 0.2s ease;
+}
+[data-editable]:hover {
+    border-bottom-color: #666666;
+}
+[data-editable-input] {
+    outline: transparent;
+    color: #666666;
+    font-size: 16px;
+}
+[data-editable-input]:focus{
+    border-bottom-color: #666666;
+}

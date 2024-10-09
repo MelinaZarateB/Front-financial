@@ -8,6 +8,30 @@ import {
 } from "../../redux/actions";
 
 const AdminUsers = ({ handleCreateUser }) => {
+
+  document.querySelectorAll('[data-editable]').forEach(function(item){
+    item.addEventListener('click', function() {
+      const input = document.createElement('input')
+      input.className = item.className
+      input.dataset.editableInput = true
+      input.value = item.dataset.editable 
+      input.addEventListener('blur', function() {
+        if(input.value) {
+          item.dataset.editable = input.value
+          item.textContent = input.value
+        }
+        input.replaceWith(item)
+      })
+      input.addEventListener('keydown', function(e){
+        if(e.key == 'Enter') {
+          e.preventDefault()
+          input.blur()
+        }
+      })
+      item.replaceWith(input)
+      input.focus()
+    })
+  })
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const users = useSelector((state) => state.users);
@@ -21,11 +45,7 @@ const AdminUsers = ({ handleCreateUser }) => {
   const handleChange = (event) => {
     setEmail(event.target.value);
   };
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      dispatch(searchUserByEmail(email));
-    }
-  };
+
   const handleGetUserByEmail = () => {
     dispatch(searchUserByEmail(email));
   };
@@ -56,7 +76,6 @@ const AdminUsers = ({ handleCreateUser }) => {
             type="text"
             className="input-search-user"
             name="email"
-            onKeyDown={handleKeyDown}
             onChange={handleChange}
             value={email}
           />
@@ -116,9 +135,15 @@ const AdminUsers = ({ handleCreateUser }) => {
                 ) : users && users.length > 0 ? (
                   users.map((user) => (
                     <tr key={user._id}>
-                      <td data-table="Nombre">{user.username}</td>
-                      <td data-table="Apellido">{user.lastname}</td>
-                      <td data-table="Email">{user.email}</td>
+                      <td data-table="Nombre">
+                        <span data-editable={user.username}>{user.username}</span>
+                      </td>
+                      <td data-table="Apellido">
+                        <span data-editable={user.lastname}>{user.lastname}</span>
+                      </td>
+                      <td data-table="Email">
+                        <span data-editable={user.email}>{user.email}</span>
+                      </td>
                       <td data-table="Estado">
                         {user.isActive ? "Activo" : "Inactivo"}
                       </td>
@@ -132,7 +157,9 @@ const AdminUsers = ({ handleCreateUser }) => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6">No hay usuarios disponibles</td>
+                    <td colSpan="6" style={{ textAlign: "center" }}>
+                      No hay usuarios disponibles
+                    </td>
                   </tr>
                 )}
               </tbody>
