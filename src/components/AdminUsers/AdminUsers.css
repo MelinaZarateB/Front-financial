@@ -13,7 +13,18 @@
     outline: transparent;
     color: #666666;
     font-size: 16px;
+    transition: all 0.2s ease;
 }
 [data-editable-input]:focus{
     border-bottom-color: #666666;
+}
+.my-confirm-button{
+    background-color: #E4A5AD;
+    color: #A43042;
+    cursor: pointer;
+    border-radius: 4px;
+    display: inline-block;
+}
+.my-confirm-button:hover{
+    background-color: #e4b3ba;
 }

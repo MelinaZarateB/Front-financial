@@ -14,6 +14,20 @@ const CreateUser = ({ handleCreateUser }) => {
       dispatch(cleanMessage());
     };
   }, []);
+  useEffect(() => {
+    if (stateRegisterUser.success) {
+      setNewUser({
+        username: "",
+        lastname: "",
+        password: "",
+        email: "",
+        phone: "",
+        isActive: true,
+        role: "user",
+      });
+    }
+  }, [stateRegisterUser.success]); // Ejecuta este efecto cuando cambia stateRegisterUser.success
+  
 
   const [newUser, setNewUser] = useState({
     username: "",

@@ -11,14 +11,23 @@ import {
   SEARCH_USER_BY_EMAIL,
   GET_ALL_USERS,
   CLEAN_FILTER_USER_BY_EMAIL,
-  DELETE_USER,
+  DELETE_USER_SUCCESS,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_FAILURE,
+  UPDATE_USER,
 } from "./action-types";
 import axios from "axios";
+import Swal from 'sweetalert2'
+
+
+export const updateUser = (userId) => {
+  return (dispatch) => {
+    console.log(userId);
+  };
+};
 
 export const registerUser = (newUser) => {
-  console.log(newUser)
+  console.log(newUser);
   return async (dispatch) => {
     try {
       const { data } = await axios.post(`http://localhost:3000/users`, newUser);
@@ -42,10 +51,38 @@ export const registerUser = (newUser) => {
   };
 };
 
-export const deleteUser = () => {
-  try {
-  } catch (error) {
-    console.log(error);
+export const deleteUser = (userId) => {
+  console.log('userId de la action', userId)
+  return async (dispatch) => {
+    try {
+      const token = localStorage.getItem("token");
+      console.log('Token en la action:', token); 
+
+      if(token){
+        const { data } = await axios.delete(
+          `http://localhost:3000/users/delete-user/${userId}`,{
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+          if(data) {
+            Swal.fire({
+              title: 'Eliminado',
+              text: 'El usuario ha sido eliminado.',
+              icon: 'success',
+              timer: 2000,
+              showConfirmButton: false,
+            });
+           dispatch({
+            type: DELETE_USER_SUCCESS,
+            payload: data
+           })
+          }
+      }
+     //const { data } = await axios.delete(`http://localhost:3000/users/delete-user/${userId}`)
+    } catch (error) {
+      console.log(error);
+    }
   }
 };
 export const cleanFilterUserByEmail = () => {
@@ -125,12 +162,25 @@ export const login = (user) => {
         `http://localhost:3000/auth/login`,
         user
       );
-      console.log("try", response);
+
       if (response) {
+        const { access_token, user } = response.data; // Extrae el token y el user
+        const { role } = user; // Extrae el rol del usuario
+        // Guarda el token en localStorage
+        localStorage.setItem("token", access_token);
+
+        // Despacha el éxito del login y pasa el rol del usuario
         dispatch({
           type: LOGIN_SUCCESS,
-          payload: true,
+          payload: {
+            isAuthenticated: true,
+            role: role, 
+          },
         });
+        // Configura el token para futuras solicitudes en Axios
+      /*  axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${access_token}`;*/
       }
     } catch (error) {
       const message = error.response && error.response.data.message;

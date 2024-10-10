@@ -1,37 +1,17 @@
 import "./AdminUsers.css";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import imgPencil from './../../assets/pencil.svg';
 import {
   cleanFilterUserByEmail,
   searchUserByEmail,
   getAllUsers,
+  updateUser,
+  deleteUser
 } from "../../redux/actions";
+import Swal from 'sweetalert2'
 
 const AdminUsers = ({ handleCreateUser }) => {
-
-  document.querySelectorAll('[data-editable]').forEach(function(item){
-    item.addEventListener('click', function() {
-      const input = document.createElement('input')
-      input.className = item.className
-      input.dataset.editableInput = true
-      input.value = item.dataset.editable 
-      input.addEventListener('blur', function() {
-        if(input.value) {
-          item.dataset.editable = input.value
-          item.textContent = input.value
-        }
-        input.replaceWith(item)
-      })
-      input.addEventListener('keydown', function(e){
-        if(e.key == 'Enter') {
-          e.preventDefault()
-          input.blur()
-        }
-      })
-      item.replaceWith(input)
-      input.focus()
-    })
-  })
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const users = useSelector((state) => state.users);
@@ -39,7 +19,41 @@ const AdminUsers = ({ handleCreateUser }) => {
 
   useEffect(() => {
     dispatch(getAllUsers());
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    document.querySelectorAll('[data-editable]').forEach(function (item) {
+      item.addEventListener('click', function () {
+        const userId = item.dataset.userId; // Identificar el usuario
+        const fieldName = item.dataset.field; // Campo que se está editando
+        const input = document.createElement('input');
+        input.className = item.className;
+        input.dataset.editableInput = true;
+        input.value = item.dataset.editable;
+        
+        input.addEventListener('blur', function () {
+          if (input.value) {
+            item.dataset.editable = input.value;
+            // Restaura el texto y la imagen del lápiz
+            item.innerHTML = `${input.value} <img src="${imgPencil}" alt="" />`;
+            // Dispatch para actualizar el valor después del blur
+            dispatch(updateUser(userId, { [fieldName]: input.value }));
+          }
+          input.replaceWith(item);
+        });
+
+        input.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            input.blur(); // Desencadena el blur, lo que actualiza y despacha la acción
+          }
+        });
+
+        item.replaceWith(input);
+        input.focus();
+      });
+    });
+  }, [dispatch, users]); // Asegúrate de que este efecto se ejecute cuando los usuarios cambien
 
   /* Handlers */
   const handleChange = (event) => {
@@ -49,10 +63,32 @@ const AdminUsers = ({ handleCreateUser }) => {
   const handleGetUserByEmail = () => {
     dispatch(searchUserByEmail(email));
   };
+
   const handleCleanFilterUserByEmail = () => {
     dispatch(cleanFilterUserByEmail());
     setEmail("");
   };
+  const handleDeleteUser = (userId) => {
+    Swal.fire({
+      title: "¿Seguro que desea eliminar este usuario?",
+      icon: 'warning',
+      showCancelButton: true, // Muestra el botón de cancelar
+      confirmButtonText: 'Eliminar', // Texto del botón de confirmación
+      cancelButtonText: 'Cancelar', // Texto del botón de cancelación
+      reverseButtons: true, // Opcional: intercambia el orden de los botones
+      customClass: {
+        confirmButton: 'my-confirm-button', // Clase personalizada para el botón de confirmación
+        cancelButton: 'my-cancel-button',   // Clase personalizada para el botón de cancelación
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Si el usuario confirma, ejecutamos la acción deleteUser
+        dispatch(deleteUser(userId));
+      } 
+    });
+  };
+  
+
   return (
     <div className="container-second-section-users">
       <div>
@@ -113,7 +149,7 @@ const AdminUsers = ({ handleCreateUser }) => {
                   <th>Apellido</th>
                   <th>Email</th>
                   <th>Estado</th>
-                  <th colSpan="2"></th>
+                  <th colSpan="1"></th>
                 </tr>
               </thead>
               <tbody>
@@ -126,32 +162,32 @@ const AdminUsers = ({ handleCreateUser }) => {
                       {userByEmail.isActive ? "Activo" : "Inactivo"}
                     </td>
                     <td>
-                      <button className="btn-edit">Editar</button>
-                    </td>
-                    <td>
-                      <button className="btn-trash">Eliminar</button>
+                      <button className="btn-trash" onClick={() => handleDeleteUser(userByEmail._id)}>Eliminar</button>
                     </td>
                   </tr>
                 ) : users && users.length > 0 ? (
                   users.map((user) => (
                     <tr key={user._id}>
                       <td data-table="Nombre">
-                        <span data-editable={user.username}>{user.username}</span>
+                        <span data-editable={user.username} data-user-id={user._id} data-field="username">
+                          {user.username} <img src={imgPencil} alt="" />
+                        </span>
                       </td>
                       <td data-table="Apellido">
-                        <span data-editable={user.lastname}>{user.lastname}</span>
+                        <span data-editable={user.lastname} data-user-id={user._id} data-field="lastname">
+                          {user.lastname} <img src={imgPencil} alt="" />
+                        </span>
                       </td>
                       <td data-table="Email">
-                        <span data-editable={user.email}>{user.email}</span>
+                        <span data-editable={user.email} data-user-id={user._id} data-field="email">
+                          {user.email} <img src={imgPencil} alt="" />
+                        </span>
                       </td>
                       <td data-table="Estado">
                         {user.isActive ? "Activo" : "Inactivo"}
                       </td>
                       <td>
-                        <button className="btn-edit">Editar</button>
-                      </td>
-                      <td>
-                        <button className="btn-trash">Eliminar</button>
+                        <button className="btn-trash" onClick={() => handleDeleteUser(user._id)}>Eliminar</button>
                       </td>
                     </tr>
                   ))

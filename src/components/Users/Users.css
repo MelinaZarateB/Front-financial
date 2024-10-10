@@ -56,9 +56,6 @@
 .btn-clean:hover{
   background-color: rgb(13, 98, 37);
 }
-.btn-create-user:hover {
-  background-color: #d5ffe1;
-}
 .container-table{
   max-width: 1440px;
   width: 100%;
@@ -90,18 +87,6 @@ th, td {
 }
 .tbl tr:nth-child(even) {
   background-color: #F9F9F9
-}
-.btn-edit{
-  display: inline-block;
-  border: none;
-  padding: 0.4rem;
-  cursor: pointer;
-  background-color: #73C9F2;
-  color: #002140;
-  border-radius: 4px;
-}
-.btn-edit:hover{
-  background-color: #85cff1;
 }
 .btn-trash{
   display: inline-block;

@@ -10,57 +10,66 @@ import {
   SEARCH_USER_BY_EMAIL,
   CLEAN_FILTER_USER_BY_EMAIL,
   REGISTER_USER_SUCCESS,
-  REGISTER_USER_FAILURE
+  REGISTER_USER_FAILURE,
+  DELETE_USER_SUCCESS
 } from "./action-types";
 
 let initialState = {
   signUpStatus: null,
   signUpMessage: "",
   loginMessage: "",
+  userRole: "",
   changePasswordMessage: {},
   users: [],
   userByEmail: {},
-  registerUser: {}
+  registerUser: {},
+  deleteUserSuccess: ""
 };
 
 const Reducer = (state = initialState, action) => {
   switch (action.type) {
-    case CLEAN_MESSAGE:
-      return{
-        ...state,
-        registerUser: {}
-      }
-    case REGISTER_USER_SUCCESS: 
+    case DELETE_USER_SUCCESS: 
     return{
       ...state,
-      registerUser: {
-        success: true,
-        message: 'Usuario registrado con exito'
-      }
+      deleteUserSuccess: state.deleteUserSuccess !== "" ? "" : action.payload // Si deleteUser no está vacío, lo reseteamos
+       // Actualizamos con el valor que venga en el payload de la acción
     }
+    case CLEAN_MESSAGE:
+      return {
+        ...state,
+        registerUser: {},
+      };
+    case REGISTER_USER_SUCCESS:
+      return {
+        ...state,
+        registerUser: {
+          success: true,
+          message: "Usuario registrado con exito",
+        },
+      };
     case REGISTER_USER_FAILURE:
-      return{
+      return {
         ...state,
         registerUser: {
           success: false,
-          message: action.payload
-        }
-      }
-    case CLEAN_FILTER_USER_BY_EMAIL: 
-    return{
-      ...state,
-      userByEmail: action.payload
-    }
-    case SEARCH_USER_BY_EMAIL: 
-    return{
-      ...state,
-      userByEmail: action.payload
-    }
-    case GET_ALL_USERS:
-      return{
+          message: action.payload,
+        },
+      };
+    case CLEAN_FILTER_USER_BY_EMAIL:
+      return {
         ...state,
-        users: action.payload
-      }
+        userByEmail: action.payload,
+      };
+    case SEARCH_USER_BY_EMAIL:
+      return {
+        ...state,
+        userByEmail: action.payload,
+      };
+    case GET_ALL_USERS:
+      return {
+        ...state,
+        users: action.payload,
+      };
     case CHANGE_PASSWORD_FAILURE:
       return {
         ...state,
@@ -95,7 +104,8 @@ const Reducer = (state = initialState, action) => {
     case LOGIN_SUCCESS:
       return {
         ...state,
-        loginMessage: action.payload,
+        loginMessage: action.payload.isAuthenticated, // Almacena el mensaje true o false
+        role: action.payload.role,
       };
     case LOGIN_FAILURE:
       return {

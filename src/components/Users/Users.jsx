@@ -12,11 +12,11 @@ const Users = () => {
   const users = useSelector((state) => state.users);
   const userByEmail = useSelector((state) => state.userByEmail);
   const stateRegisterUser = useSelector((state) => state.registerUser)
-  console.log(userByEmail);
+  const deleteUser = useSelector((state) => state.deleteUserSuccess)
   
   useEffect(() => {
     dispatch(getAllUsers());
-  }, [stateRegisterUser]);
+  }, [stateRegisterUser, deleteUser]);
   /* Handlers */
   const handleCreateUser = () => {
     if (!createUser) setCreateUser(true);
