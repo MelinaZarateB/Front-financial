@@ -20,7 +20,7 @@ import axios from "axios";
 import Swal from 'sweetalert2'
 
 
-export const updateUser = (userId) => {
+export const updateUser = (userId, updateField) => {
   return (dispatch) => {
     console.log(userId);
   };
