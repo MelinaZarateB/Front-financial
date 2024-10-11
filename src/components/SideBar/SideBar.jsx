@@ -24,9 +24,9 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
     sideBar.classList.toggle("close");
     toggleButton.classList.toggle("rotate");
     Array.from(sideBar.getElementsByClassName("show")).forEach((ul) => {
-        ul.classList.remove("show");
-        setRotated(false)
-        setSubMenus({})
+      ul.classList.remove("show");
+      setRotated(false);
+      setSubMenus({});
     });
   };
   const handleOpenSide = () => {
@@ -39,15 +39,18 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
     }
   };
   const isActiveLink = () => {
-    if(!isActive) setIsActive(true);
-    
-
-  }
-    return (
+    if (!isActive) setIsActive(true);
+  };
+  return (
     <aside id="sidebar">
       <ul>
         <li>
-          <span className="logo" style={{color: '#06571f', fontWeight: '600'}}>Servicios Financieros</span>
+          <span
+            className="logo"
+            style={{ color: "#F3F3F3", fontWeight: "600" }}
+          >
+            Servicios Financieros
+          </span>
           <button id="toggle-btn" onClick={toggleSideBar}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -60,11 +63,14 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
             </svg>
           </button>
         </li>
-        <li className="active" onClick={() => {
-          handleOpenSide();
-          isActiveLink();
-        }}>
-          <a href="" >
+        <li
+          className="active"
+          onClick={() => {
+            handleOpenSide();
+            isActiveLink();
+          }}
+        >
+          <a href="">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="24px"
@@ -94,7 +100,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               width="24px"
               fill="#5f6368"
             >
-              <path d="M620-163 450-333l56-56 114 114 226-226 56 56-282 282Zm220-397h-80v-200h-80v120H280v-120h-80v560h240v80H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h167q11-35 43-57.5t70-22.5q40 0 71.5 22.5T594-840h166q33 0 56.5 23.5T840-760v200ZM480-760q17 0 28.5-11.5T520-800q0-17-11.5-28.5T480-840q-17 0-28.5 11.5T440-800q0 17 11.5 28.5T480-760Z" />
+              <path d="M280-640q-33 0-56.5-23.5T200-720v-80q0-33 23.5-56.5T280-880h400q33 0 56.5 23.5T760-800v80q0 33-23.5 56.5T680-640H280Zm0-80h400v-80H280v80ZM160-80q-33 0-56.5-23.5T80-160v-40h800v40q0 33-23.5 56.5T800-80H160ZM80-240l139-313q10-22 30-34.5t43-12.5h376q23 0 43 12.5t30 34.5l139 313H80Zm260-80h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm0-80h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm0-80h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm120 160h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm0-80h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm0-80h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm120 160h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm0-80h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm0-80h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Z" />
             </svg>
             <span>Caja</span>
             <svg
@@ -122,7 +128,157 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
             </div>
           </ul>
         </li>
-        <li onClick={(e) => onNavItemChange(e, 'offices')}>
+        <li
+          className="active"
+          onClick={() => {
+            handleOpenSide();
+            isActiveLink();
+          }}
+        >
+          <a href="">
+            <svg
+              width="22"
+              height="20"
+              viewBox="0 0 22 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{fill: 'none'}}
+            >
+              <path
+                d="M20.5 15H14.5M14.5 15L17 12.5M14.5 15L17 17.5"
+                stroke="white"
+                stroke-opacity="0.7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M20.5 11V3C20.5 2.60218 20.342 2.22064 20.0607 1.93934C19.7794 1.65804 19.3978 1.5 19 1.5H3C2.60218 1.5 2.22064 1.65804 1.93934 1.93934C1.65804 2.22064 1.5 2.60218 1.5 3V17C1.5 17.3978 1.65804 17.7794 1.93934 18.0607C2.22064 18.342 2.60218 18.5 3 18.5H13.235"
+                stroke="white"
+                stroke-opacity="0.7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M9 5V15"
+                stroke="white"
+                stroke-opacity="0.7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M11.5 6.5H7.75C7.28587 6.5 6.84075 6.68437 6.51256 7.01256C6.18437 7.34075 6 7.78587 6 8.25C6 8.71413 6.18437 9.15925 6.51256 9.48744C6.84075 9.81563 7.28587 10 7.75 10H10.25C10.7141 10 11.1592 10.1844 11.4874 10.5126C11.8156 10.8408 12 11.2859 12 11.75C12 12.2141 11.8156 12.6592 11.4874 12.9874C11.1592 13.3156 10.7141 13.5 10.25 13.5H6"
+                stroke="white"
+                stroke-opacity="0.7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <span>Ingresos</span>
+          </a>
+        </li>
+        <li
+          className="active"
+          onClick={() => {
+            handleOpenSide();
+            isActiveLink();
+          }}
+        >
+          <a href="">
+            <svg
+              width="22"
+              height="20"
+              viewBox="0 0 22 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ fill: "none" }}
+            >
+              <path
+                d="M14.5 15H20.5M20.5 15L18 17.5M20.5 15L18 12.5"
+                stroke="white"
+                stroke-opacity="0.7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M20.5 11V3C20.5 2.60218 20.342 2.22064 20.0607 1.93934C19.7794 1.65804 19.3978 1.5 19 1.5H3C2.60218 1.5 2.22064 1.65804 1.93934 1.93934C1.65804 2.22064 1.5 2.60218 1.5 3V17C1.5 17.3978 1.65804 17.7794 1.93934 18.0607C2.22064 18.342 2.60218 18.5 3 18.5H13.235"
+                stroke="white"
+                stroke-opacity="0.7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M9 5V15"
+                stroke="white"
+                stroke-opacity="0.7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M11.5 6.5H7.75C7.28587 6.5 6.84075 6.68437 6.51256 7.01256C6.18437 7.34075 6 7.78587 6 8.25C6 8.71413 6.18437 9.15925 6.51256 9.48744C6.84075 9.81563 7.28587 10 7.75 10H10.25C10.7141 10 11.1592 10.1844 11.4874 10.5126C11.8156 10.8408 12 11.2859 12 11.75C12 12.2141 11.8156 12.6592 11.4874 12.9874C11.1592 13.3156 10.7141 13.5 10.25 13.5H6"
+                stroke="white"
+                stroke-opacity="0.7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <span>Egresos</span>
+          </a>
+        </li>
+        <li
+          className="active"
+          onClick={() => {
+            handleOpenSide();
+            isActiveLink();
+          }}
+        >
+          <a href="">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ fill: "none" }}
+            >
+              <path
+                d="M20 12V8H6C5.46957 8 4.96086 7.78929 4.58579 7.41421C4.21071 7.03914 4 6.53043 4 6C4 4.9 4.9 4 6 4H18V8"
+                stroke="white"
+                stroke-opacity="0.7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M4 6V18C4 19.1 4.9 20 6 20H20V16"
+                stroke="white"
+                stroke-opacity="0.7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M18 12C17.4696 12 16.9609 12.2107 16.5858 12.5858C16.2107 12.9609 16 13.4696 16 14C16 15.1 16.9 16 18 16H22V12H18Z"
+                stroke="white"
+                stroke-opacity="0.7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span>Balance</span>
+          </a>
+        </li>
+        <li onClick={(e) => onNavItemChange(e, "offices")}>
           <a href="">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -136,7 +292,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
             <span>Sucursales</span>
           </a>
         </li>
-        <li onClick={(e) => onNavItemChange(e, 'users')}>
+        <li onClick={(e) => onNavItemChange(e, "users")}>
           <a href="">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +308,15 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
         </li>
         <li>
           <a href="">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/></svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 -960 960 960"
+              width="24px"
+              fill="#5f6368"
+            >
+              <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z" />
+            </svg>
             <span>Salir</span>
           </a>
         </li>

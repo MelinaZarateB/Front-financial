@@ -6,10 +6,13 @@
     top: 0;
     align-self: start;
     /*background-color: #06571f;*/
+    background-color: #191919;
     transition: 0.3s ease-in-out;
     overflow: hidden; /* Para que se oculten las palabras al replegarse la barra */
     text-wrap: nowrap; /* Para que el texto no se ponga en dos lineas al replegarse la barra */
     box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
 }
 #sidebar.close{
     padding: 5px;
@@ -29,7 +32,7 @@
 #sidebar ul li.active a{
     color: #06571f;
     svg{
-        fill: #06571f;
+       /* fill: #06571f;*/
     }
 }
 #sidebar a, #sidebar .dropdown-btn, #sidebar .logo{
@@ -53,13 +56,15 @@
 }
 #sidebar svg{
     flex-shrink: 0;
+    fill: rgba(255, 255, 255, 0.7);
 
 }
 #sidebar a span, #sidebar .dropdown-btn span{
     flex-grow: 1; /*No importa el tamaño de la palabra, la flecha se ubicara a la misma distancia lugar siempre */
+    color: rgba(255, 255, 255, 0.7);
 }
 #sidebar a:hover, #sidebar .dropdown-btn:hover {
-    background-color:#d5ffe1
+    background-color:rgba(255, 255, 255, 0.08);
 }
 #sidebar .sub-menu{
     /*display: none;*/
@@ -84,6 +89,7 @@
 }
 #sidebar .sub-menu a{
     padding-left: 2em;
+    color: rgba(255, 255, 255, 0.7);
 }
 #toggle-btn{
     margin-left: auto;
@@ -97,7 +103,7 @@
     }
 }
 #toggle-btn:hover{
-    background-color: #d5ffe1
+    background-color: #0e5f28
 }
 @media screen and (max-width: 800px) {
     #sidebar{
