@@ -12,7 +12,6 @@
   height: 100vh;
   gap: 2rem;
 }
-
 .input-search-user {
   font-size: 14px;
   padding-left: 1rem;
@@ -103,6 +102,7 @@ th, td {
   background-color: rgba(255, 255, 255, 0.83);
   color: #A43042;
   border-radius: 4px;
+  transition: all 0.2s ease;
 }
 /*.btn-trash:hover{
   background-color: #e4b3ba;

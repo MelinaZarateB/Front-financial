@@ -1,8 +1,9 @@
 import "./Transactions.css";
 import { useEffect } from "react";
-import { getTransactions } from "../../redux/actions";
+import { getTransactions, deleteTransaction } from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import imgPencil from "./../../assets/pencil.svg";
+import Swal from "sweetalert2";
 
 const Transactions = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,27 @@ const Transactions = () => {
   useEffect(() => {
     dispatch(getTransactions());
   }, []);
+
+  /* Handles */
+  const handleDeleteTransaction = (transactionId) => {
+    Swal.fire({
+      title: "¿Seguro que desea eliminar esta transaccion?",
+      icon: "warning",
+      showCancelButton: true, // Muestra el botón de cancelar
+      confirmButtonText: "Eliminar", // Texto del botón de confirmación
+      cancelButtonText: "Cancelar", // Texto del botón de cancelación
+      reverseButtons: true, // Opcional: intercambia el orden de los botones
+      customClass: {
+        confirmButton: "my-confirm-button", // Clase personalizada para el botón de confirmación
+        cancelButton: "my-cancel-button", // Clase personalizada para el botón de cancelación
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Si el usuario confirma, ejecutamos la acción deleteUser
+        dispatch(deleteTransaction(transactionId));
+      }
+    });
+  };
 
   return (
     <section className="container-transactions">
@@ -71,7 +93,14 @@ const Transactions = () => {
                       </td>
                       <td data-table="Sucursal">{transaction.subOfficeName}</td>
                       <td data-table="Estado">
-                        <button className="btn-trash">Eliminar</button>
+                        <button
+                          className="btn-trash"
+                          onClick={() =>
+                            handleDeleteTransaction(transaction._id)
+                          }
+                        >
+                          Eliminar
+                        </button>
                       </td>
                     </tr>
                   ))

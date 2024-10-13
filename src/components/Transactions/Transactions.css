@@ -11,3 +11,7 @@
     height: 100vh;
     gap: 2rem;
 }
+.btn-trash:hover{
+    background-color: #E4A5AD;
+    color: #A43042;
+}

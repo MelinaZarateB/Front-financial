@@ -16,9 +16,39 @@ import {
   REGISTER_USER_FAILURE,
   UPDATE_USER,
   GET_TRANSACTIONS,
+  DELETE_TRANSACTION
 } from "./action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
+
+/* Actions para transacciones */
+
+export const deleteTransaction = (transactionId) => {
+  return async (dispatch) => {
+    try{
+      const token = localStorage.getItem("token");
+      const { data } =   axios.detele(`http://localhost:3000/transactions/${transactionId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (data) {
+        Swal.fire({
+          title: "Eliminado",
+          text: "La transaccion ha sido eliminada.",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    }catch(error){
+
+    }
+  }
+
+}
 
 export const getTransactions = () => {
   return async (dispatch) => {
@@ -37,6 +67,7 @@ export const getTransactions = () => {
   };
 };
 
+/* Actions para usuarios comunes */
 export const updateUser = (userId, updateField) => {
   return (dispatch) => {
     console.log(userId);
