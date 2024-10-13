@@ -15,10 +15,27 @@ import {
   REGISTER_USER_SUCCESS,
   REGISTER_USER_FAILURE,
   UPDATE_USER,
+  GET_TRANSACTIONS,
 } from "./action-types";
 import axios from "axios";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 
+export const getTransactions = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get("http://localhost:3000/transactions");
+      console.log(data);
+      if (data) {
+        dispatch({
+          type: GET_TRANSACTIONS,
+          payload: data,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
 
 export const updateUser = (userId, updateField) => {
   return (dispatch) => {
@@ -52,38 +69,40 @@ export const registerUser = (newUser) => {
 };
 
 export const deleteUser = (userId) => {
-  console.log('userId de la action', userId)
+  console.log("userId de la action", userId);
   return async (dispatch) => {
     try {
       const token = localStorage.getItem("token");
-      console.log('Token en la action:', token); 
+      console.log("Token en la action:", token);
 
-      if(token){
+      if (token) {
         const { data } = await axios.delete(
-          `http://localhost:3000/users/delete-user/${userId}`,{
+          `http://localhost:3000/users/delete-user/${userId}`,
+          {
             headers: {
-              Authorization: `Bearer ${token}`
-            }
-          })
-          if(data) {
-            Swal.fire({
-              title: 'Eliminado',
-              text: 'El usuario ha sido eliminado.',
-              icon: 'success',
-              timer: 2000,
-              showConfirmButton: false,
-            });
-           dispatch({
-            type: DELETE_USER_SUCCESS,
-            payload: data
-           })
+              Authorization: `Bearer ${token}`,
+            },
           }
+        );
+        if (data) {
+          Swal.fire({
+            title: "Eliminado",
+            text: "El usuario ha sido eliminado.",
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          dispatch({
+            type: DELETE_USER_SUCCESS,
+            payload: data,
+          });
+        }
       }
-     //const { data } = await axios.delete(`http://localhost:3000/users/delete-user/${userId}`)
+      //const { data } = await axios.delete(`http://localhost:3000/users/delete-user/${userId}`)
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 };
 export const cleanFilterUserByEmail = () => {
   return {
@@ -174,11 +193,11 @@ export const login = (user) => {
           type: LOGIN_SUCCESS,
           payload: {
             isAuthenticated: true,
-            role: role, 
+            role: role,
           },
         });
         // Configura el token para futuras solicitudes en Axios
-      /*  axios.defaults.headers.common[
+        /*  axios.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${access_token}`;*/
       }

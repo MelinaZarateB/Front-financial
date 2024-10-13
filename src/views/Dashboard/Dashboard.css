@@ -3,7 +3,7 @@
     grid-template-columns: auto 1fr;
 }
 .main{
-    
+    background-color: #f4f9f4;
 }
 @media screen and (max-width: 800px) {
     .container-dashboard{

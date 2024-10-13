@@ -7,8 +7,10 @@
   padding-top: 2rem;
 }
 .input-create-user {
+  justify-content: center;
   display: flex;
   flex-direction: column;
+  background-color: transparent;
 }
 .input-create-user-principal {
   font-size: 14px;
@@ -43,6 +45,9 @@
   opacity: 0.6;
   border: none;
 }
+.btn-submit-create-user:disabled svg{
+  fill: white;
+}
 .btn-submit-create-user:disabled:hover {
   background-color: #ebebeb;
   color: #999;
@@ -54,17 +59,16 @@
   background-color: transparent;
   border-radius: 4px;
   cursor: pointer;
-  background-color: #06571f;
+  border: 1px solid #06571f;
   color: white;
   padding: 0.3rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 5px;
+  color: #06571f;
 }
-.btn-submit-create-user:hover{
-  background-color: rgb(13, 98, 37);
-}
+
 @media screen and (width < 800px) {
   .container-parent-create-user {
     display: flex;

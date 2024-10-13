@@ -175,7 +175,7 @@ const CreateUser = ({ handleCreateUser }) => {
               height="20px"
               viewBox="0 -960 960 960"
               width="20px"
-              fill="white"
+              fill="#06571f"
             >
               <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
             </svg>
@@ -190,7 +190,7 @@ const CreateUser = ({ handleCreateUser }) => {
               height="17px"
               viewBox="0 -960 960 960"
               width="17px"
-              fill="white"
+              fill="#06571f"
             >
               <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
             </svg>

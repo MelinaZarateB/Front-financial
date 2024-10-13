@@ -63,23 +63,49 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
             </svg>
           </button>
         </li>
-        <li
-          className="active"
-          onClick={() => {
-            handleOpenSide();
-            isActiveLink();
-          }}
-        >
+        <li onClick={(e) => onNavItemChange(e, "transactions")}>
           <a href="">
             <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              height="24px"
-              viewBox="0 -960 960 960"
-              width="24px"
-              fill="#5f6368"
             >
-              <path d="M480-40q-112 0-206-51T120-227v107H40v-240h240v80h-99q48 72 126.5 116T480-120q75 0 140.5-28.5t114-77q48.5-48.5 77-114T840-480h80q0 91-34.5 171T791-169q-60 60-140 94.5T480-40Zm-36-160v-52q-47-11-76.5-40.5T324-370l66-26q12 41 37.5 61.5T486-314q33 0 56.5-15.5T566-378q0-29-24.5-47T454-466q-59-21-86.5-50T340-592q0-41 28.5-74.5T446-710v-50h70v50q36 3 65.5 29t40.5 61l-64 26q-8-23-26-38.5T482-648q-35 0-53.5 15T410-592q0 26 23 41t83 35q72 26 96 61t24 77q0 29-10 51t-26.5 37.5Q583-274 561-264.5T514-250v50h-70ZM40-480q0-91 34.5-171T169-791q60-60 140-94.5T480-920q112 0 206 51t154 136v-107h80v240H680v-80h99q-48-72-126.5-116T480-840q-75 0-140.5 28.5t-114 77q-48.5 48.5-77 114T120-480H40Z" />
+              <path
+                d="M17 11L21 7L17 3"
+                stroke="white"
+                stroke-opacity="0.7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M21 7H9"
+                stroke="white"
+                stroke-opacity="0.7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M7 21L3 17L7 13"
+                stroke="white"
+                stroke-opacity="0.7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M15 17H3"
+                stroke="white"
+                stroke-opacity="0.7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
+
             <span>Transacciones</span>
           </a>
         </li>
@@ -128,13 +154,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
             </div>
           </ul>
         </li>
-        <li
-          className="active"
-          onClick={() => {
-            handleOpenSide();
-            isActiveLink();
-          }}
-        >
+        <li onClick={(e) => onNavItemChange(e, "incomes")}>
           <a href="">
             <svg
               width="22"
@@ -142,7 +162,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               viewBox="0 0 22 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              style={{fill: 'none'}}
+              style={{ fill: "none" }}
             >
               <path
                 d="M20.5 15H14.5M14.5 15L17 12.5M14.5 15L17 17.5"
@@ -181,13 +201,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
             <span>Ingresos</span>
           </a>
         </li>
-        <li
-          className="active"
-          onClick={() => {
-            handleOpenSide();
-            isActiveLink();
-          }}
-        >
+        <li onClick={(e) => onNavItemChange(e, "expenses")}>
           <a href="">
             <svg
               width="22"
@@ -234,13 +248,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
             <span>Egresos</span>
           </a>
         </li>
-        <li
-          className="active"
-          onClick={() => {
-            handleOpenSide();
-            isActiveLink();
-          }}
-        >
+        <li onClick={(e) => onNavItemChange(e, "balance")}>
           <a href="">
             <svg
               width="24"

@@ -11,7 +11,8 @@ import {
   CLEAN_FILTER_USER_BY_EMAIL,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_FAILURE,
-  DELETE_USER_SUCCESS
+  DELETE_USER_SUCCESS,
+  GET_TRANSACTIONS
 } from "./action-types";
 
 let initialState = {
@@ -23,16 +24,21 @@ let initialState = {
   users: [],
   userByEmail: {},
   registerUser: {},
-  deleteUserSuccess: ""
+  deleteUserSuccess: "",
+  transactions: []
 };
 
 const Reducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_TRANSACTIONS:
+      return{
+        ...state,
+        transactions: action.payload
+      }
     case DELETE_USER_SUCCESS: 
     return{
       ...state,
-      deleteUserSuccess: state.deleteUserSuccess !== "" ? "" : action.payload // Si deleteUser no está vacío, lo reseteamos
-       // Actualizamos con el valor que venga en el payload de la acción
+      deleteUserSuccess: state.deleteUserSuccess !== "" ? "" : action.payload // Si deleteUser no está vacío, lo 
     }
     case CLEAN_MESSAGE:
       return {
