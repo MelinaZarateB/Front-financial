@@ -49,7 +49,8 @@ const Transactions = () => {
                   <th>Usuario</th>
                   <th>Fecha</th>
                   <th>Monto</th>
-                  <th>Moneda</th>
+                  <th>Moneda de pago</th>
+                  <th>Moneda de compra</th>
                   <th>Tasa de cambio</th>
                   <th>Comisión</th>
                   <th>Sucursal</th>
@@ -80,9 +81,12 @@ const Transactions = () => {
                           }
                         )}
                       </td>
-                      <td data-table="Monto">{transaction.sourceAmount}</td>
-                      <td data-table="Moneda">
+                      <td data-table="Monto">{transaction.targetAmount}</td>
+                      <td data-table="Moneda de pago">
                         {transaction.sourceCurrencyCode}
+                      </td>
+                      <td data-table="Moneda de compra">
+                        {transaction.targetCurrencyCode}
                       </td>
                       <td data-table="Tasa de cambio">
                         {transaction.exchangeRate}

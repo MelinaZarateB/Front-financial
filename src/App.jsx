@@ -4,11 +4,20 @@ import ChangePassword from "./views/ChangePassword/ChangePassword";
 import SignUpVerification from "./views/SignUpVerification/SignUpVerification";
 import RestorePassword from "./views/RestorePassword/RestorePassword";
 import Dashboard from "./views/Dashboard/Dashboard";
-
 /* Hooks */
-import { Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
 function App() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if(token) {
+      navigate("/dashboard");
+    }
+  }, [])
+
   return (
     <>
       <Routes>
