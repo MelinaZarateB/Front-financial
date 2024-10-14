@@ -63,9 +63,16 @@
     flex-grow: 1; /*No importa el tamaño de la palabra, la flecha se ubicara a la misma distancia lugar siempre */
     color: rgba(255, 255, 255, 0.7);
 }
-#sidebar a:hover, #sidebar .dropdown-btn:hover {
-    background-color:rgba(255, 255, 255, 0.08);
+#sidebar .exit:hover{
+    background-color: rgba(255, 255, 255, 0.08);
 }
+#sidebar a:hover, #sidebar .dropdown-btn:hover {
+    background-color: #06571f;
+}
+#sidebar .exit{
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
 #sidebar .sub-menu{
     /*display: none;*/
     transition: 0.3s ease-in-out;
@@ -104,7 +111,7 @@
 }
 #toggle-btn:hover{
     /*background-color: #0e5f28*/
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: #06571f;
 }
 @media screen and (max-width: 800px) {
     #sidebar{

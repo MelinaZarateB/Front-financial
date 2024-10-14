@@ -85,14 +85,15 @@
   overflow-y: auto;
 }
 th, td {
-  padding: 10px;
+  padding: 5px;
   text-align: left;
   white-space: nowrap; /* Evita que el contenido se envuelva */
+  /*border: 1px solid #ddd; /* Define el borde que separa filas y columnas */
 }
 
 .tbl tbody tr td{
   color: #666;
-  padding: 0.8rem;
+  padding: 0.4rem;
 }
 .tbl tbody tr td{
   border-top: 1px solid #ddd;

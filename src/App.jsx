@@ -13,9 +13,7 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if(token) {
-      navigate("/dashboard");
-    }
+    
   }, [])
 
   return (

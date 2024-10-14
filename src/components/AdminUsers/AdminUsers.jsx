@@ -93,7 +93,7 @@ const AdminUsers = ({ handleCreateUser }) => {
     <div className="container-second-section-users">
       <div>
         <button className="btn-create-user" onClick={handleCreateUser}>
-          Crear usuario
+          Registrar usuario
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24px"

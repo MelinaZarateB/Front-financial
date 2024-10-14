@@ -39,7 +39,22 @@ const Transactions = () => {
 
   return (
     <section className="container-transactions">
+      <div>
+        <button className="btn-create-user">
+          Registrar transacción
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24px"
+            viewBox="0 -960 960 960"
+            width="24px"
+            fill="#06571f"
+          >
+            <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+          </svg>
+        </button>
+      </div>
       <div className="container-second-section-transactions">
+        <div></div>
         <div className="container-table">
           <div className="tbl-container">
             <table className="tbl">
@@ -47,12 +62,12 @@ const Transactions = () => {
                 <tr>
                   <th>Tipo</th>
                   <th>Usuario</th>
-                  <th>Fecha</th>
                   <th>Monto</th>
-                  <th>Moneda de pago</th>
-                  <th>Moneda de compra</th>
-                  <th>Tasa de cambio</th>
+                  <th>Paga</th>
+                  <th>Compra</th>
+                  <th>T/C</th>
                   <th>Comisión</th>
+                  <th>Fecha</th>
                   <th>Sucursal</th>
                   <th colSpan="1"></th>
                 </tr>
@@ -71,24 +86,15 @@ const Transactions = () => {
                         </span>
                       </td>
                       <td data-table="Usuario">{transaction.userName}</td>
-                      <td data-table="Fecha">
-                        {new Date(transaction.createdAt).toLocaleDateString(
-                          "es-ES",
-                          {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "2-digit",
-                          }
-                        )}
-                      </td>
+
                       <td data-table="Monto">{transaction.targetAmount}</td>
-                      <td data-table="Moneda de pago">
+                      <td data-table="Pago">
                         {transaction.sourceCurrencyCode}
                       </td>
-                      <td data-table="Moneda de compra">
+                      <td data-table="Compro">
                         {transaction.targetCurrencyCode}
                       </td>
-                      <td data-table="Tasa de cambio">
+                      <td data-table="T/C">
                         {transaction.exchangeRate}
                       </td>
                       <td data-table="Comisión">
@@ -96,19 +102,33 @@ const Transactions = () => {
                           ? transaction.commission
                           : "N/A"}
                       </td>
-                      <td data-table="Sucursal">{transaction.subOfficeName}</td>
-                      {userRol === 'administrador' ? (
-                      <td data-table="Estado">
-                        <button
-                          className="btn-trash"
-                          onClick={() =>
-                            handleDeleteTransaction(transaction._id)
-                          }
-                        >
-                          Eliminar
-                        </button>
+                      <td data-table="Fecha">
+                        {new Date(transaction.createdAt)
+                          .toLocaleString("es-ES", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: false, // Para formato 24 horas
+                          })
+                          .replace(",", "")}
                       </td>
-                      ) : ''}
+                      <td data-table="Sucursal">{transaction.subOfficeName}</td>
+                      {userRol === "administrador" ? (
+                        <td data-table="Estado">
+                          <button
+                            className="btn-trash"
+                            onClick={() =>
+                              handleDeleteTransaction(transaction._id)
+                            }
+                          >
+                            Eliminar
+                          </button>
+                        </td>
+                      ) : (
+                        ""
+                      )}
                     </tr>
                   ))
                 ) : (
