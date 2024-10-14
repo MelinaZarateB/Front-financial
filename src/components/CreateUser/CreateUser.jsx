@@ -2,7 +2,7 @@ import "./CreateUser.css";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser, cleanMessage } from "../../redux/actions";
-import Spinner from "../../utils/Spinner/Spinner";
+import SpinnerSmall from './../../utils/Spinner/SpinnerSmall';
 
 const CreateUser = ({ handleCreateUser }) => {
   const dispatch = useDispatch();
@@ -27,7 +27,6 @@ const CreateUser = ({ handleCreateUser }) => {
       });
     }
   }, [stateRegisterUser.success]); // Ejecuta este efecto cuando cambia stateRegisterUser.success
-  
 
   const [newUser, setNewUser] = useState({
     username: "",
@@ -162,13 +161,9 @@ const CreateUser = ({ handleCreateUser }) => {
               !newUser.phone
             }
           >
-            <label htmlFor="submit" className="label">
+            <label htmlFor="submit" className="label" >
               {" "}
-              {isSubmitting ? (
-                <Spinner style={{ width: "20px", height: "20px" }} />
-              ) : (
-                "Registrar usuario"
-              )}
+              {isSubmitting ? <SpinnerSmall /> : "Registrar usuario"}
             </label>
             <svg
               xmlns="http://www.w3.org/2000/svg"

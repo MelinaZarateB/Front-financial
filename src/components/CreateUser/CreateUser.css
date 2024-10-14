@@ -67,6 +67,14 @@
   justify-content: space-between;
   gap: 5px;
   color: #06571f;
+  transition: all 0.2s ease;
+}
+.btn-submit-create-user:hover{
+  background-color: rgb(13, 98, 37);
+  color: rgba(255, 255, 255, 0.83);
+}
+.btn-submit-create-user:hover svg{
+  fill: rgba(255, 255, 255, 0.83);
 }
 
 @media screen and (width < 800px) {

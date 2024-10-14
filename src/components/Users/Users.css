@@ -52,12 +52,20 @@
   font-weight: 500;
   background-color: rgba(255, 255, 255, 0.83);
 }
-/*.btn-search-users:hover{
+.btn-search-users:hover{
   background-color: rgb(13, 98, 37);
+  color: rgba(255, 255, 255, 0.83);
+}
+.btn-search-users:hover svg{
+  fill: rgba(255, 255, 255, 0.83);;
 }
 .btn-clean:hover{
   background-color: rgb(13, 98, 37);
-}*/
+  color: rgba(255, 255, 255, 0.83);
+}
+.btn-clean:hover svg{
+  fill: rgba(255, 255, 255, 0.83);;
+}
 .container-table{
   max-width: 1440px;
   width: 100%;
@@ -157,6 +165,7 @@ th, td {
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.83);
+  transition: all 0.2s ease;
 }
 .btn-search-users{
   border: none;
@@ -170,4 +179,5 @@ th, td {
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.83);
+  transition: all 0.2 ease;
 }

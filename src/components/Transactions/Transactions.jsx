@@ -9,6 +9,7 @@ const Transactions = () => {
   const dispatch = useDispatch();
 
   const transactions = useSelector((state) => state.transactions);
+  const userRol = useSelector((state) => state.userRole);
   console.log(transactions);
 
   useEffect(() => {
@@ -92,6 +93,7 @@ const Transactions = () => {
                           : "N/A"}
                       </td>
                       <td data-table="Sucursal">{transaction.subOfficeName}</td>
+                      {userRol === 'administrador' ? (
                       <td data-table="Estado">
                         <button
                           className="btn-trash"
@@ -102,6 +104,7 @@ const Transactions = () => {
                           Eliminar
                         </button>
                       </td>
+                      ) : ''}
                     </tr>
                   ))
                 ) : (

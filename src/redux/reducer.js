@@ -111,7 +111,7 @@ const Reducer = (state = initialState, action) => {
       return {
         ...state,
         loginMessage: action.payload.isAuthenticated, // Almacena el mensaje true o false
-        role: action.payload.role,
+        userRole: action.payload.role,
       };
     case LOGIN_FAILURE:
       return {

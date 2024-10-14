@@ -6,6 +6,14 @@
     border-radius: 100%;
     animation: spin 1s infinite;
 }
+.spinner-small{
+    width: 20px;
+    height: 20px;
+    border: 5px solid #fffc;
+    border-top-color: rgb(21, 152, 58);
+    border-radius: 100%;
+    animation: spin 1s infinite;
+}
 @keyframes spin {
     to{
         transform: rotate(360deg);

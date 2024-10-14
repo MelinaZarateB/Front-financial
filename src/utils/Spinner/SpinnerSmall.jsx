@@ -3,7 +3,7 @@ import './Spinner.css';
 const Spinner = () => {
     return(
         <div 
-        className='spinner'
+        className='spinner-small'
         aria-label="Cargando"
         aria-live="polite"
         role="status">
