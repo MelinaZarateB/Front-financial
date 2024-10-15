@@ -8,6 +8,7 @@ import Income from "../../components/Income/Income";
 import Expense from "../../components/Expense/Expense";
 import Balance from "../../components/Balance/Balance";
 import Movements from "../../components/Movements/Movements";
+import Clients from "../../components/Clients/Clients";
 import Offices from "../../components/Offices/Offices";
 import Users from "../../components/Users/Users";
 import { useEffect } from "react";
@@ -35,6 +36,7 @@ const Dashboard = () => {
           {selectedNavItem === "expenses" && <Expense />}
           {selectedNavItem === "balance" && <Balance />}
           {selectedNavItem === 'movements' && <Movements />}
+          {selectedNavItem === 'clients' && <Clients />}
           {selectedNavItem === "offices" && <Offices />}
           {selectedNavItem === "users" && <Users />}
         </main>
