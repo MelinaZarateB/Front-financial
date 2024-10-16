@@ -1,6 +1,20 @@
 import "./Expense.css";
 import { useState } from "react";
 
+const typeExpenses = [
+  "Servicios Públicos",
+  "Alquileres",
+  "Sueldos y Salarios",
+  "Mantenimiento",
+  "Materiales e Insumos",
+  "Publicidad y Marketing",
+  "Transporte",
+  "Impuestos y Tasas",
+  "Gastos Administrativos",
+  "Seguros",
+  "Varios",
+];
+
 const expensesArray = [
   {
     id: 1,
@@ -69,8 +83,13 @@ const expensesArray = [
 
 const Expense = () => {
   const [type, setType] = useState("");
+  const[selectType, setSelectType] = useState('')
 
-  console.log(type)
+  const handleChangeType = (event) => {
+    setSelectType(event.target.value)
+
+
+  }
 
   // Calcular el total de los montos
   const total = expensesArray.reduce((acc, expense) => acc + expense.monto, 0);
@@ -93,15 +112,45 @@ const Expense = () => {
       </div>
       <div>
         <div className="container-search-purchase">
-          <label htmlFor="email">Buscar egreso por tipo</label>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: '3px' }}>
+            <div className="input-box-dashboard">
             <input
               type="text"
-              className="input-search-user"
+              className="input-field-dashboard"
               name="type"
               value={type}
               onChange={(e) => setType(e.target.value)}
             />
+            <label className="label-input-dashboard">Buscar egreso por tipo</label>
+            </div>
+            <div className="input-box-dashboard">
+  <div
+    className={`select-container ${
+      selectType ? "has-value" : ""
+    }`}
+  >
+    <select
+      name="typeExpense"
+      className="input-field-dashboard select"
+      value={selectType}
+      onChange={handleChangeType}
+      style={{
+        color: selectType ? "#000" : "#555",
+        cursor: "pointer",
+      }}
+    >
+  
+      <option value="all">Filtre por tipo de egreso</option>
+      {typeExpenses?.map((typeExpense, index) => (
+        <option key={index} value={typeExpense}>
+          {typeExpense}
+        </option>
+      ))}
+    </select>
+    <div className="floating-label">Filtre por tipo de egreso</div>
+  </div>
+</div>
+
             <button className="btn-search-users">
               Buscar{" "}
               <svg
@@ -180,11 +229,10 @@ const Expense = () => {
 
                 {/* Fila para el total */}
                 <tr>
-                  <td colSpan='4' style={{ textAlign: "right"}}>
-                   <strong> Total: $ {total.toFixed(2)}</strong>
+                  <td colSpan="4" style={{ textAlign: "right" }}>
+                    <strong> Total: $ {total.toFixed(2)}</strong>
                   </td>
-                  <td colSpan='3'></td>
-                 
+                  <td colSpan="3"></td>
                 </tr>
               </tbody>
             </table>

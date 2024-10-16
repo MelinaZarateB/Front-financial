@@ -353,7 +353,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
             <span>Usuarios</span>
           </a>
         </li>
-        <li>
+        <li style={{marginTop: '15px'}}>
           <a href="" className="exit">
             <svg
               xmlns="http://www.w3.org/2000/svg"

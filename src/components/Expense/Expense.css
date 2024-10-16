@@ -6,3 +6,48 @@
     flex-direction: column;
     gap: 2rem
 }
+.select{
+    width: 200px;
+    cursor: pointer;
+    --bs-form-select-bg-img: url('/src/assets/download.svg');
+    display: block;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    background-image: var(--bs-form-select-bg-img), var(--bs-form-select-bg-icon, none);
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: right .75rem center;
+    background-size: 16px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    font-family: inherit;
+}
+.floating-label {
+    position: absolute;
+    display: none;
+    top: 50%;
+    left: 1rem;
+    color: #555;
+    pointer-events: none;
+    transition: 0.3s;
+  }
+  .select-container.has-value .floating-label {
+    display: flex;
+    top: -10px;
+    left: 0.5rem;
+    font-size: 14px;
+    color: #555;
+    background-color: #fafafa;
+    padding: 0 5px;
+  }
+  .select-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }

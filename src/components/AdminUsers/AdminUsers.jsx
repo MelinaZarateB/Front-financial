@@ -106,15 +106,19 @@ const AdminUsers = ({ handleCreateUser }) => {
         </button>
       </div>
       <div className="container-search-purchase">
-        <label htmlFor="email">Buscar usuario por email</label>
+  
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div className="input-box-dashboard">
           <input
             type="text"
-            className="input-search-user"
+            className="input-field-dashboard"
             name="email"
             onChange={handleChange}
             value={email}
           />
+          <label htmlFor="email" className="label-input-dashboard">Buscar usuario por email</label>
+
+          </div>
           <button onClick={handleGetUserByEmail} className="btn-search-users">
             Buscar{" "}
             <svg
@@ -134,7 +138,7 @@ const AdminUsers = ({ handleCreateUser }) => {
               height="20px"
               viewBox="0 -960 960 960"
               width="20px"
-              fill="#06571f"
+              fill="rgba(255, 255, 255, 0.83)"
             >
               <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
             </svg>

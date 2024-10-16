@@ -77,6 +77,7 @@
   fill: rgba(255, 255, 255, 0.83);
 }
 
+
 @media screen and (width < 800px) {
   .container-parent-create-user {
     display: flex;

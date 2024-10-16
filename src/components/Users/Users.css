@@ -6,7 +6,7 @@
   padding-right: 2rem;
   background-color: #f4f9f4;
 }
-.container-second-section-users{
+.container-second-section-users {
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -52,64 +52,65 @@
   font-weight: 500;
   background-color: rgba(255, 255, 255, 0.83);
 }
-.btn-search-users:hover{
+.btn-search-users:hover {
   background-color: rgb(13, 98, 37);
   color: rgba(255, 255, 255, 0.83);
 }
-.btn-search-users:hover svg{
-  fill: rgba(255, 255, 255, 0.83);;
+.btn-search-users:hover svg {
+  fill: rgba(255, 255, 255, 0.83);
 }
-.btn-clean:hover{
+.btn-clean:hover {
   background-color: rgb(13, 98, 37);
   color: rgba(255, 255, 255, 0.83);
 }
-.btn-clean:hover svg{
-  fill: rgba(255, 255, 255, 0.83);;
+.btn-clean:hover svg {
+  fill: rgba(255, 255, 255, 0.83);
 }
-.container-table{
+.container-table {
   max-width: 1440px;
   width: 100%;
   box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.83)
+  background-color: rgba(255, 255, 255, 0.83);
 }
-.tbl{
+.tbl {
   width: 100%;
   border-collapse: collapse;
 }
-.tbl-container{
+.tbl-container {
   padding-right: 1.2rem;
   padding-left: 1.2rem;
   padding-top: 1.2rem;
   max-height: 450px;
   overflow-y: auto;
 }
-th, td {
+th,
+td {
   padding: 5px;
   text-align: left;
   white-space: nowrap; /* Evita que el contenido se envuelva */
   /*border: 1px solid #ddd; /* Define el borde que separa filas y columnas */
 }
 
-.tbl tbody tr td{
+.tbl tbody tr td {
   color: #666;
   padding: 0.4rem;
 }
-.tbl tbody tr td{
+.tbl tbody tr td {
   border-top: 1px solid #ddd;
 }
 .tbl tr:nth-child(even) {
-  background-color: #F3F3F3;
+  background-color: #f3f3f3;
 }
-.btn-trash{
+.btn-trash {
   display: inline-block;
   border: none;
   padding: 0.4rem;
   cursor: pointer;
   /*background-color: #E4A5AD;*/
-  border: 1px solid #A43042;
+  border: 1px solid #a43042;
   background-color: rgba(255, 255, 255, 0.83);
-  color: #A43042;
+  color: #a43042;
   border-radius: 4px;
   transition: all 0.2s ease;
 }
@@ -117,68 +118,86 @@ th, td {
   background-color: #e4b3ba;
 }*/
 @media screen and (max-width: 800px) {
-  .tbl thead{
+  .tbl thead {
     display: none;
   }
 
   .tbl tr,
-  .tbl td{
+  .tbl td {
     display: block;
     width: 100%;
   }
-  .tbl tr{
+  .tbl tr {
     margin-bottom: 1rem;
   }
-  .tbl tbody tr td{
+  .tbl tbody tr td {
     position: relative;
     text-align: right;
   }
-  .tbl td::before{
+  .tbl td::before {
     content: attr(data-table);
     position: absolute;
     left: 0;
     width: 50%;
     text-align: left;
   }
-  .container-users{
+  .container-users {
     padding-left: 3%;
     padding-right: 3%;
     padding-top: 3%;
   }
-  .tbl-container{
+  .tbl-container {
     padding-right: 1rem;
     padding-left: 1rem;
     padding-top: 1rem;
   }
-  .btn-create-user{
+  .btn-create-user {
     width: 100%;
   }
 }
-.btn-clean{
+.btn-clean {
   border: none;
   background-color: transparent;
   border-radius: 4px;
-  border: 1px solid  #06571f;
+  border: 1px solid #06571f;
   cursor: pointer;
-  color: #06571f;
-  padding: 0.4rem;
+  padding: 0.3rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.83);
+  color: rgba(255, 255, 255, 0.83);
+  background-color: #06571f;
   transition: all 0.2s ease;
+  text-shadow: rgba(9, 11, 11, 0.6) 0px 1px 1px;
+  border: 1px solid #063a17;
+  box-shadow: rgba(6, 87, 31, 0.5) 0px 1px 0px inset,
+    /* Verde medio */ rgba(4, 58, 21, 0.4) 0px -1px 0px 1px inset,
+    /* Verde más oscuro */ rgba(9, 11, 11, 0.1) 0px 2px 4px 0px; /* Sombras neutras */
+    
 }
-.btn-search-users{
+.btn-clean svg{
+  fill: rgba(255, 255, 255, 0.83);;
+}
+.btn-search-users {
   border: none;
   background-color: transparent;
   border-radius: 4px;
-  border: 1px solid  #06571f;
+  border: 1px solid #06571f;
   cursor: pointer;
-  color: #06571f;
-  padding: 0.4rem;
+  padding: 0.3rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.83);
-  transition: all 0.2 ease;
+  color: rgba(255, 255, 255, 0.83);
+  background-color: #06571f;
+  transition: all 0.2s ease;
+  text-shadow: rgba(9, 11, 11, 0.6) 0px 1px 1px;
+  border: 1px solid #063a17;
+  box-shadow: rgba(6, 87, 31, 0.5) 0px 1px 0px inset,
+    /* Verde medio */ rgba(4, 58, 21, 0.4) 0px -1px 0px 1px inset,
+    /* Verde más oscuro */ rgba(9, 11, 11, 0.1) 0px 2px 4px 0px; /* Sombras neutras */
+}
+.btn-search-users svg{
+  fill: rgba(255, 255, 255, 0.83);;
+
 }
