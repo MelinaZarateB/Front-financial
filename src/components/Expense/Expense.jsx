@@ -85,11 +85,16 @@ const Expense = () => {
   const [type, setType] = useState("");
   const[selectType, setSelectType] = useState('')
 
+  
   const handleChangeType = (event) => {
-    setSelectType(event.target.value)
+    const selectedValue = event.target.value;
 
-
-  }
+    if (selectedValue === "all") {
+      setSelectType(""); // Restablecer el valor del select
+    } else {
+      setSelectType(selectedValue); // Establecer el valor seleccionado
+    }
+  };
 
   // Calcular el total de los montos
   const total = expensesArray.reduce((acc, expense) => acc + expense.monto, 0);
