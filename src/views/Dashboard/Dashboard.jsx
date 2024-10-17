@@ -33,9 +33,9 @@ const Dashboard = () => {
       </div>
       <div className="main">
         <main>
-          {selectedNavItem === "transactions" && <Transactions />}
+          {selectedNavItem === "transactions" && <LocalizationProvider dateAdapter={AdapterDayjs}><Transactions /></LocalizationProvider>}
           {selectedNavItem === "cash-register" && <CashRegister />}
-          {selectedNavItem === "incomes" && <Income />}
+          {selectedNavItem === "incomes" &&  <LocalizationProvider dateAdapter={AdapterDayjs}><Income /> </LocalizationProvider>}
           {selectedNavItem === "expenses" && <LocalizationProvider dateAdapter={AdapterDayjs}><Expense />  </LocalizationProvider>}
           {selectedNavItem === "balance" && <Balance />}
           {selectedNavItem === 'movements' && <Movements />}

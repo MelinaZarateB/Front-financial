@@ -1,5 +1,9 @@
 import "./Income.css";
 import { useState } from "react";
+import { DatePicker } from "@mui/x-date-pickers";
+import TextField from "@mui/material/TextField";
+import { ThemeProvider } from '@mui/material/styles';
+import theme from "../../utils/theme";
 
 const incomesArray = [
     {
@@ -72,16 +76,20 @@ const Income = () => {
   const [type, setType] = useState("");
   const[selectType, setSelectType] = useState('')
 
+  const [dataForm, setDataForm] = useState({
+    dateFrom: new Date(),
+    dateTo: new Date(),
+  });
+
   const handleChangeType = (event) => {
     setSelectType(event.target.value)
-
-
   }
 
   // Calcular el total de los montos
   const total = incomesArray.reduce((acc, income) => acc + income.monto, 0);
 
   return (
+    <ThemeProvider theme={theme}>
     <section className="section-expense">
       <div>
         <button className="btn-create-user">
@@ -110,7 +118,26 @@ const Income = () => {
             />
             <label className="label-input-dashboard">Buscar ingreso por tipo</label>
             </div>
-
+            <div>
+              <DatePicker
+                label="Filtre desde"
+                value={dataForm.dateFrom}
+                renderInput={(params) => <TextField {...params} />}
+                onChange={(newValue) => {
+                  setDataForm({ ...dataForm, dateFrom: newValue });
+                }}
+              />
+            </div>
+            <div>
+            <DatePicker
+                label="Hasta"
+                value={dataForm.dateTo}
+                renderInput={(params) => <TextField {...params} />}
+                onChange={(newValue) => {
+                  setDataForm({ ...dataForm, dateTo: newValue });
+                }}
+              />
+            </div>
 
             <button className="btn-search-users">
               Buscar{" "}
@@ -136,6 +163,7 @@ const Income = () => {
                 <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
               </svg>
             </button>
+            
           </div>
         </div>
 
@@ -213,6 +241,7 @@ const Income = () => {
         </div>
       </div>
     </section>
+    </ThemeProvider>
   );
 };
 

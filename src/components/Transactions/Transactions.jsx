@@ -1,15 +1,23 @@
 import "./Transactions.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getTransactions, deleteTransaction } from "../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import imgPencil from "./../../assets/pencil.svg";
 import Swal from "sweetalert2";
+import { DatePicker } from "@mui/x-date-pickers";
+import TextField from "@mui/material/TextField";
+import { ThemeProvider } from '@mui/material/styles';
+import theme from "../../utils/theme";
 
 const Transactions = () => {
   const dispatch = useDispatch();
 
   const transactions = useSelector((state) => state.transactions);
   const userRol = useSelector((state) => state.userRole);
+  const [dataForm, setDataForm] = useState({
+    dateFrom: new Date(),
+    dateTo: new Date(),
+  });
   console.log(transactions);
 
   useEffect(() => {
@@ -38,6 +46,7 @@ const Transactions = () => {
   };
 
   return (
+    <ThemeProvider theme={theme}>
     <section className="container-transactions">
       <div>
         <button className="btn-create-user">
@@ -54,7 +63,52 @@ const Transactions = () => {
         </button>
       </div>
       <div className="container-second-section-transactions">
-        <div></div>
+        <div style={{display: 'flex',alignItems: "center", gap: "10px", marginBottom: '3px'}}>
+        <div>
+              <DatePicker
+                label="Filtre desde"
+                value={dataForm.dateFrom}
+                renderInput={(params) => <TextField {...params} />}
+                onChange={(newValue) => {
+                  setDataForm({ ...dataForm, dateFrom: newValue });
+                }}
+              />
+            </div>
+            <div>
+            <DatePicker
+                label="Hasta"
+                value={dataForm.dateTo}
+                renderInput={(params) => <TextField {...params} />}
+                onChange={(newValue) => {
+                  setDataForm({ ...dataForm, dateTo: newValue });
+                }}
+              />
+            </div>
+            <button className="btn-search-users">
+              Buscar{" "}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="20px"
+                viewBox="0 -960 960 960"
+                width="20px"
+                fill="#06571f"
+              >
+                <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+              </svg>
+            </button>
+            <button className="btn-clean">
+              Limpiar{" "}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="20px"
+                viewBox="0 -960 960 960"
+                width="20px"
+                fill="#06571f"
+              >
+                <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+              </svg>
+            </button>
+        </div>
         <div className="container-table">
           <div className="tbl-container">
             <table className="tbl">
@@ -153,6 +207,7 @@ const Transactions = () => {
         </div>
       </div>
     </section>
+     </ThemeProvider>
   );
 };
 
