@@ -32,6 +32,7 @@
   outline: none;
 
 }
+/* Estilo base de la floating-label (cuando no tiene valor o está sin focus) */
 .floating-label {
   position: absolute;
   display: none;
@@ -41,16 +42,27 @@
   pointer-events: none;
   transition: 0.3s;
 }
+
+/* Mostrar el label flotante cuando hay un valor seleccionado */
 .select-container.has-value .floating-label {
   display: flex;
   top: -10px;
   left: 0.5rem;
   font-size: 14px;
-  color: #555;
   background-color: #f4f9f4;
   padding: 0 5px;
-  color: #1976d2;
+  color: #1976d2; /* Azul cuando el select tiene valor */
 }
+
+/* Cambiar color del label cuando se pierde el focus */
+.select-container select:focus + .floating-label {
+  color: #1976d2; /* Azul cuando está en focus */
+}
+
+.select-container select:not(:focus) + .floating-label {
+  color: #555; /* Vuelve a gris cuando se pierde el focus */
+}
+
 .select-container {
   position: relative;
   display: inline-block;
