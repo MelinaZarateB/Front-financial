@@ -85,36 +85,45 @@ const Transactions = () => {
                           {transaction.type} <img src={imgPencil} alt="" />
                         </span>
                       </td>
-                      <td data-table="Usuario">{transaction.userName}</td>
-
-                      <td data-table="Monto">{transaction.targetAmount}</td>
+                      <td data-table="Usuario">
+                        <span>{transaction.userName}</span>
+                      </td>
+                      <td data-table="Monto">
+                        <span>{transaction.targetAmount}</span>
+                      </td>
                       <td data-table="Pago">
-                        {transaction.sourceCurrencyCode}
+                        <span>{transaction.sourceCurrencyCode}</span>
                       </td>
                       <td data-table="Compro">
-                        {transaction.targetCurrencyCode}
+                        <span>{transaction.targetCurrencyCode}</span>
                       </td>
                       <td data-table="T/C">
-                        {transaction.exchangeRate}
+                        <span>{transaction.exchangeRate}</span>
                       </td>
                       <td data-table="Comisión">
-                        {transaction.commission
-                          ? transaction.commission
-                          : "N/A"}
+                        <span>
+                          {transaction.commission
+                            ? transaction.commission
+                            : "N/A"}
+                        </span>
                       </td>
                       <td data-table="Fecha">
-                        {new Date(transaction.createdAt)
-                          .toLocaleString("es-ES", {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "2-digit",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            hour12: false, // Para formato 24 horas
-                          })
-                          .replace(",", "")}
+                        <span>
+                          {new Date(transaction.createdAt)
+                            .toLocaleString("es-ES", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false, // Para formato 24 horas
+                            })
+                            .replace(",", "")}
+                        </span>
                       </td>
-                      <td data-table="Sucursal">{transaction.subOfficeName}</td>
+                      <td data-table="Sucursal">
+                        <span>{transaction.subOfficeName}</span>
+                      </td>
                       {userRol === "administrador" ? (
                         <td data-table="Estado">
                           <button

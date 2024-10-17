@@ -69,7 +69,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               width="24"
               height="24"
               viewBox="0 0 24 24"
-              fill="none"
+              style={{ fill: selectedNavItem === 'transactions' ? 'white' : '' }}
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
@@ -106,7 +106,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               />
             </svg>
 
-            <span>Transacciones</span>
+            <span className={selectedNavItem === 'transactions' ? 'spannn' : ''}>Transacciones</span>
           </a>
         </li>
         <li
@@ -156,7 +156,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
         </li>
         <li onClick={(e) => onNavItemChange(e, "incomes")}>
           <a href="">
-            <svg
+          <svg
               width="22"
               height="20"
               viewBox="0 0 22 20"
@@ -167,7 +167,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               <path
                 d="M20.5 15H14.5M14.5 15L17 12.5M14.5 15L17 17.5"
                 stroke="white"
-                stroke-opacity="0.7"
+                stroke-opacity={selectedNavItem === 'incomes' ? '1' : '0.7'}
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -175,7 +175,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               <path
                 d="M20.5 11V3C20.5 2.60218 20.342 2.22064 20.0607 1.93934C19.7794 1.65804 19.3978 1.5 19 1.5H3C2.60218 1.5 2.22064 1.65804 1.93934 1.93934C1.65804 2.22064 1.5 2.60218 1.5 3V17C1.5 17.3978 1.65804 17.7794 1.93934 18.0607C2.22064 18.342 2.60218 18.5 3 18.5H13.235"
                 stroke="white"
-                stroke-opacity="0.7"
+                stroke-opacity={selectedNavItem === 'incomes' ? '1' : '0.7'}
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -183,7 +183,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               <path
                 d="M9 5V15"
                 stroke="white"
-                stroke-opacity="0.7"
+                stroke-opacity={selectedNavItem === 'incomes' ? '1' : '0.7'}
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -191,19 +191,20 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               <path
                 d="M11.5 6.5H7.75C7.28587 6.5 6.84075 6.68437 6.51256 7.01256C6.18437 7.34075 6 7.78587 6 8.25C6 8.71413 6.18437 9.15925 6.51256 9.48744C6.84075 9.81563 7.28587 10 7.75 10H10.25C10.7141 10 11.1592 10.1844 11.4874 10.5126C11.8156 10.8408 12 11.2859 12 11.75C12 12.2141 11.8156 12.6592 11.4874 12.9874C11.1592 13.3156 10.7141 13.5 10.25 13.5H6"
                 stroke="white"
-                stroke-opacity="0.7"
+                stroke-opacity={selectedNavItem === 'incomes' ? '1' : '0.7'}
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
             </svg>
 
-            <span>Ingresos</span>
+
+            <span className={selectedNavItem === 'incomes' ? 'spannn' : ''}>Ingresos</span>
           </a>
         </li>
         <li onClick={(e) => onNavItemChange(e, "expenses")}>
           <a href="">
-            <svg
+          <svg
               width="22"
               height="20"
               viewBox="0 0 22 20"
@@ -214,7 +215,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               <path
                 d="M14.5 15H20.5M20.5 15L18 17.5M20.5 15L18 12.5"
                 stroke="white"
-                stroke-opacity="0.7"
+                stroke-opacity={selectedNavItem === 'expenses' ? '1' : '0.7'}
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -222,7 +223,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               <path
                 d="M20.5 11V3C20.5 2.60218 20.342 2.22064 20.0607 1.93934C19.7794 1.65804 19.3978 1.5 19 1.5H3C2.60218 1.5 2.22064 1.65804 1.93934 1.93934C1.65804 2.22064 1.5 2.60218 1.5 3V17C1.5 17.3978 1.65804 17.7794 1.93934 18.0607C2.22064 18.342 2.60218 18.5 3 18.5H13.235"
                 stroke="white"
-                stroke-opacity="0.7"
+                stroke-opacity={selectedNavItem === 'expenses' ? '1' : '0.7'}
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -230,7 +231,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               <path
                 d="M9 5V15"
                 stroke="white"
-                stroke-opacity="0.7"
+                stroke-opacity={selectedNavItem === 'expenses' ? '1' : '0.7'}
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -238,19 +239,19 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               <path
                 d="M11.5 6.5H7.75C7.28587 6.5 6.84075 6.68437 6.51256 7.01256C6.18437 7.34075 6 7.78587 6 8.25C6 8.71413 6.18437 9.15925 6.51256 9.48744C6.84075 9.81563 7.28587 10 7.75 10H10.25C10.7141 10 11.1592 10.1844 11.4874 10.5126C11.8156 10.8408 12 11.2859 12 11.75C12 12.2141 11.8156 12.6592 11.4874 12.9874C11.1592 13.3156 10.7141 13.5 10.25 13.5H6"
                 stroke="white"
-                stroke-opacity="0.7"
+                stroke-opacity={selectedNavItem === 'expenses' ? '1' : '0.7'}
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
             </svg>
 
-            <span>Egresos</span>
+            <span className={selectedNavItem === 'expenses' ? 'spannn' : ''}>Egresos</span>
           </a>
         </li>
         <li onClick={(e) => onNavItemChange(e, "balance")}>
           <a href="">
-            <svg
+          <svg
               width="24"
               height="24"
               viewBox="0 0 24 24"
@@ -261,7 +262,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               <path
                 d="M20 12V8H6C5.46957 8 4.96086 7.78929 4.58579 7.41421C4.21071 7.03914 4 6.53043 4 6C4 4.9 4.9 4 6 4H18V8"
                 stroke="white"
-                stroke-opacity="0.7"
+                stroke-opacity={selectedNavItem === 'balance' ? '1' : '0.7'}
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -269,7 +270,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               <path
                 d="M4 6V18C4 19.1 4.9 20 6 20H20V16"
                 stroke="white"
-                stroke-opacity="0.7"
+                stroke-opacity={selectedNavItem === 'balance' ? '1' : '0.7'}
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -277,13 +278,13 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               <path
                 d="M18 12C17.4696 12 16.9609 12.2107 16.5858 12.5858C16.2107 12.9609 16 13.4696 16 14C16 15.1 16.9 16 18 16H22V12H18Z"
                 stroke="white"
-                stroke-opacity="0.7"
+                stroke-opacity={selectedNavItem === 'balance' ? '1' : '0.7'}
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
             </svg>
-            <span>Balance</span>
+            <span className={selectedNavItem === 'balance' ? 'spannn' : ''}>Balance</span>
           </a>
         </li>
         <li onClick={(e) => onNavItemChange(e, "movements")}>
@@ -292,7 +293,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               width="24"
               height="24"
               viewBox="0 0 24 25"
-              fill="none"
+              style={{ fill: selectedNavItem === 'movements' ? 'white' : 'rgba(255, 255, 255, 0.7)' }}
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
@@ -316,13 +317,13 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
                 fill="rgba(255, 255, 255, 0.7);"
               />
             </svg>
-            <span>Movimientos</span>
+            <span className={selectedNavItem === 'movements' ? 'spannn' : ''}>Movimientos</span>
           </a>
         </li>
         <li onClick={(e) => onNavItemChange(e, "clients")}>
           <a href="">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm240-600h160v-80H400v80Zm-160 80h-80v440h80v-440Zm400 440v-440H320v440h320Zm80-440v440h80v-440h-80ZM480-420Z"/></svg>
-            <span>Clientes</span>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"    style={{ fill: selectedNavItem === 'clients' ? 'white' : 'rgba(255, 255, 255, 0.7)' }}><path d="M160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm240-600h160v-80H400v80Zm-160 80h-80v440h80v-440Zm400 440v-440H320v440h320Zm80-440v440h80v-440h-80ZM480-420Z"/></svg>
+            <span className={selectedNavItem === 'clients' ? 'spannn' : ''}>Clientes</span>
           </a>
         </li>
         <li onClick={(e) => onNavItemChange(e, "offices")}>
@@ -332,11 +333,11 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               height="24px"
               viewBox="0 -960 960 960"
               width="24px"
-              fill="#5f6368"
+              style={{ fill: selectedNavItem === 'offices' ? 'white' : 'rgba(255, 255, 255, 0.7)' }}
             >
               <path d="M120-120v-560h160v-160h400v320h160v400H520v-160h-80v160H120Zm80-80h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 320h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 480h80v-80h-80v80Zm0-160h80v-80h-80v80Z" />
             </svg>
-            <span>Sucursales</span>
+            <span className={selectedNavItem === 'offices' ? 'spannn' : ''}>Sucursales</span>
           </a>
         </li>
         <li onClick={(e) => onNavItemChange(e, "users")}>
@@ -346,11 +347,11 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               height="24px"
               viewBox="0 -960 960 960"
               width="24px"
-              fill="#5f6368"
+              style={{ fill: selectedNavItem === 'users' ? 'white' : 'rgba(255, 255, 255, 0.7)' }}
             >
               <path d="M0-240v-63q0-43 44-70t116-27q13 0 25 .5t23 2.5q-14 21-21 44t-7 48v65H0Zm240 0v-65q0-32 17.5-58.5T307-410q32-20 76.5-30t96.5-10q53 0 97.5 10t76.5 30q32 20 49 46.5t17 58.5v65H240Zm540 0v-65q0-26-6.5-49T754-397q11-2 22.5-2.5t23.5-.5q72 0 116 26.5t44 70.5v63H780Zm-455-80h311q-10-20-55.5-35T480-370q-55 0-100.5 15T325-320ZM160-440q-33 0-56.5-23.5T80-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T160-440Zm640 0q-33 0-56.5-23.5T720-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T800-440Zm-320-40q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T600-600q0 50-34.5 85T480-480Zm0-80q17 0 28.5-11.5T520-600q0-17-11.5-28.5T480-640q-17 0-28.5 11.5T440-600q0 17 11.5 28.5T480-560Zm1 240Zm-1-280Z" />
             </svg>
-            <span>Usuarios</span>
+            <span className={selectedNavItem === 'users' ? 'spannn' : ''}>Usuarios</span>
           </a>
         </li>
         <li style={{marginTop: '15px'}}>

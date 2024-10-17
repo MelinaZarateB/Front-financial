@@ -16,18 +16,29 @@ import {
   REGISTER_USER_FAILURE,
   UPDATE_USER,
   GET_TRANSACTIONS,
-  DELETE_TRANSACTION
+  DELETE_TRANSACTION,
+  CREATE_EXPENSE,
+  CREATE_INCOME,
 } from "./action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-/* Actions para transacciones */
+/* Actions para Egresos - Ingresos */
+export const createIncome = (income) => {
+  console.log("action de income:", income);
+};
 
+export const createExpense = (expense) => {
+  console.log("action de expense:", expense);
+};
+
+/* Actions para transacciones */
 export const deleteTransaction = (transactionId) => {
   return async (dispatch) => {
-    try{
+    try {
       const token = localStorage.getItem("token");
-      const { data } =   axios.detele(`http://localhost:3000/transactions/${transactionId}`,
+      const { data } = axios.detele(
+        `http://localhost:3000/transactions/${transactionId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -43,12 +54,9 @@ export const deleteTransaction = (transactionId) => {
           showConfirmButton: false,
         });
       }
-    }catch(error){
-
-    }
-  }
-
-}
+    } catch (error) {}
+  };
+};
 
 export const getTransactions = () => {
   return async (dispatch) => {

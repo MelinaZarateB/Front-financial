@@ -107,7 +107,7 @@ const AdminUsers = ({ handleCreateUser }) => {
       </div>
       <div className="container-search-purchase">
   
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" ,marginBottom: "3px"}}>
           <div className="input-box-dashboard">
           <input
             type="text"

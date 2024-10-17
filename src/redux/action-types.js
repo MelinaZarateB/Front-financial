@@ -18,3 +18,6 @@ export const UPDATE_USER = 'UPDATE_USER';
 export const GET_TRANSACTIONS = 'GET_TRANSACTIONS';
 export const DELETE_TRANSACTION = 'DELETE_TRANSACTION';
 
+/* Types para Egresos - Ingresos */
+export const CREATE_EXPENSE = 'CREATE_EXPENSE';
+export const CREATE_INCOME = 'CREATE_INCOME';

@@ -12,6 +12,9 @@ import Clients from "../../components/Clients/Clients";
 import Offices from "../../components/Offices/Offices";
 import Users from "../../components/Users/Users";
 import { useEffect } from "react";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
 
 const Dashboard = () => {
   const [selectedNavItem, setSelectedNavItem] = useState("transactions");
@@ -33,7 +36,7 @@ const Dashboard = () => {
           {selectedNavItem === "transactions" && <Transactions />}
           {selectedNavItem === "cash-register" && <CashRegister />}
           {selectedNavItem === "incomes" && <Income />}
-          {selectedNavItem === "expenses" && <Expense />}
+          {selectedNavItem === "expenses" && <LocalizationProvider dateAdapter={AdapterDayjs}><Expense />  </LocalizationProvider>}
           {selectedNavItem === "balance" && <Balance />}
           {selectedNavItem === 'movements' && <Movements />}
           {selectedNavItem === 'clients' && <Clients />}

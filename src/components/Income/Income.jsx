@@ -157,11 +157,20 @@ const Income = () => {
                 {incomesArray && incomesArray.length > 0 ? (
                   incomesArray.map((income) => (
                     <tr key={income._id}>
-                      <td data-table="Tipo">{income.tipo}</td>
-                      <td data-table="Usuario">{income.usuario}</td>
-                      <td data-table="Descripción">{income.descripcion}</td>
-                      <td data-table="Monto">$ {income.monto.toFixed(2)}</td>
-                      <td data-table="Fecha">
+                    <td data-table="Tipo">
+                      <span>{income.tipo}</span>
+                    </td>
+                    <td data-table="Usuario">
+                      <span>{income.usuario}</span>
+                    </td>
+                    <td data-table="Descripción">
+                      <span>{income.descripcion}</span>
+                    </td>
+                    <td data-table="Monto">
+                      <span>$ {income.monto.toFixed(2)}</span>
+                    </td>
+                    <td data-table="Fecha">
+                      <span>
                         {new Date(income.fecha)
                           .toLocaleString("es-ES", {
                             day: "2-digit",
@@ -172,8 +181,11 @@ const Income = () => {
                             hour12: false,
                           })
                           .replace(",", "")}
-                      </td>
-                      <td data-table="Sucursal">{income.sucursal}</td>
+                      </span>
+                    </td>
+                    <td data-table="Sucursal">
+                      <span>{income.sucursal}</span>
+                    </td>
 
                       <td>
                         <button className="btn-trash">Eliminar</button>
@@ -191,7 +203,7 @@ const Income = () => {
                 {/* Fila para el total */}
                 <tr>
                   <td colSpan="4" style={{ textAlign: "right" }}>
-                    <strong> Total: $ {total.toFixed(2)}</strong>
+                    <span style={{fontWeight: '500'}}> Total: $ {total.toFixed(2)}</span>
                   </td>
                   <td colSpan="3"></td>
                 </tr>
