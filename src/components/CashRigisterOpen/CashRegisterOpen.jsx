@@ -6,6 +6,10 @@ const CajaApertura = () => {
     { nombre: "Peso Argentino", codigo: "ARS", stock: 0 },
     { nombre: "Dólar Estadounidense", codigo: "USD", stock: 0 },
     { nombre: "Euro", codigo: "EUR", stock: 0 },
+    {nombre: "MP Manu", codigo: "ARS", stock: 0},
+    {nombre: "Cheques", codigo: "ARS", stock: 0},
+    {nombre: "Juancho", codigo: "ARS", stock: 0},
+    {nombre: "Cara chica", codigo: "USD", stock: 0}
   ]);
   const [tasas, setTasas] = useState({
     USD: 1000, // Tasa de cambio ARS/USD
@@ -71,8 +75,6 @@ const CajaApertura = () => {
 
   return (
     <div className="section-cash-opening">
-      <div className="formulario">
-        <div className="campo">
           <div className="input-group">
             <div className="input-box-dashboard">
               <input
@@ -82,18 +84,10 @@ const CajaApertura = () => {
                 className="input-field-dashboard"
               />
               <label className="label-input-dashboard">
-                Tasa de cambio ARS/
+                Tasa de cambio ARS/USD
               </label>
             </div>
-            <select
-              value={tasaActual}
-              onChange={(e) => setTasaActual(e.target.value)}
-            >
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-            </select>
-          </div>
-        </div>
+        
         <div className="input-box-dashboard">
           <input
             type="text"
@@ -103,13 +97,15 @@ const CajaApertura = () => {
             />
             <label className="label-input-dashboard">Tasa EUR/USD:</label>
         </div>
-      </div>
+        </div>
+
+        {/* Tabla comienza aca */}
       <div className="container-table">
         <div className="tbl-container">
           <table className="tbl-cash">
             <thead>
               <tr>
-                <th>Moneda</th>
+                <th>Moneda/Cuenta</th>
                 <th>Código</th>
                 <th>Stock</th>
                 <th>Valor en {monedaBase}</th>
@@ -123,6 +119,10 @@ const CajaApertura = () => {
                   <td>{moneda.codigo}</td>
                   <td>
                     <input
+                    style={{
+                        border: '1px solid #555',
+                        borderRadius: '4px'
+                      }}
                       type="text"
                       value={moneda.stock}
                       onChange={(e) => actualizarStock(index, e.target.value)}

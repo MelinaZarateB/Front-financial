@@ -14,19 +14,12 @@
   margin-bottom: 16px;
 }
 
-.formulario {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.campo {
-  flex: 1;
-}
 
 .input-group {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 3px;
 }
 
 .tabla {
@@ -40,6 +33,7 @@
   border: 1px solid #ccc;
   padding: 8px;
   text-align: left;
+  border-radius: 4px;
 }
 .total {
   margin-top: 16px;
@@ -60,6 +54,7 @@
 .tbl-cash {
   width: 100%;
   border-collapse: collapse;
+  border-radius: 4px;
 }
 .tbl-container {
   padding-right: 1.2rem;
