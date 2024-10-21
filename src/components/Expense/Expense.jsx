@@ -117,7 +117,6 @@ const Expense = () => {
             height="24px"
             viewBox="0 -960 960 960"
             width="24px"
-            fill="#06571f"
           >
             <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
           </svg>
@@ -245,7 +244,7 @@ const Expense = () => {
                         <span>{expense.descripcion}</span>
                       </td>
                       <td data-table="Monto">
-                        <span>$ {expense.monto.toFixed(2)}</span>
+                        <span> $ -{expense.monto.toFixed(2)}</span>
                       </td>
                       <td data-table="Fecha">
                         <span>

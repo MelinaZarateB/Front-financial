@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import "./CajaApertura.css";
+import './CashRegisterOpen.css';
 
-const CajaApertura = () => {
+const CashRegisterOpen = () => {
   const [monedas, setMonedas] = useState([
     { nombre: "Peso Argentino", codigo: "ARS", stock: 0 },
     { nombre: "Dólar Estadounidense", codigo: "USD", stock: 0 },
     { nombre: "Euro", codigo: "EUR", stock: 0 },
-    {nombre: "MP Manu", codigo: "ARS", stock: 0},
-    {nombre: "Cheques", codigo: "ARS", stock: 0},
-    {nombre: "Juancho", codigo: "ARS", stock: 0},
-    {nombre: "Cara chica", codigo: "USD", stock: 0}
+    { nombre: "MP Manu", codigo: "ARS", stock: 0 },
+    { nombre: "Cheques", codigo: "ARS", stock: 0 },
+    { nombre: "Juancho", codigo: "ARS", stock: 0 },
+    { nombre: "Cara chica", codigo: "USD", stock: 0 },
   ]);
   const [tasas, setTasas] = useState({
     USD: 1000, // Tasa de cambio ARS/USD
@@ -75,31 +75,37 @@ const CajaApertura = () => {
 
   return (
     <div className="section-cash-opening">
-          <div className="input-group">
-            <div className="input-box-dashboard">
-              <input
-                type="text"
-                value={tasas[tasaActual]}
-                onChange={(e) => actualizarTasa(e.target.value)}
-                className="input-field-dashboard"
-              />
-              <label className="label-input-dashboard">
-                Tasa de cambio ARS/USD
-              </label>
-            </div>
-        
+      <div className="input-group">
+        <div className="input-box-dashboard">
+          <input
+            type="text"
+            value={tasas[tasaActual]}
+            onChange={(e) => actualizarTasa(e.target.value)}
+            className="input-field-dashboard"
+          />
+          <label className="label-input-dashboard">
+            Tasa de cambio ARS/USD
+          </label>
+        </div>
+        <select
+          value={tasaActual}
+          onChange={(e) => setTasaActual(e.target.value)}
+        >
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+        </select>
         <div className="input-box-dashboard">
           <input
             type="text"
             value={tasaEURUSD}
             className="input-field-dashboard"
             onChange={(e) => setTasaEURUSD(parseFloat(e.target.value) || 0)}
-            />
-            <label className="label-input-dashboard">Tasa EUR/USD:</label>
+          />
+          <label className="label-input-dashboard">Tasa EUR/USD:</label>
         </div>
-        </div>
+      </div>
 
-        {/* Tabla comienza aca */}
+      {/* Tabla comienza aca */}
       <div className="container-table">
         <div className="tbl-container">
           <table className="tbl-cash">
@@ -119,9 +125,9 @@ const CajaApertura = () => {
                   <td>{moneda.codigo}</td>
                   <td>
                     <input
-                    style={{
-                        border: '1px solid #555',
-                        borderRadius: '4px'
+                      style={{
+                        border: "1px solid #555",
+                        borderRadius: "4px",
                       }}
                       type="text"
                       value={moneda.stock}
@@ -143,33 +149,46 @@ const CajaApertura = () => {
       </div>
       <div className="agregar-moneda">
         <div className="input-box-dashboard">
-        <input
-          value={nuevaMoneda.nombre}
-          className="input-field-dashboard"
-          onChange={(e) =>
-            setNuevaMoneda({ ...nuevaMoneda, nombre: e.target.value })
-          }
-        />
-        <label htmlFor="" className="label-input-dashboard">Nombre de la moneda</label>
+          <input
+            value={nuevaMoneda.nombre}
+            className="input-field-dashboard"
+            onChange={(e) =>
+              setNuevaMoneda({ ...nuevaMoneda, nombre: e.target.value })
+            }
+          />
+          <label htmlFor="" className="label-input-dashboard">
+            Nombre de la moneda
+          </label>
         </div>
         <div className="input-box-dashboard">
-        <input
-          
-          value={nuevaMoneda.codigo}
-          className="input-field-dashboard"
-          onChange={(e) =>
-            setNuevaMoneda({
-              ...nuevaMoneda,
-              codigo: e.target.value.toUpperCase(),
-            })
-          }
-        />
-        <label htmlFor="" className="label-input-dashboard">Código de la moneda</label>
+          <input
+            value={nuevaMoneda.codigo}
+            className="input-field-dashboard"
+            onChange={(e) =>
+              setNuevaMoneda({
+                ...nuevaMoneda,
+                codigo: e.target.value.toUpperCase(),
+              })
+            }
+          />
+          <label htmlFor="" className="label-input-dashboard">
+            Código de la moneda
+          </label>
         </div>
-        <button onClick={agregarMoneda} className="btn-search-users">Agregar Moneda</button>
+        <button onClick={agregarMoneda} className="btn-search-users">
+          Agregar moneda
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24px"
+            viewBox="0 -960 960 960"
+            width="24px"
+          >
+            <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+          </svg>
+        </button>
       </div>
     </div>
   );
 };
 
-export default CajaApertura;
+export default CashRegisterOpen;

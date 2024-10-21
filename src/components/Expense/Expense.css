@@ -53,7 +53,6 @@
   padding: 0 5px;
   color: #1976d2; /* Azul cuando el select tiene valor */
 }
-
 /* Cambiar color del label cuando se pierde el focus */
 .select-container select:focus + .floating-label {
   color: #1976d2; /* Azul cuando está en focus */
@@ -62,7 +61,6 @@
 .select-container select:not(:focus) + .floating-label {
   color: #555; /* Vuelve a gris cuando se pierde el focus */
 }
-
 .select-container {
   position: relative;
   display: inline-block;

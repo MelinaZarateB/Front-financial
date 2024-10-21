@@ -1,0 +1,16 @@
+.container-movements{
+    width: 100%;
+    /*height: 100vh;*/
+    padding-left: 2rem;
+    padding-top: 2rem;
+    padding-right: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.container-second-section-movements{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    
+}
