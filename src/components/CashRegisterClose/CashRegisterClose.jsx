@@ -211,17 +211,14 @@ const CashRegisterClose = () => {
                   <th>Descripcion</th>
                   <th>Hora</th>
                   <th>Sucursal</th>
-                  <th colSpan="1"></th>
+                  {!closeRegister ? (
+                    <th colSpan="1"></th>
+
+                  ) : ''}
                 </tr>
               </thead>
               <tbody>
-                {closeRegister || movimientos.length === 0 ? (
-                  <tr>
-                    <td colSpan="12" style={{ textAlign: "center" }}>
-                      No hay operaciones del día
-                    </td>
-                  </tr>
-                ) : (
+                {movimientos && movimientos.length > 0 ? (
                   movimientos.map((movimiento) => (
                     <tr key={movimiento._id}>
                       <td data-table="Tipo">
@@ -237,7 +234,7 @@ const CashRegisterClose = () => {
                               justifyContent: "center",
                               margin: "0 auto",
                             }}
-                          />
+                          /> // Para compra, venta, y cambio de cheque
                         ) : movimiento.type === "ingreso" ? (
                           <img
                             style={{
@@ -248,7 +245,7 @@ const CashRegisterClose = () => {
                             src={imgIncome}
                             alt="Ingreso"
                             title="Ingreso"
-                          />
+                          /> // Emoji o icono para ingreso con tooltip
                         ) : movimiento.type === "egreso" ? (
                           <img
                             src={imgExpense}
@@ -259,7 +256,7 @@ const CashRegisterClose = () => {
                             }}
                             alt="Egreso"
                             title="Egreso"
-                          />
+                          /> // Emoji o icono para egreso con tooltip
                         ) : (
                           ""
                         )}
@@ -304,11 +301,20 @@ const CashRegisterClose = () => {
                       <td data-table="Sucursal">
                         <span>{movimiento.subOfficeName}</span>
                       </td>
+                      
+                        {!closeRegister ? (
                       <td>
-                        <button className="btn-trash">Eliminar</button>
-                      </td>
+                          <button className="btn-trash">Eliminar</button>  </td>
+                        ) : ''}
+                     
                     </tr>
                   ))
+                ) : (
+                  <tr>
+                    <td colSpan="9" style={{ textAlign: "center" }}>
+                      No hay operaciones del día
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>
