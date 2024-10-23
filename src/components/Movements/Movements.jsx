@@ -265,17 +265,17 @@ const Movements = () => {
                             ""
                           )}
                         </td>
-
+                   
                         <td data-table="Usuario">
                           <span>{movimiento.userName}</span>
                         </td>
                         <td data-table="Monto">
                           <span>$ {movimiento.targetAmount}</span>
                         </td>
-                        <td data-table="Pago">
+                        <td data-table="Paga">
                           <span>{movimiento.sourceCurrencyCode}</span>
                         </td>
-                        <td data-table="Compro">
+                        <td data-table="Compra">
                           <span>{movimiento.targetCurrencyCode}</span>
                         </td>
                         <td data-table="T/C">
@@ -283,8 +283,7 @@ const Movements = () => {
                         </td>
                         <td data-table="Comisión">
                           <span>
-                            {movimiento.commission
-                          }
+                            {movimiento.commission}
                           </span>
                         </td>
                         <td data-table="Descripcion">
@@ -308,7 +307,7 @@ const Movements = () => {
                           <span>{movimiento.subOfficeName}</span>
                         </td>
 
-                        <td data-table="Estado">
+                        <td >
                           <button className="btn-trash">Eliminar</button>
                         </td>
                       </tr>

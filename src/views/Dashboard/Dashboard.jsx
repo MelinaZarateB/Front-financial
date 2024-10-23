@@ -3,7 +3,6 @@ import SideBar from "../../components/SideBar/SideBar";
 import NavBar from "../../components/NavBar/NavBar";
 import { useState } from "react";
 import Transactions from "../../components/Transactions/Transactions";
-import CashRegister from "../../components/CashRegister/CashRegister";
 import Income from "../../components/Income/Income";
 import Expense from "../../components/Expense/Expense";
 import Balance from "../../components/Balance/Balance";
@@ -12,6 +11,7 @@ import Clients from "../../components/Clients/Clients";
 import Offices from "../../components/Offices/Offices";
 import Users from "../../components/Users/Users";
 import CashRegisterOpen from "../../components/CashRegisterOpen/CashRegisterOpen";
+import CashRegisterClose from "../../components/CashRegisterClose/CashRegisterClose";
 import { useEffect } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -36,6 +36,7 @@ const Dashboard = () => {
         <main>
           {selectedNavItem === "transactions" && <LocalizationProvider dateAdapter={AdapterDayjs}><Transactions /></LocalizationProvider>}
           {selectedNavItem === 'opening' && <CashRegisterOpen />}
+          {selectedNavItem === 'close' && <CashRegisterClose></CashRegisterClose>}
           {selectedNavItem === "incomes" &&  <LocalizationProvider dateAdapter={AdapterDayjs}><Income /> </LocalizationProvider>}
           {selectedNavItem === "expenses" && <LocalizationProvider dateAdapter={AdapterDayjs}><Expense />  </LocalizationProvider>}
           {selectedNavItem === "balance" && <Balance />}

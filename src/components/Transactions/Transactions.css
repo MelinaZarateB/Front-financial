@@ -17,3 +17,10 @@
   background-color: #e4a5ad;
   color: #a43042;
 }
+@media  screen and (max-width:800px) {
+  .container-transactions{
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-top: 2%;
+  }
+}

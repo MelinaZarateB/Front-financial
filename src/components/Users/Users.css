@@ -108,11 +108,23 @@ td {
   padding: 0.4rem;
   cursor: pointer;
   /*background-color: #E4A5AD;*/
-  border: 1px solid #a43042;
-  background-color: rgba(255, 255, 255, 0.83);
+  /*border: 1px solid #a43042;
   color: #a43042;
+  background-color: rgba(255, 255, 255, 0.83);*/
+  background-color: #EF4444;
+  color: rgba(255, 255, 255, 0.83);
   border-radius: 4px;
   transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: .75rem;
+  line-height: 1rem;
+}
+.btn-trash:hover {
+ /* background-color: #e4a5ad;
+  color: #a43042;*/
+  background-color: #f05757;
+  color: rgba(255, 255, 255, 0.83);
+
 }
 /*.btn-trash:hover{
   background-color: #e4b3ba;
@@ -199,5 +211,11 @@ td {
 }
 .btn-search-users svg{
   fill: rgba(255, 255, 255, 0.83);;
-
+}
+@media screen and (max-width:800px) {
+  .container-users{
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-top: 2%;
+  }
 }
