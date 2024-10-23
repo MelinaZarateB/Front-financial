@@ -153,10 +153,20 @@ const CashRegisterClose = () => {
       </span>
         </div>
         </div>
+        <div className="container-balance">
+            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+            <span>Balance final en USD: </span>
+            <span>$ 0.00</span>
+            </div>
+            <div>
+                Diferencia: $ 0.00
+            </div>
+        </div>
       <div>
         <div style={{ backgroundColor: "white", padding: "15px" }}>
           <h3 style={{ fontWeight: "500" }}>Operaciones del día</h3>
         </div>
+
         <div className="container-table">
           <div className="tbl-container">
             <table className="tbl-cash">
@@ -276,15 +286,7 @@ const CashRegisterClose = () => {
           </div>
         </div>
       </div>
-        <div className="container-balance">
-            <div style={{display: 'flex', justifyContent: 'space-between'}}>
-            <span>Balance final en USD: </span>
-            <span>$ 0.00</span>
-            </div>
-            <div>
-                Diferencia: $ 0.00
-            </div>
-        </div>
+       
     </section>
   );
 };

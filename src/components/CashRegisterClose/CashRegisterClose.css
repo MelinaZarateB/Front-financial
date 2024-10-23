@@ -7,7 +7,7 @@
   padding-bottom: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 }
 .first-section-cash-close{
     display: flex;
@@ -28,7 +28,8 @@
     color: #a43042;
     background-color: rgba(255, 255, 255, 0.83);*/
     background-color: #191919;
-    color: rgba(255, 255, 255, 0.83);
+    /*color: rgba(255, 255, 255, 0.83);*/
+    color: white;
     border-radius: 4px;
     transition: all 0.2s ease;
     font-weight: 500;
@@ -39,7 +40,7 @@
     line-height: 1.25rem;
 }
 .btn-close-cash:hover{
-    background-color: #262525;
+    background-color: #373535;
 }
 .container-balance{
     background-color: white;
