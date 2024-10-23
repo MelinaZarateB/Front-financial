@@ -149,17 +149,17 @@ const CashRegisterClose = () => {
           width: "300px",
         }}
       >
-        Saldo inicial en USD: 00.0
+        Saldo inicial en USD: $ 4.000,00
       </span>
         </div>
         </div>
         <div className="container-balance">
             <div style={{display: 'flex', justifyContent: 'space-between'}}>
             <span>Balance final en USD: </span>
-            <span>$ 0.00</span>
+            <span>$ 5.500,00</span>
             </div>
             <div>
-                Diferencia: $ 0.00
+                Diferencia: $ 1.500,00
             </div>
         </div>
       <div>

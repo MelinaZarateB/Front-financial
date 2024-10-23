@@ -75,6 +75,9 @@ const CashRegisterOpen = () => {
 
   return (
     <div className="section-cash-opening">
+       <div className="container-btn-cash-close">
+            <button className="btn-close-cash">Abrir caja</button>
+        </div>
       <div className="input-group">
         <div className="input-box-dashboard">
           <input
@@ -87,13 +90,7 @@ const CashRegisterOpen = () => {
             Tasa de cambio ARS/USD
           </label>
         </div>
-        <select
-          value={tasaActual}
-          onChange={(e) => setTasaActual(e.target.value)}
-        >
-          <option value="USD">USD</option>
-          <option value="EUR">EUR</option>
-        </select>
+     
         <div className="input-box-dashboard">
           <input
             type="text"
