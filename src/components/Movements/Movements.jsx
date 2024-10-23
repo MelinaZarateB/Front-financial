@@ -306,7 +306,6 @@ const Movements = () => {
                         <td data-table="Sucursal">
                           <span>{movimiento.subOfficeName}</span>
                         </td>
-
                         <td >
                           <button className="btn-trash">Eliminar</button>
                         </td>

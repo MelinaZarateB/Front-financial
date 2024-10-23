@@ -2,6 +2,7 @@ import "./CashRegisterClose.css";
 import imgArrows from "./../../assets/arrows.svg";
 import imgIncome from "./../../assets/arrowIncome.svg";
 import imgExpense from "./../../assets/arrowExpense.svg";
+import { useState } from "react";
 
 const movimientos = [
   {
@@ -133,42 +134,70 @@ const movimientos = [
 ];
 
 const CashRegisterClose = () => {
+  const [closeRegister, setCloseRegister] = useState(false);
+  const [closingTime, setClosingTime] = useState(null);
+  const handleCloseRegister = () => {
+    // Cuando se cierra la caja, guarda la hora actual
+    const now = new Date();
+    const formattedTime = now.toLocaleString("es-ES", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true, // Para formato 12h con AM/PM
+    });
+    setClosingTime(formattedTime);
+    setCloseRegister(true);
+  };
+
   return (
     <section className="container-cash-closing">
-        <div className="first-section-cash-close">
+      <div className="first-section-cash-close">
         <div className="container-btn-cash-close">
-            <button className="btn-close-cash">Cerrar caja</button>
+          <button className="btn-close-cash" disabled={closeRegister} onClick={handleCloseRegister}>
+            Cerrar caja
+          </button>
         </div>
-        <div>
-      <span
-        style={{
-          backgroundColor: "white",
-          border: "1px solid #ddd",
-          borderRadius: "4px",
-          padding: "10px",
-          width: "300px",
-        }}
-      >
-        Saldo inicial en USD: $ 4.000,00
-      </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          <h3>Saldo inicial en USD: </h3>
+          <span
+            style={{
+              backgroundColor: "white",
+              border: "1px solid #ddd",
+              borderRadius: "4px",
+              padding: "0.4rem",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            $ 4.000,00
+          </span>
         </div>
+      </div>
+      <div className="container-balance">
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <span className="span-balance">Balance final en USD: </span>
+          <span className="span-monto-balance">$ 5.500,00</span>
         </div>
-        <div className="container-balance">
-            <div style={{display: 'flex', justifyContent: 'space-between'}}>
-            <span>Balance final en USD: </span>
-            <span>$ 5.500,00</span>
-            </div>
-            <div>
-                Diferencia: $ 1.500,00
-            </div>
+        <div className="difference-balance">Diferencia: $ 1.500,00</div>
+      </div>
+
+      {closeRegister ? (
+        <div className="section-cash-closing">
+          <div>Caja cerrada exitosamente el {closingTime}</div>
         </div>
+      ) : (
+        ""
+      )}
       <div>
         <div style={{ backgroundColor: "white", padding: "15px" }}>
           <h3 style={{ fontWeight: "500" }}>Operaciones del día</h3>
         </div>
 
         <div className="container-table">
-          <div className="tbl-container">
+          <div className="tbl-container-cash-close">
             <table className="tbl-cash">
               <thead>
                 <tr>
@@ -186,7 +215,13 @@ const CashRegisterClose = () => {
                 </tr>
               </thead>
               <tbody>
-                {movimientos && movimientos.length > 0 ? (
+                {closeRegister || movimientos.length === 0 ? (
+                  <tr>
+                    <td colSpan="12" style={{ textAlign: "center" }}>
+                      No hay operaciones del día
+                    </td>
+                  </tr>
+                ) : (
                   movimientos.map((movimiento) => (
                     <tr key={movimiento._id}>
                       <td data-table="Tipo">
@@ -202,7 +237,7 @@ const CashRegisterClose = () => {
                               justifyContent: "center",
                               margin: "0 auto",
                             }}
-                          /> // Para compra, venta, y cambio de cheque
+                          />
                         ) : movimiento.type === "ingreso" ? (
                           <img
                             style={{
@@ -213,7 +248,7 @@ const CashRegisterClose = () => {
                             src={imgIncome}
                             alt="Ingreso"
                             title="Ingreso"
-                          /> // Emoji o icono para ingreso con tooltip
+                          />
                         ) : movimiento.type === "egreso" ? (
                           <img
                             src={imgExpense}
@@ -224,7 +259,7 @@ const CashRegisterClose = () => {
                             }}
                             alt="Egreso"
                             title="Egreso"
-                          /> // Emoji o icono para egreso con tooltip
+                          />
                         ) : (
                           ""
                         )}
@@ -274,19 +309,12 @@ const CashRegisterClose = () => {
                       </td>
                     </tr>
                   ))
-                ) : (
-                  <tr>
-                    <td colSpan="9" style={{ textAlign: "center" }}>
-                      No hay operaciones del día
-                    </td>
-                  </tr>
                 )}
               </tbody>
             </table>
           </div>
         </div>
       </div>
-       
     </section>
   );
 };

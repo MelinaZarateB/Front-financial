@@ -2,6 +2,7 @@ import "./AdminUsers.css";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import imgPencil from './../../assets/pencil.svg';
+import imgTrash from './../../assets/apartment_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg'
 import {
   cleanFilterUserByEmail,
   searchUserByEmail,

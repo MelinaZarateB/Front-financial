@@ -13,10 +13,7 @@
   flex-direction: column;
   height: 100vh;
 }
-.btn-trash:hover {
-  background-color: #e4a5ad;
-  color: #a43042;
-}
+
 @media  screen and (max-width:800px) {
   .container-transactions{
     padding-left: 2%;
