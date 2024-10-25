@@ -103,7 +103,13 @@ const Expense = () => {
       setSelectType(selectedValue); // Establecer el valor seleccionado
     }
   };
-
+  const changeForm = (event) => {
+    event.preventDefault()
+    if (viewForm === false) setViewForm(true);
+    else {
+      setViewForm(false);
+    }
+  };
   // Calcular el total de los montos
   const total = expensesArray.reduce((acc, expense) => acc + expense.monto, 0);
 
@@ -111,7 +117,7 @@ const Expense = () => {
     <ThemeProvider theme={theme}>
       <section className="section-expense">
         <div>
-          <button className="btn-create-user">
+          <button className="btn-create-user" onClick={changeForm} style={{borderBottomLeftRadius: viewForm ? '0px' : '4px', borderBottomRightRadius: viewForm ? '0px' : '4px'}}>
             Registrar egreso
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -122,6 +128,128 @@ const Expense = () => {
               <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
             </svg>
           </button>
+          <div className={`form-container ${viewForm ? "open" : ""}`}>
+            <form action="" className="form-dashboard" onSubmit={(e) => e.preventDefault()}>
+              <div className="form-columns">
+                {/* Primera columna con los inputs apilados */}
+                <div className="inputs-column">
+                <div className="input-box-dashboard">
+                <div
+                  className={`select-container ${
+                    selectType ? "has-value" : ""
+                  }`}
+                >
+                  <select
+                    name="typeExpense"
+                    className="input-field-dashboard select"
+                    value={selectType}
+                    onChange={handleChangeType}
+                    style={{
+                      color: selectType ? "#000" : "#555",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <option value="all">Filtre por tipo de egreso</option>
+                    {typeExpenses?.map((typeExpense, index) => (
+                      <option key={index} value={typeExpense}>
+                        {typeExpense}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="floating-label" style={{backgroundColor: 'rgba(255, 255, 255)'}}>
+                    Tipo de egreso
+                  </div>
+                </div>
+              </div>
+                {/* Segunda columna con el textarea */}
+                <div className="form-column">
+                  <div className="textarea-box-dashboard">
+                    <textarea
+                      className="textarea-field-dashboard"
+                      name="type"
+                      value={type}
+                      placeholder=" "
+                      onChange={(e) => setType(e.target.value)}
+                    ></textarea>
+                    <label className="label-textarea-dashboard" style={{backgroundColor: 'rgba(255, 255, 255)'}}>
+                      Descripcion del egreso
+                    </label>
+                  </div>
+                </div>
+                <div className="input-box-dashboard">
+                    <input
+                      type="text"
+                      className="input-field-dashboard"
+                      name="type"
+                      value={type}
+                      onChange={(e) => setType(e.target.value)}
+                    />
+                    <label className="label-input-dashboard" style={{backgroundColor: 'rgba(255, 255, 255)'}}>Monto</label>
+                  </div>
+                </div>
+              <div className="input-box-dashboard">
+                <div
+                  className={`select-container ${
+                    selectType ? "has-value" : ""
+                  }`}
+                >
+                  <select
+                    name="typeExpense"
+                    className="input-field-dashboard select"
+                    value={selectType}
+                    onChange={handleChangeType}
+                    style={{
+                      color: selectType ? "#000" : "#555",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <option value="all">Sucursal</option>
+                    {typeExpenses?.map((typeExpense, index) => (
+                      <option key={index} value={typeExpense}>
+                        {typeExpense}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="floating-label" style={{backgroundColor: 'rgba(255, 255, 255)'}}>
+                    Sucursal
+                  </div>
+                </div>
+              </div>
+              
+              </div>
+
+              <div
+                className="buttons-container"
+                style={{ display: "flex", gap: "5px", justifyContent: 'end' }}
+              >
+                <button className="btn-search-users">
+                  Registrar{" "}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="20px"
+                    viewBox="0 -960 960 960"
+                    width="20px"
+                    fill="#06571f"
+                  >
+                    <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+                  </svg>
+                </button>
+                <button className="btn-search-users" onClick={changeForm}>
+                  Cerrar{" "}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="17px"
+                    viewBox="0 -960 960 960"
+                    width="17px"
+                    fill="#06571f"
+                    
+                  >
+                    <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                  </svg>
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
         <div>
           <div className="container-search-purchase">
