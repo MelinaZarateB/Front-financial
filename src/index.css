@@ -24,3 +24,6 @@ input[type="email"]:-webkit-autofill,
 input[type="password"]:-webkit-autofill {
   background-color: #fafbfc !important;
 }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

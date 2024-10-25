@@ -39,9 +39,9 @@
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
-.btn-close-cash:disabled{
-    background-color: #373535;
-    cursor: not-allowed;
+.btn-close-cash:disabled {
+  background-color: #373535;
+  cursor: not-allowed;
 }
 .btn-close-cash:hover {
   background-color: #373535;
@@ -68,15 +68,15 @@
   max-height: 450px;
   overflow-y: auto;
 }
-.section-cash-closing{
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid rgb(187 247 208);
-    background-color: #F0FDF4;
-    display: flex;
-    justify-content: center;
-    color: rgb(22 101 52);
-    opacity: 1;
+.section-cash-closing {
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid rgb(187 247 208);
+  background-color: #f0fdf4;
+  display: flex;
+  justify-content: center;
+  color: rgb(22 101 52);
+  opacity: 1;
 }
 @media screen and (max-width: 800px) {
   .tbl-container-cash-close {

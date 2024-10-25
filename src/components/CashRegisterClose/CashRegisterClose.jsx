@@ -4,6 +4,7 @@ import imgIncome from "./../../assets/arrowIncome.svg";
 import imgExpense from "./../../assets/arrowExpense.svg";
 import { useState } from "react";
 
+
 const movimientos = [
   {
     _id: 1,
@@ -156,7 +157,11 @@ const CashRegisterClose = () => {
     <section className="container-cash-closing">
       <div className="first-section-cash-close">
         <div className="container-btn-cash-close">
-          <button className="btn-close-cash" disabled={closeRegister} onClick={handleCloseRegister}>
+          <button
+            className="btn-close-cash"
+            disabled={closeRegister}
+            onClick={handleCloseRegister}
+          >
             Cerrar caja
           </button>
         </div>
@@ -211,10 +216,7 @@ const CashRegisterClose = () => {
                   <th>Descripcion</th>
                   <th>Hora</th>
                   <th>Sucursal</th>
-                  {!closeRegister ? (
-                    <th colSpan="1"></th>
-
-                  ) : ''}
+                  {!closeRegister ? <th colSpan="1"></th> : ""}
                 </tr>
               </thead>
               <tbody>
@@ -301,12 +303,14 @@ const CashRegisterClose = () => {
                       <td data-table="Sucursal">
                         <span>{movimiento.subOfficeName}</span>
                       </td>
-                      
-                        {!closeRegister ? (
-                      <td>
-                          <button className="btn-trash">Eliminar</button>  </td>
-                        ) : ''}
-                     
+
+                      {!closeRegister ? (
+                        <td>
+                          <button className="btn-trash">Eliminar</button>{" "}
+                        </td>
+                      ) : (
+                        ""
+                      )}
                     </tr>
                   ))
                 ) : (

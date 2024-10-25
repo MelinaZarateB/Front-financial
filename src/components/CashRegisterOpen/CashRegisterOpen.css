@@ -18,13 +18,15 @@
 .tbl-cash th,
 .tbl-cash td {
   border: 1px solid #ccc;
-  padding: 8px;
+  padding: 5px;
   text-align: left;
-  border-radius: 4px;
+ /* border-radius: 4px; */
+  max-width: 200px;
+  vertical-align: middle;
+  font-size: 14px;
+  line-height: 1.428571429;
 }
-.total {
-  margin-top: 16px;
-}
+
 .agregar-moneda {
   display: flex;
   gap: 8px;
@@ -53,7 +55,7 @@
 }
 th,
 td {
-  padding: 5px;
+  /*padding: 5px;
   text-align: left;
   white-space: nowrap; /* Evita que el contenido se envuelva */
   /*border: 1px solid #ddd; /* Define el borde que separa filas y columnas */
@@ -61,7 +63,7 @@ td {
 
 .tbl-cash tbody tr td {
   color: #666;
-  padding: 0.4rem;
+  /*padding: 0.4rem;*/
 }
 .tbl-cash tbody tr td {
   border-top: 1px solid #ddd;
