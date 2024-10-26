@@ -4,12 +4,13 @@
   padding-left: 2rem;
   padding-top: 2rem;
   padding-right: 2rem;
+  padding-bottom: 2rem;
   background-color: #f4f9f4;
 }
 .container-second-section-users {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  /*height: 100vh;*/
   gap: 2rem;
 }
 .input-search-user {
@@ -51,6 +52,9 @@
   justify-content: space-between;
   font-weight: 500;
   background-color: rgba(255, 255, 255, 0.83);
+}
+.btn-create-user svg{
+  transform: rotate(90deg);
 }
 .btn-search-users:hover {
   background-color: rgb(13, 98, 37);

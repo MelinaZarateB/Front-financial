@@ -7,6 +7,11 @@
   flex-direction: column;
   gap: 2rem;
 }
+.rotate-svg {
+  transform: rotate(-90deg); 
+  transition: transform 0.3s ease;
+}
+
 .select {
   width: 200px;
   cursor: pointer;

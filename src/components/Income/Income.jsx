@@ -126,6 +126,7 @@ const Income = () => {
               viewBox="0 -960 960 960"
               width="24px"
               fill="#06571f"
+              style={{transform: viewForm ? 'rotate(-90deg)' : '', transition: 'all 0.2s ease-in-out'}}
             >
               <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
             </svg>
