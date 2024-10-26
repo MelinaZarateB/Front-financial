@@ -89,10 +89,23 @@ const Expense = () => {
   const [type, setType] = useState("");
   const [selectType, setSelectType] = useState("");
   const [viewForm, setViewForm] = useState(false);
+  const [newExpense, setNewExpense] = useState({
+    type: "",
+    description: "",
+    amount: "",
+    office: "",
+  });
   const [dataForm, setDataForm] = useState({
     dateFrom: new Date(),
     dateTo: new Date(),
   });
+
+  const handleChangeNewExpense = (event) => {
+    setNewExpense({
+      ...newExpense,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   const handleChangeType = (event) => {
     const selectedValue = event.target.value;
@@ -166,10 +179,10 @@ const Expense = () => {
                   <div className="textarea-box-dashboard">
                     <textarea
                       className="textarea-field-dashboard"
-                      name="type"
-                      value={type}
+                      name="description"
+                      value={newExpense.description}
                       placeholder=" "
-                      onChange={(e) => setType(e.target.value)}
+                      onChange={handleChangeNewExpense}
                     ></textarea>
                     <label className="label-textarea-dashboard" style={{backgroundColor: 'rgba(255, 255, 255)'}}>
                       Descripcion del egreso
@@ -180,9 +193,9 @@ const Expense = () => {
                     <input
                       type="text"
                       className="input-field-dashboard"
-                      name="type"
-                      value={type}
-                      onChange={(e) => setType(e.target.value)}
+                      name="amount"
+                      value={newExpense.amount}
+                      onChange={handleChangeNewExpense}
                     />
                     <label className="label-input-dashboard" style={{backgroundColor: 'rgba(255, 255, 255)'}}>Monto</label>
                   </div>
@@ -204,11 +217,7 @@ const Expense = () => {
                     }}
                   >
                     <option value="all">Sucursal</option>
-                    {typeExpenses?.map((typeExpense, index) => (
-                      <option key={index} value={typeExpense}>
-                        {typeExpense}
-                      </option>
-                    ))}
+                   
                   </select>
                   <div className="floating-label" style={{backgroundColor: 'rgba(255, 255, 255)'}}>
                     Sucursal

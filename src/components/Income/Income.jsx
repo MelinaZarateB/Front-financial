@@ -74,12 +74,25 @@ const incomesArray = [
 const Income = () => {
   const [type, setType] = useState("");
   const [selectType, setSelectType] = useState("");
+  const [newIncome, setNewIncome] = useState({
+    type: "",
+    description: "",
+    amount: "",
+    office: "",
+  });
+  console.log(newIncome.type);
   const [viewForm, setViewForm] = useState(false);
 
   const [dataForm, setDataForm] = useState({
     dateFrom: new Date(),
     dateTo: new Date(),
   });
+  const handleChangeNewIncome = (event) => {
+    setNewIncome({
+      ...newIncome,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   const handleChangeType = (event) => {
     setSelectType(event.target.value);
@@ -132,8 +145,8 @@ const Income = () => {
                       type="text"
                       className="input-field-dashboard"
                       name="type"
-                      value={type}
-                      onChange={(e) => setType(e.target.value)}
+                      value={newIncome.type}
+                      onChange={handleChangeNewIncome}
                     />
                     <label
                       className="label-input-dashboard"
@@ -147,9 +160,9 @@ const Income = () => {
                     <input
                       type="text"
                       className="input-field-dashboard"
-                      name="type"
-                      value={type}
-                      onChange={(e) => setType(e.target.value)}
+                      name="amount"
+                      value={newIncome.amount}
+                      onChange={handleChangeNewIncome}
                     />
                     <label
                       className="label-input-dashboard"
@@ -165,10 +178,10 @@ const Income = () => {
                 <div className="textarea-box-dashboard">
                   <textarea
                     className="textarea-field-dashboard"
-                    name="type"
-                    value={type}
+                    name="description"
+                    value={newIncome.description}
                     placeholder=" "
-                    onChange={(e) => setType(e.target.value)}
+                    onChange={handleChangeNewIncome}
                   ></textarea>
                   <label className="label-textarea-dashboard">
                     Descripcion del ingreso
@@ -203,7 +216,7 @@ const Income = () => {
 
               <div
                 className="buttons-container"
-                style={{ display: "flex", gap: "5px", justifyContent: 'end' }}
+                style={{ display: "flex", gap: "5px", justifyContent: "end" }}
               >
                 <button className="btn-search-users">
                   Registrar{" "}

@@ -13,8 +13,6 @@
   font-size: 14px;
   color: rgba(0, 0, 0, 0.6);
   font-weight: 400;
-  line-height: 1.4375em;
-  letter-spacing: 0.00938em;
   padding: 0;
   display: block;
   white-space: nowrap;
@@ -101,7 +99,7 @@
 }
 
 .form-container.open {
-  max-height: 400px; /* Ajusta este valor según la altura del contenido */
+  max-height: 450px; /* Ajusta este valor según la altura del contenido */
   width: 30%;
   box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
   border-bottom-left-radius: 4px;
