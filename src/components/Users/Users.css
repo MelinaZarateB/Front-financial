@@ -143,41 +143,40 @@ td {
   background-color: #e4b3ba;
 }*/
 @media screen and (max-width: 800px) {
-  .tbl thead {
+  .tbl thead{
     display: none;
   }
-
   .tbl tr,
-  .tbl td {
+  .tbl td{
     display: block;
     width: 100%;
   }
-  .tbl tr {
+  .tbl tr{
     margin-bottom: 1rem;
   }
-  .tbl tbody tr td {
+  .tbl tbody tr td{
     position: relative;
     text-align: right;
-    max-width: 100px;
+    max-width: 100%;
   }
-  .tbl td::before {
+  .tbl td::before{
     content: attr(data-table);
     position: absolute;
     left: 0;
     width: 50%;
     text-align: left;
   }
-  .container-users {
+  .container-users{
     padding-left: 3%;
     padding-right: 3%;
     padding-top: 3%;
   }
-  .tbl-container {
+  .tbl-container{
     padding-right: 1rem;
     padding-left: 1rem;
     padding-top: 1rem;
   }
-  .btn-create-user {
+  .btn-create-user{
     width: 100%;
   }
 }
