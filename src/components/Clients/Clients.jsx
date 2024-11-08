@@ -78,7 +78,7 @@ const Clients = () => {
     <section className="container-clients">
       {showClientDetail ? (
         // Si está habilitada la vista de detalle, mostrar ClientDetail
-        <ClientDetail clientId={selectedClientId} onGoBack={handleGoBack} />
+        <ClientDetail clientId={selectedClientId} onGoBack={handleGoBack}  />
       ) : (
         // Si no, mostrar la lista de clientes
         <div>
@@ -116,7 +116,7 @@ const Clients = () => {
             </button>
             <button
               className="btn-clean"
-         
+        
             >
               Limpiar{" "}
               <svg
@@ -154,14 +154,14 @@ const Clients = () => {
                           <span>{detail.lastName}</span>
                         </td>
                         <td data-table="Saldo en guarda">
-                          <span>{detail.balanceInStore}</span>
+                          <span>{detail.balanceInStore.toFixed(2)}</span>
                         </td>
 
                         <td data-table="Deuda total">
-                          <span>{detail.totalDebt}</span>
+                          <span>{detail.totalDebt.toFixed(2)}</span>
                         </td>
                         <td data-table="Pagos total">
-                          <span>{detail.totalPayments}</span>
+                          <span>{detail.totalPayments.toFixed(2)}</span>
                         </td>
                         <td>
                           {/* Modales */}
