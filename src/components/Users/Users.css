@@ -44,7 +44,7 @@
   font-weight: 500;
   font-size: 17px;
   height: 60px;
-  width: 30%;
+  width: 100%;
   text-align: left;
   padding: 10px 20px;
   display: flex;
@@ -186,7 +186,7 @@ td {
   border-radius: 4px;
   border: 1px solid #06571f;
   cursor: pointer;
-  padding: 5px;
+  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -209,7 +209,7 @@ td {
   border-radius: 4px;
   border: 1px solid #06571f;
   cursor: pointer;
-  padding: 5px;
+  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;

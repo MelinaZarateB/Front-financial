@@ -7,12 +7,35 @@ import Swal from "sweetalert2";
 import { DatePicker } from "@mui/x-date-pickers";
 import TextField from "@mui/material/TextField";
 import { ThemeProvider } from "@mui/material/styles";
+import { Switch } from "@/components/ui/switch";
 import theme from "../../utils/theme";
+import plusIcon from "./../../assets/plus.svg";
+import ModalNewClient from "@/visuals/Modals/ModalNewClient/ModalNewClient";
 
+const clients = [
+  {
+    _id: 1,
+    firstName: "Juan",
+    lastName: "Pérez",
+  },
+  {
+    _id: 2,
+    firstName: "Ana",
+    lastName: "González",
+  },
+  {
+    _id: 3,
+    firstName: "Carlos",
+    lastName: "Martínez",
+  },
+];
 const Transactions = () => {
   const dispatch = useDispatch();
   const [viewForm, setViewForm] = useState(false);
   const [selectType, setSelectType] = useState("");
+  const [hasGuardedBalance, setHasGuardedBalance] = useState(false);
+  const [clientSelected, setClientSelected] = useState({ id: "", firstName: "" });
+  const [isModalOpen, setModalOpen] = useState(false);
   const [newTransaction, setNewTransaction] = useState({
     type: "",
     amount: "",
@@ -22,6 +45,7 @@ const Transactions = () => {
     commission: "",
     office: "",
   });
+  console.log(clientSelected);
 
   const transactions = useSelector((state) => state.transactions);
   const userRol = useSelector((state) => state.userRole);
@@ -34,6 +58,14 @@ const Transactions = () => {
   useEffect(() => {
     dispatch(getTransactions());
   }, []);
+
+  const handleOpenModal = () => {
+    setModalOpen(true); // Abre el modal
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false); // Cierra el modal
+  };
 
   /* Handles */
   const handleDeleteTransaction = (transactionId) => {
@@ -86,7 +118,10 @@ const Transactions = () => {
               viewBox="0 -960 960 960"
               width="24px"
               fill="#06571f"
-              style={{transform: viewForm ? 'rotate(-90deg)' : '', transition: 'all 0.2s ease-in-out'}}
+              style={{
+                transform: viewForm ? "rotate(-90deg)" : "",
+                transition: "all 0.2s ease-in-out",
+              }}
             >
               <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
             </svg>
@@ -191,38 +226,122 @@ const Transactions = () => {
                       Comisión
                     </label>
                   </div>
-                </div>
-
-                {/* Segunda columna con el textarea */}
-
-
-
-                <div className="input-box-dashboard">
-                  <div
-                    className={`select-container ${
-                      selectType ? "has-value" : ""
-                    }`}
-                  >
-                    <select
-                      name="typeExpense"
-                      className="input-field-dashboard select"
-                      style={{
-                        color: selectType ? "#000" : "#555",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <option value="all">Sucursal</option>
-                    </select>
+                  <div className="input-box-dashboard">
                     <div
-                      className="floating-label"
-                      style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                      className={`select-container ${
+                        selectType ? "has-value" : ""
+                      }`}
                     >
-                      Sucursal
+                      <select
+                        name="typeExpense"
+                        className="input-field-dashboard select"
+                        style={{
+                          color: selectType ? "#000" : "#555",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <option value="all">Sucursal</option>
+                      </select>
+                      <div
+                        className="floating-label"
+                        style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                      >
+                        Sucursal
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "5px", marginBottom: '5px' }}
+              >
+                <Switch
+                  id="guarded-balance"
+                  checked={hasGuardedBalance}
+                  onCheckedChange={setHasGuardedBalance}
+                />
+                <label htmlFor="">Registrar Saldo en Guarda</label>
+              </div>
 
+              {hasGuardedBalance && (
+                <div className="space-y-4 border-t pt-4">
+                  <div className="container-input-btn">
+                    <div className="input-box-dashboard">
+                      <input
+                        type="text"
+                        className="input-field-dashboard"
+                        name="exchangeRate"
+                        value={newTransaction.exchangeRate}
+                        onChange={handleChangeNewIncome}
+                      />
+                      <label
+                        className="label-input-dashboard"
+                        style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                      >
+                        Buscar cliente por nombre
+                      </label>
+                    </div>
+                    <div>
+                      <button
+                        className="btn-new-client"
+                        onClick={handleOpenModal}
+                      >
+                        <span>Nuevo cliente</span>
+                        <img src={plusIcon} alt="" />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="container-client-first-section">
+                    {clients?.map((client) => (
+                      <div
+                        key={client._id}
+                        className="container-client-saldo"
+                        onClick={() =>
+                          setClientSelected({
+                            id: client._id,
+                            firstName: `${client.firstName} ${client.lastName}`,
+                          })
+                        }
+                        style={{
+                          backgroundColor:
+                            clientSelected.id === client._id ? "#EFF6FF" : "",
+                          border:
+                            clientSelected.id === client._id
+                              ? "1px solid #1F97F3"
+                              : "",
+                        }}
+                      >
+                        <span>{client.firstName}</span>{" "}
+                        <span>{client.lastName}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {clientSelected && (
+                    <div>
+                      <div className="input-box-dashboard">
+                        <input type="text" className="input-field-dashboard" />
+                        <label
+                          className="label-input-dashboard"
+                          style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                        >
+                          Ingrese monto en guarda
+                        </label>
+                      </div>
+                      <p
+                        style={{
+                          color: "rgb(107 114 128)",
+                          fontSize: "14px",
+                          marginTop: "5px",
+                        }}
+                      >
+                        Este monto quedará registrado como saldo en guarda para{" "}
+                        {clientSelected.firstName} 
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+              <ModalNewClient isOpen={isModalOpen} onClose={handleCloseModal} />
               <div
                 className="buttons-container"
                 style={{ display: "flex", gap: "5px", justifyContent: "end" }}

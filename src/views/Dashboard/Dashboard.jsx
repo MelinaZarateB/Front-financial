@@ -102,8 +102,8 @@ const Dashboard = () => {
         />
       </div>
       <div className="main">
-        <div style={{paddingLeft: '2rem'}}>
-        <Tabs value={pestañaActiva} onValueChange={setPestañaActiva}>
+        <div style={{backgroundColor: '#E5E5E5'}} >
+        <Tabs value={pestañaActiva} onValueChange={setPestañaActiva} style={{paddingLeft: '2rem'}}>
           <TabsList className="tabs-container bg-neutral-200" >
             {pestañasAbiertas.map((nombreComponente) => (
               <TabsTrigger
@@ -113,9 +113,10 @@ const Dashboard = () => {
               >
                 {nombresPestañas[nombreComponente]}
                 <Button
+                style={{width: '100%'}}
                 variant="ghost"
                 size="ml"
-                className="ml-2 p-0"
+                className="ml-3 p-0 w-full"
                 
                   onClick={(e) => cerrarPestaña(e, nombreComponente)}
                 >

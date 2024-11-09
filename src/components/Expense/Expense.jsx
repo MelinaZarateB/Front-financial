@@ -201,8 +201,7 @@ const Expense = () => {
                     />
                     <label className="label-input-dashboard" style={{backgroundColor: 'rgba(255, 255, 255)'}}>Monto</label>
                   </div>
-                </div>
-              <div className="input-box-dashboard">
+                  <div className="input-box-dashboard">
                 <div
                   className={`select-container ${
                     selectType ? "has-value" : ""
@@ -226,6 +225,7 @@ const Expense = () => {
                   </div>
                 </div>
               </div>
+                </div>
               
               </div>
 
