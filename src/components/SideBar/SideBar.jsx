@@ -206,46 +206,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
             </span>
           </a>
         </li>
-        <li onClick={(e) => onNavItemChange(e, "balance")}>
-          <a href="">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              style={{ fill: "none" }}
-            >
-              <path
-                d="M20 12V8H6C5.46957 8 4.96086 7.78929 4.58579 7.41421C4.21071 7.03914 4 6.53043 4 6C4 4.9 4.9 4 6 4H18V8"
-                stroke="white"
-                stroke-opacity={selectedNavItem === "balance" ? "1" : "0.7"}
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M4 6V18C4 19.1 4.9 20 6 20H20V16"
-                stroke="white"
-                stroke-opacity={selectedNavItem === "balance" ? "1" : "0.7"}
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M18 12C17.4696 12 16.9609 12.2107 16.5858 12.5858C16.2107 12.9609 16 13.4696 16 14C16 15.1 16.9 16 18 16H22V12H18Z"
-                stroke="white"
-                stroke-opacity={selectedNavItem === "balance" ? "1" : "0.7"}
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            <span className={selectedNavItem === "balance" ? "spannn" : ""}>
-              Balance
-            </span>
-          </a>
-        </li>
+       
         <li onClick={(e) => onNavItemChange(e, "movements")}>
           <a href="">
             <svg
@@ -307,27 +268,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
             </span>
           </a>
         </li>
-        <li onClick={(e) => onNavItemChange(e, "offices")}>
-          <a href="">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24px"
-              viewBox="0 -960 960 960"
-              width="24px"
-              style={{
-                fill:
-                  selectedNavItem === "offices"
-                    ? "white"
-                    : "rgba(255, 255, 255, 0.7)",
-              }}
-            >
-              <path d="M120-120v-560h160v-160h400v320h160v400H520v-160h-80v160H120Zm80-80h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 320h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 480h80v-80h-80v80Zm0-160h80v-80h-80v80Z" />
-            </svg>
-            <span className={selectedNavItem === "offices" ? "spannn" : ""}>
-              Sucursales
-            </span>
-          </a>
-        </li>
+        
         <li onClick={(e) => onNavItemChange(e, "users")}>
           <a href="">
             <svg

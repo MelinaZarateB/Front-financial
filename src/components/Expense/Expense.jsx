@@ -146,7 +146,6 @@ const Expense = () => {
           <div className={`form-container ${viewForm ? "open" : ""}`}>
             <form action="" className="form-dashboard" onSubmit={(e) => e.preventDefault()}>
               <div className="form-columns">
-                {/* Primera columna con los inputs apilados */}
                 <div className="inputs-column">
                 <div className="input-box-dashboard">
                 <div
@@ -176,8 +175,17 @@ const Expense = () => {
                   </div>
                 </div>
               </div>
-                {/* Segunda columna con el textarea */}
-                <div className="form-column">
+              <div className="input-box-dashboard">
+                    <input
+                      type="text"
+                      className="input-field-dashboard"
+                      name="amount"
+                      value={newExpense.amount}
+                      onChange={handleChangeNewExpense}
+                    />
+                    <label className="label-input-dashboard" style={{backgroundColor: 'rgba(255, 255, 255)'}}>Monto</label>
+                  </div>
+                
                   <div className="textarea-box-dashboard">
                     <textarea
                       className="textarea-field-dashboard"
@@ -190,17 +198,7 @@ const Expense = () => {
                       Descripcion del egreso
                     </label>
                   </div>
-                </div>
-                <div className="input-box-dashboard">
-                    <input
-                      type="text"
-                      className="input-field-dashboard"
-                      name="amount"
-                      value={newExpense.amount}
-                      onChange={handleChangeNewExpense}
-                    />
-                    <label className="label-input-dashboard" style={{backgroundColor: 'rgba(255, 255, 255)'}}>Monto</label>
-                  </div>
+    
                   <div className="input-box-dashboard">
                 <div
                   className={`select-container ${

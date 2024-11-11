@@ -172,10 +172,6 @@ const Income = () => {
                       Monto
                     </label>
                   </div>
-                </div>
-
-                {/* Segunda columna con el textarea */}
-
                 <div className="textarea-box-dashboard">
                   <textarea
                     className="textarea-field-dashboard"
@@ -188,7 +184,6 @@ const Income = () => {
                     Descripcion del ingreso
                   </label>
                 </div>
-
                 <div className="input-box-dashboard">
                   <div
                     className={`select-container ${
@@ -213,6 +208,9 @@ const Income = () => {
                     </div>
                   </div>
                 </div>
+                </div>
+
+
               </div>
 
               <div

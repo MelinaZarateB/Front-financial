@@ -1,6 +1,9 @@
 .textarea-box-dashboard {
   position: relative;
   height: 100%; /* Ocupar toda la altura del contenedor padre */
+  width: 100%;
+  max-width: 300px;
+
 }
 
 .label-textarea-dashboard {
@@ -74,7 +77,7 @@
 }
 
 .form-columns {
-  display: grid;
+  /*display: grid;
   grid-template-columns: 1fr; /* Cambiado a 2 columnas */
   gap: 1rem;
   margin-bottom: 1rem;

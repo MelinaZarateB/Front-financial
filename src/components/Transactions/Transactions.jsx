@@ -316,7 +316,7 @@ const Transactions = () => {
                       </div>
                     ))}
                   </div>
-                  {clientSelected && (
+                  {clientSelected.firstName && (
                     <div>
                       <div className="input-box-dashboard">
                         <input type="text" className="input-field-dashboard" />

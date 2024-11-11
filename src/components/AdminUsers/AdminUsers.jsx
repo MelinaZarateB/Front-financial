@@ -195,8 +195,6 @@ const AdminUsers = ({ handleCreateUser }) => {
                     Email
                   </label>
                 </div>
-              </div>
-
               <div className="input-box-dashboard">
                 <div
                   className={`select-container ${
@@ -221,6 +219,8 @@ const AdminUsers = ({ handleCreateUser }) => {
                   </div>
                 </div>
               </div>
+              </div>
+
             </div>
 
             <div
