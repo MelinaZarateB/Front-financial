@@ -148,7 +148,6 @@ const AdminUsers = ({ handleCreateUser }) => {
             onSubmit={(e) => e.preventDefault()}
           >
             <div className="form-columns">
-              {/* Primera columna con los inputs apilados */}
               <div className="inputs-column">
                 <div className="input-box-dashboard">
                   <input
@@ -220,7 +219,6 @@ const AdminUsers = ({ handleCreateUser }) => {
                 </div>
               </div>
               </div>
-
             </div>
 
             <div

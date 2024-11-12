@@ -5,6 +5,7 @@
   border: 1px solid transparent;
   cursor: text;
   transition: all 0.2s ease;
+  display: flex;
 }
 [data-editable]:hover {
   border-bottom-color: #666666;
