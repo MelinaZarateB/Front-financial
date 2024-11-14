@@ -1,15 +1,36 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createCurrencies } from "@/redux/actions";
+import SpinnerSmall from './../../../utils/Spinner/SpinnerSmall';
 
-const ModalCreateCurrency = ({ isOpen, onClose, onSubmit }) => {
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
-  const [currency, setCurrency] = useState(""); // Estado para la moneda seleccionada
+const ModalCreateCurrency = ({ isOpen, onClose }) => {
+  const dispatch = useDispatch();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [createCurrency, setCreateCurrency] = useState({
+    name: "",
+    code: "",
+    exchangeRate: "",
+  });
+  console.log(createCurrency.name);
 
-  const handleSubmit = () => {
-    onSubmit(amount, description, currency);
-    setAmount("");
-    setDescription("");
-    setCurrency(""); // Restablecer la moneda a USD al enviar
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCreateCurrency({
+      ...createCurrency,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true); // Cambia a 'true' cuando comience el envío
+    try {
+      await dispatch(createCurrencies(createCurrency));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false); // Cambia de nuevo a 'false' cuando termine el envío
+    }
   };
 
   if (!isOpen) return null;
@@ -18,12 +39,14 @@ const ModalCreateCurrency = ({ isOpen, onClose, onSubmit }) => {
     <div className="modal">
       <div className="modal-content">
         <h2 className="h2-modal">Crear nueva moneda</h2>
+
         <div className="input-box-dashboard">
           <input
             className="input-field-dashboard"
             type="text"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            name="name"
+            value={createCurrency.name}
+            onChange={handleInputChange}
           />
           <label
             className="label-input-dashboard"
@@ -32,12 +55,14 @@ const ModalCreateCurrency = ({ isOpen, onClose, onSubmit }) => {
             Nombre
           </label>
         </div>
+
         <div className="input-box-dashboard">
           <input
             className="input-field-dashboard"
             type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            name="code"
+            value={createCurrency.code}
+            onChange={handleInputChange}
           />
           <label
             className="label-input-dashboard"
@@ -46,12 +71,14 @@ const ModalCreateCurrency = ({ isOpen, onClose, onSubmit }) => {
             Código
           </label>
         </div>
+
         <div className="input-box-dashboard">
           <input
             className="input-field-dashboard"
             type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            name="exchangeRate"
+            value={createCurrency.exchangeRate}
+            onChange={handleInputChange}
           />
           <label
             className="label-input-dashboard"
@@ -60,26 +87,17 @@ const ModalCreateCurrency = ({ isOpen, onClose, onSubmit }) => {
             Tipo de cambio
           </label>
         </div>
-        <div className="input-box-dashboard">
-          <input
-            className="input-field-dashboard"
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <label
-            className="label-input-dashboard"
-            style={{ backgroundColor: "rgba(255, 255, 255)" }}
-          >
-            Stock global
-          </label>
-        </div>
+
         <div
           className="buttons-container"
           style={{ display: "flex", gap: "5px", justifyContent: "end" }}
         >
-          <button className="btn-search-users" onClick={handleSubmit}>
-             Crear{" "}
+          <div>
+          <button className="btn-submit-create-user" onClick={handleSubmit}>
+          <label htmlFor="submit" className="label" >
+              {" "}
+              {isSubmitting ? <SpinnerSmall /> : "Crear"}
+            </label>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="20px"
@@ -89,7 +107,9 @@ const ModalCreateCurrency = ({ isOpen, onClose, onSubmit }) => {
             >
               <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
             </svg>
+            
           </button>
+          </div>
           <button className="btn-search-users" onClick={onClose}>
             Cerrar{" "}
             <svg
@@ -107,4 +127,5 @@ const ModalCreateCurrency = ({ isOpen, onClose, onSubmit }) => {
     </div>
   );
 };
+
 export default ModalCreateCurrency;

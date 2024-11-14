@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import './CashRegisterOpen.css';
+import "./CashRegisterOpen.css";
+import ModalCreateCurrency from "@/visuals/Modals/ModalCreateCurrency/ModalCreateCurrency";
+import arrowDown from "./../../assets/arrow-down.svg";
 
 const CashRegisterOpen = () => {
+  const [isModalOpen, setModalOpen] = useState(false);
+
   const [monedas, setMonedas] = useState([
     { nombre: "Peso Argentino", codigo: "ARS", stock: 0 },
     { nombre: "Dólar Estadounidense", codigo: "USD", stock: 0 },
@@ -73,11 +77,19 @@ const CashRegisterOpen = () => {
     setTasas((prev) => ({ ...prev, [tasaActual]: parseFloat(nuevaTasa) || 0 }));
   };
 
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
   return (
     <div className="section-cash-opening">
-       <div className="container-btn-cash-close">
-            <button className="btn-close-cash">Abrir caja</button>
-        </div>
+      <div className="container-btn-cash-close">
+        <button className="btn-close-cash">Abrir caja</button>
+      </div>
       <div className="input-group">
         <div className="input-box-dashboard">
           <input
@@ -90,7 +102,7 @@ const CashRegisterOpen = () => {
             Tasa de cambio ARS/USD
           </label>
         </div>
-     
+
         <div className="input-box-dashboard">
           <input
             type="text"
@@ -145,44 +157,21 @@ const CashRegisterOpen = () => {
         </h3>
       </div>
       <div className="agregar-moneda">
-        <div className="input-box-dashboard">
-          <input
-            value={nuevaMoneda.nombre}
-            className="input-field-dashboard"
-            onChange={(e) =>
-              setNuevaMoneda({ ...nuevaMoneda, nombre: e.target.value })
-            }
-          />
-          <label htmlFor="" className="label-input-dashboard">
-            Nombre de la moneda
-          </label>
-        </div>
-        <div className="input-box-dashboard">
-          <input
-            value={nuevaMoneda.codigo}
-            className="input-field-dashboard"
-            onChange={(e) =>
-              setNuevaMoneda({
-                ...nuevaMoneda,
-                codigo: e.target.value.toUpperCase(),
-              })
-            }
-          />
-          <label htmlFor="" className="label-input-dashboard">
-            Código de la moneda
-          </label>
-        </div>
-        <button onClick={agregarMoneda} className="btn-search-users">
-          Agregar moneda
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24px"
-            viewBox="0 -960 960 960"
-            width="24px"
-          >
-            <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
-          </svg>
+        <button onClick={handleOpenModal} className="btn-search-users">
+          Crear moneda
         </button>
+        <span
+          style={{
+            display: "flex",
+            color: "#06571F",
+            cursor: "pointer",
+            whiteSpace: 'nowrap',
+            alignItems: 'center'
+          }}
+        >
+          Ver monedas <img src={arrowDown} alt="" />
+        </span>
+        <ModalCreateCurrency isOpen={isModalOpen} onClose={handleCloseModal} />
       </div>
     </div>
   );

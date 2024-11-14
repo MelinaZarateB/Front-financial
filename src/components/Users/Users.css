@@ -219,8 +219,10 @@ td {
   text-shadow: rgba(9, 11, 11, 0.6) 0px 1px 1px;
   border: 1px solid #063a17;
   box-shadow: rgba(6, 87, 31, 0.5) 0px 1px 0px inset,
+
     /* Verde medio */ rgba(4, 58, 21, 0.4) 0px -1px 0px 1px inset,
     /* Verde más oscuro */ rgba(9, 11, 11, 0.1) 0px 2px 4px 0px; /* Sombras neutras */
+    white-space: nowrap;
 }
 .btn-search-users svg{
   fill: rgba(255, 255, 255, 0.83);;

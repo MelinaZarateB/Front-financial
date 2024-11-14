@@ -38,16 +38,16 @@ const Dashboard = () => {
   };
 
   const componentes = {
-    transactions: <Transactions />,
-    opening: <CashRegisterOpen />,
-    close: <CashRegisterClose />,
-    incomes: <Income />,
-    expenses: <Expense />,
-    balance: <Balance />,
-    movements: <Movements />,
-    clients: <Clients />,
-    offices: <Offices />,
-    users: <Users />,
+    transactions: Transactions,
+    opening: CashRegisterOpen,
+    close: CashRegisterClose,
+    incomes: Income,
+    expenses: Expense,
+    balance: Balance,
+    movements: Movements,
+    clients: Clients,
+    offices: Offices,
+    users: Users,
   };
 
   const abrirPestaña = (nombreComponente) => {
@@ -126,17 +126,27 @@ const Dashboard = () => {
             ))}
           </TabsList>
         </Tabs>
-
         </div>
 
         <main>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            {componentes[pestañaActiva]}
+            {pestañasAbiertas.map((nombreComponente) => {
+              const ComponenteActual = componentes[nombreComponente];
+              return (
+                <div
+                  key={nombreComponente}
+                  style={{
+                    display: pestañaActiva === nombreComponente ? 'block' : 'none'
+                  }}
+                >
+                  <ComponenteActual />
+                </div>
+              );
+            })}
           </LocalizationProvider>
         </main>
       </div>
     </section>
   );
 };
-
 export default Dashboard;

@@ -12,7 +12,9 @@ import {
   REGISTER_USER_SUCCESS,
   REGISTER_USER_FAILURE,
   DELETE_USER_SUCCESS,
-  GET_TRANSACTIONS
+  GET_TRANSACTIONS,
+  GET_SUBOFFICES,
+  GET_CURRENCIES,
 } from "./action-types";
 
 let initialState = {
@@ -25,21 +27,35 @@ let initialState = {
   userByEmail: {},
   registerUser: {},
   deleteUserSuccess: "",
-  transactions: []
+  transactions: [],
+  subOffices: [],
+  currencies: [],
 };
 
 const Reducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_TRANSACTIONS:
-      return{
+    case GET_CURRENCIES: {
+      return {
         ...state,
-        transactions: action.payload
-      }
-    case DELETE_USER_SUCCESS: 
-    return{
-      ...state,
-      deleteUserSuccess: state.deleteUserSuccess !== "" ? "" : action.payload // Si deleteUser no está vacío, lo 
+        currencies: action.payload,
+      };
     }
+
+    case GET_SUBOFFICES:
+      return {
+        ...state,
+        subOffices: action.payload,
+      };
+    case GET_TRANSACTIONS:
+      return {
+        ...state,
+        transactions: action.payload,
+      };
+    case DELETE_USER_SUCCESS:
+      return {
+        ...state,
+        deleteUserSuccess: state.deleteUserSuccess !== "" ? "" : action.payload, // Si deleteUser no está vacío, lo
+      };
     case CLEAN_MESSAGE:
       return {
         ...state,

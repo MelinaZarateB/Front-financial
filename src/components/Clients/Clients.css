@@ -128,11 +128,11 @@
 }
 
 .menu-content[data-state="open"] {
-  animation: slideIn 0.3s ease-in-out;
+  animation: slideIn 0.2s ease-in-out;
 }
 
 .menu-content[data-state="closed"] {
-  animation: slideOut 0.3s ease-in-out;
+  animation: slideOut 0.2s ease-in-out;
 }
 
 @keyframes slideIn {

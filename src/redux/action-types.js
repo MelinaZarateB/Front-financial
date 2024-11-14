@@ -21,3 +21,11 @@ export const DELETE_TRANSACTION = 'DELETE_TRANSACTION';
 /* Types para Egresos - Ingresos */
 export const CREATE_EXPENSE = 'CREATE_EXPENSE';
 export const CREATE_INCOME = 'CREATE_INCOME';
+
+/* Types para sucursales */
+export const GET_SUBOFFICES = 'GET_SUBOFFICES';
+
+/* Types para currencies */
+export const CREATE_CURRENCIES = 'CREATE_CURRENCIES';
+export const GET_CURRENCIES = 'GET_CURRENCIES'
+export const DELETE_CURRENCY = 'DELETE_CURRENCY';

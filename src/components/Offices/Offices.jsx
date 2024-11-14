@@ -1,15 +1,24 @@
-import "./Offices.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import plusIcon from "./../../assets/plus.svg";
 import officeIcon from "./../../assets/office.svg";
 import usersIcon from "./../../assets/usersOffices.svg";
-import currencyIcon from './../../assets/currency.svg';
+import currencyIcon from "./../../assets/currency.svg";
+import arrowDown from "./../../assets/arrow-down.svg";
 import ModalCreateUser from "@/visuals/Modals/ModalCreateUser/ModalCreateUser";
 import ModalCreateCurrency from "@/visuals/Modals/ModalCreateCurrency/ModalCreateCurrency";
 import ModalCreateSuboffice from "@/visuals/Modals/ModalCreateSuboffice/ModalCreateSuboffice";
-
+import {
+  getSubOffices,
+  getCurrencies,
+  deleteCurrencySubOffice,
+} from "@/redux/actions";
+import "./Offices.css";
 
 const Offices = () => {
+  const dispatch = useDispatch();
+  const subOffices = useSelector((state) => state.subOffices);
+  const currencies = useSelector((state) => state.currencies);
   const [viewForm, setViewForm] = useState(false);
   const [selectType, setSelectType] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
@@ -19,26 +28,40 @@ const Offices = () => {
     sub_offices: [],
     globalStock: "",
   });
+  const [visibleCurrencies, setVisibleCurrencies] = useState({});
+
   const changeForm = () => {
-    if (viewForm === false) setViewForm(true);
-    else {
-      setViewForm(false);
-    }
+    setViewForm(!viewForm);
   };
+
   const handleChangeNewUser = (event) => {
-    setNewUser({
-      ...newUser,
+    setNewOffice({
+      ...newOffice,
       [event.target.name]: event.target.value,
     });
   };
 
   const handleOpenModal = () => {
-    setModalOpen(true); // Abre el modal
+    setModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setModalOpen(false); // Cierra el modal
+    setModalOpen(false);
   };
+  const handleDeleteCurrency = (idCurrency, idOffice) => {
+    dispatch(deleteCurrencySubOffice(idCurrency, idOffice));
+  };
+  const toggleCurrencyVisibility = (officeId) => {
+    setVisibleCurrencies((prev) => ({
+      ...prev,
+      [officeId]: !prev[officeId],
+    }));
+  };
+
+  useEffect(() => {
+    dispatch(getSubOffices());
+    dispatch(getCurrencies());
+  }, [dispatch]);
 
   return (
     <div className="container-users">
@@ -158,104 +181,204 @@ const Offices = () => {
 
       <div className="container-parent-offices">
         <h2 className="title-offices">Casa Central</h2>
-        <strong>Dirección:</strong> {''}
+        <strong>Dirección:</strong> {""}
         <span>Cordoba 1422</span>
         <div>
           <div className="section-title-svg">
             <img src={officeIcon} alt="" />
             <h4>Suboficinas</h4>
           </div>
-          <div className="container-parent-suboffices">
-            <div>
-              <h5 style={{fontWeight: '600'}}>Sucursal 1</h5>
-              <p>Dirección: Arenales 2322</p>
-            </div>
-
-            {/* Seccion usuarios */}
-            <div>
-              <div className="section-title-svg" >
-                <img src={usersIcon} alt="" />
-                <h4>Usuarios </h4>
+          {subOffices.map((office) => (
+            <div key={office._id} className="container-parent-suboffices">
+              <div>
+                <h5 style={{ fontWeight: "600" }}>{office.name}</h5>
+                <p>Dirección: {office.address}</p>
               </div>
-              <div className="input-box-dashboard">
-                <div
-                  className={`select-container ${
-                    selectType ? "has-value" : ""
-                  }`}
-                >
-                  <select
-                    name="typeExpense"
-                    className="input-field-dashboard select"
+
+              <section className="section-users-currency">
+                {/* Seccion usuarios */}
+                <div>
+                  <div className="section-title-svg">
+                    <img src={usersIcon} alt="" />
+                    <h4>Usuarios </h4>
+                  </div>
+                  <section
                     style={{
-                      color: selectType ? "#000" : "#555",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                    }}
+                  >
+                    <div className="input-box-dashboard">
+                      <div
+                        className={`select-container ${
+                          selectType ? "has-value" : ""
+                        }`}
+                      >
+                        <select
+                          name="typeExpense"
+                          className="input-field-dashboard select"
+                          style={{
+                            color: selectType ? "#000" : "#555",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <option value="all">Seleccionar usuario</option>
+                          {office.users.map((user) => (
+                            <option key={user} value={user}>
+                              {user}
+                            </option>
+                          ))}
+                        </select>
+                        <div
+                          className="floating-label"
+                          style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                        >
+                          Usuarios
+                        </div>
+                      </div>
+                    </div>
+                    <div className="container-buttons-offices">
+                      <button className="btn-search-users">
+                        Agregar usuario
+                      </button>
+                    </div>
+                  </section>
+                  <span
+                    style={{
+                      display: "flex",
+                      color: "#06571F",
                       cursor: "pointer",
                     }}
                   >
-                    <option value="all">Seleccionar usuario</option>
-                  </select>
-                  <div
-                    className="floating-label"
-                    style={{ backgroundColor: "rgba(255, 255, 255)" }}
-                  >
-                    Usuarios
-                  </div>
+                    Ver usuarios de la sucursal <img src={arrowDown} alt="" />
+                  </span>
                 </div>
-                <div className="container-buttons-offices">
-                  <button className="btn-offices">Agregar usuario</button>
-                  <button className="btn-offices" onClick={handleOpenModal}>Crear nuevo usuario</button>
-                </div>
-              </div>
-            </div>
-            <ModalCreateUser isOpen={isModalOpen} onClose={handleCloseModal} />
 
-            {/* Seccion monedas */}
-            <div>
-              <div className="section-title-svg">
-                <img src={currencyIcon} alt="" />
-                <h4>Monedas</h4>
-              </div>
-              <div className="input-box-dashboard">
-                <div
-                  className={`select-container ${
-                    selectType ? "has-value" : ""
-                  }`}
-                >
-                  <select
-                    name="typeExpense"
-                    className="input-field-dashboard select"
+                {/* Seccion monedas */}
+                <div>
+                  <div className="section-title-svg">
+                    <img src={currencyIcon} alt="" />
+                    <h4>Monedas</h4>
+                  </div>
+                  <section
                     style={{
-                      color: selectType ? "#000" : "#555",
-                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
                     }}
                   >
-                    <option value="all">Seleccionar moneda</option>
-                  </select>
-                  <div
-                    className="floating-label"
-                    style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                    <div className="input-box-dashboard">
+                      <div
+                        className={`select-container ${
+                          selectType ? "has-value" : ""
+                        }`}
+                      >
+                        <select
+                          name="currency"
+                          className="input-field-dashboard select"
+                          style={{
+                            color: selectType ? "#000" : "#555",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <option value="all">Seleccionar moneda</option>
+                          {currencies.map((currency) => (
+                            <option key={currency._id} value={currency._id}>
+                              {currency.name} ({currency.code})
+                            </option>
+                          ))}
+                        </select>
+
+                        <div
+                          className="floating-label"
+                          style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                        >
+                          Monedas
+                        </div>
+                      </div>
+                    </div>
+                    <div className="container-buttons-offices">
+                      <button className="btn-search-users">
+                        Agregar moneda
+                      </button>
+                    </div>
+                  </section>
+                  <span
+                    style={{
+                      display: "flex",
+                      color: "#06571F",
+                      cursor: "pointer",
+                      borderBottom: "5px",
+                      borderTop: "5px",
+                    }}
+                    onClick={() => toggleCurrencyVisibility(office._id)}
                   >
-                    Monedas
+                    {visibleCurrencies[office._id]
+                      ? "Ocultar monedas de la sucursal"
+                      : "Ver monedas de la sucursal"}{" "}
+                    <img src={arrowDown} alt="" />
+                  </span>
+                  <div
+                    className={`container-table ${
+                      visibleCurrencies[office._id] ? "visible" : ""
+                    }`}
+                    style={{
+                      animation: visibleCurrencies[office._id]
+                        ? "slideIn 0.2s forwards"
+                        : "slideOut 0.2s forwards",
+                      display: visibleCurrencies[office._id] ? "block" : "none",
+                    }}
+                  >
+                    <div className="tbl-container">
+                      <table className="tbl-cash">
+                        <thead>
+                          <tr>
+                            <th>Moneda/Cuenta</th>
+                            <th>Código</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {office.currencies.map((currency) => (
+                            <tr key={currency._id}>
+                              <td>{currency.currency.name}</td>
+                              <td>{currency.currency.code}</td>
+                              <td>
+                                {" "}
+                                <button
+                                  className="btn-trash"
+                                  onClick={() =>
+                                    handleDeleteCurrency(
+                                      currency._id,
+                                      office._id
+                                    )
+                                  }
+                                >
+                                  Eliminar
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="container-buttons-offices">
-                <button className="btn-offices">Agregar moneda</button>
-                <button className="btn-offices" onClick={handleOpenModal}>Crear nueva moneda</button>
-              </div>
-              <ModalCreateCurrency isOpen={isModalOpen} onClose={handleCloseModal} />
+              </section>
             </div>
-          </div>
+          ))}
         </div>
-        <div style={{marginTop: '1rem'}}>
-          <button className="btn-offices" >
+        <div style={{ marginTop: "1rem" }}>
+          <button className="btn-search-users">
             {" "}
-            <span>Registrar suboficina</span> <img src={plusIcon} alt="" />
+            <span>Registrar subsucursal</span> <img src={plusIcon} alt="" />
           </button>
         </div>
-       
       </div>
+      <ModalCreateCurrency isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
   );
 };
+
 export default Offices;

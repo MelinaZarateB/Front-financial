@@ -10,6 +10,7 @@
   border: 1px solid #e4e4e7;
   border-radius: 5px;
   background-color: white;
+  transition: all 0.2s ease;
 }
 .title-offices {
   font-weight: 600;
@@ -26,6 +27,10 @@
 .section-title-svg h4 {
   font-weight: 600;
 }
+.section-users-currency{
+  display: flex;
+  justify-content: space-between
+}
 
 .btn-offices {
   display: flex;
@@ -40,5 +45,4 @@
   display: flex;
   flex-direction: row;
   gap: 5px;
-  margin-top: 5px;
 }
