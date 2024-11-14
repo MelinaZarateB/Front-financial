@@ -212,21 +212,6 @@ const Transactions = () => {
                     </label>
                   </div>
                   <div className="input-box-dashboard">
-                    <input
-                      type="text"
-                      className="input-field-dashboard"
-                      name="commission"
-                      value={newTransaction.commission}
-                      onChange={handleChangeNewIncome}
-                    />
-                    <label
-                      className="label-input-dashboard"
-                      style={{ backgroundColor: "rgba(255, 255, 255)" }}
-                    >
-                      Comisión
-                    </label>
-                  </div>
-                  <div className="input-box-dashboard">
                     <div
                       className={`select-container ${
                         selectType ? "has-value" : ""
@@ -439,7 +424,6 @@ const Transactions = () => {
                     <th>Paga</th>
                     <th>Compra</th>
                     <th>T/C</th>
-                    <th>Comisión</th>
                     <th>Fecha</th>
                     <th>Sucursal</th>
                     <th colSpan="1"></th>
@@ -473,13 +457,7 @@ const Transactions = () => {
                         <td data-table="T/C">
                           <span>{transaction.exchangeRate}</span>
                         </td>
-                        <td data-table="Comisión">
-                          <span>
-                            {transaction.commission
-                              ? transaction.commission
-                              : "N/A"}
-                          </span>
-                        </td>
+                       
                         <td data-table="Fecha">
                           <span>
                             {new Date(transaction.createdAt)

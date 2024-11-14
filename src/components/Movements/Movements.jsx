@@ -231,7 +231,6 @@ const Movements = () => {
                     <th>Paga</th>
                     <th>Compra</th>
                     <th>T/C</th>
-                    <th>Comisión</th>
                     <th>Descripcion</th>
                     <th>Fecha</th>
                     <th>Sucursal</th>
@@ -280,11 +279,6 @@ const Movements = () => {
                         </td>
                         <td data-table="T/C">
                           <span>{movimiento.exchangeRate}</span>
-                        </td>
-                        <td data-table="Comisión">
-                          <span>
-                            {movimiento.commission}
-                          </span>
                         </td>
                         <td data-table="Descripcion">
                             <span style={{whiteSpace:'wrap'}}>{movimiento.description}</span>
