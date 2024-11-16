@@ -12,6 +12,7 @@ import {
   getSubOffices,
   getCurrencies,
   deleteCurrencySubOffice,
+  updateStockCurrency
 } from "@/redux/actions";
 import "./Offices.css";
 
@@ -19,6 +20,8 @@ const Offices = () => {
   const dispatch = useDispatch();
   const subOffices = useSelector((state) => state.subOffices);
   const currencies = useSelector((state) => state.currencies);
+  const updaCurrency = useSelector((state) => state.updateCurrencies)
+  const [selectedCurrencyId, setSelectedCurrencyId] = useState("");
   const [viewForm, setViewForm] = useState(false);
   const [selectType, setSelectType] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
@@ -51,6 +54,13 @@ const Offices = () => {
   const handleDeleteCurrency = (idCurrency, idOffice) => {
     dispatch(deleteCurrencySubOffice(idCurrency, idOffice));
   };
+  const handleSelectChange = (e) => {
+    setSelectedCurrencyId(e.target.value);
+  };
+
+  const handleUpdateStockCurrency = (idCurrency, idOffice) => {
+    dispatch(updateStockCurrency(idCurrency, idOffice)) && setSelectedCurrencyId("");
+  }
   const toggleCurrencyVisibility = (officeId) => {
     setVisibleCurrencies((prev) => ({
       ...prev,
@@ -62,6 +72,10 @@ const Offices = () => {
     dispatch(getSubOffices());
     dispatch(getCurrencies());
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getSubOffices())
+  }, [updaCurrency])
 
   return (
     <div className="container-users">
@@ -239,7 +253,7 @@ const Offices = () => {
                       </div>
                     </div>
                     <div className="container-buttons-offices">
-                      <button className="btn-search-users">
+                      <button className="btn-search-users" >
                         Agregar usuario
                       </button>
                     </div>
@@ -276,7 +290,9 @@ const Offices = () => {
                       >
                         <select
                           name="currency"
+                          value={selectedCurrencyId}
                           className="input-field-dashboard select"
+                          onChange={handleSelectChange}
                           style={{
                             color: selectType ? "#000" : "#555",
                             cursor: "pointer",
@@ -299,7 +315,7 @@ const Offices = () => {
                       </div>
                     </div>
                     <div className="container-buttons-offices">
-                      <button className="btn-search-users">
+                      <button className="btn-search-users" onClick={() => handleUpdateStockCurrency(selectedCurrencyId, office._id)}>
                         Agregar moneda
                       </button>
                     </div>
@@ -317,7 +333,7 @@ const Offices = () => {
                     {visibleCurrencies[office._id]
                       ? "Ocultar monedas de la sucursal"
                       : "Ver monedas de la sucursal"}{" "}
-                    <img src={arrowDown} alt="" />
+                    <img src={arrowDown} alt="" style={{ transform: visibleCurrencies[office._id] ? 'rotate(180deg)' : 'rotate(0deg)'}} />
                   </span>
                   <div
                     className={`container-table ${
@@ -330,7 +346,7 @@ const Offices = () => {
                       display: visibleCurrencies[office._id] ? "block" : "none",
                     }}
                   >
-                    <div className="tbl-container">
+                    <div className="">
                       <table className="tbl-cash">
                         <thead>
                           <tr>
@@ -350,7 +366,7 @@ const Offices = () => {
                                   className="btn-trash"
                                   onClick={() =>
                                     handleDeleteCurrency(
-                                      currency._id,
+                                      currency.currency._id,
                                       office._id
                                     )
                                   }

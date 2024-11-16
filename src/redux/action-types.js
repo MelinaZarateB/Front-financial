@@ -24,6 +24,8 @@ export const CREATE_INCOME = 'CREATE_INCOME';
 
 /* Types para sucursales */
 export const GET_SUBOFFICES = 'GET_SUBOFFICES';
+export const DELETE_CURRENCY_SUBOFFICES = 'DELETE_CURRENCY_SUBOFFICES';
+export const UPDATE_CURRENCY_SUBOFFICES = 'UPDATE_CURRENCY_SUBOFFICES';
 
 /* Types para currencies */
 export const CREATE_CURRENCIES = 'CREATE_CURRENCIES';

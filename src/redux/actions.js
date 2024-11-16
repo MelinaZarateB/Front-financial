@@ -20,9 +20,11 @@ import {
   CREATE_EXPENSE,
   CREATE_INCOME,
   GET_SUBOFFICES,
+  DELETE_CURRENCY_SUBOFFICES,
   CREATE_CURRENCIES,
   GET_CURRENCIES,
   DELETE_CURRENCY,
+  UPDATE_CURRENCY_SUBOFFICES
 } from "./action-types";
 import axios from "axios";
 
@@ -56,7 +58,6 @@ export const getCurrencies = () => {
   return async (dispatch) => {
     try {
       const { data } = await axios.get("http://localhost:3000/currencies");
-      console.log("monedas disponibles:", data);
       if (data) {
         dispatch({
           type: GET_CURRENCIES,
@@ -64,7 +65,11 @@ export const getCurrencies = () => {
         });
       }
     } catch (err) {
-      console.log(err);
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo obtener las monedas. Por favor, intente nuevamente.",
+        icon: "error",
+      });
     }
   };
 };
@@ -76,6 +81,10 @@ export const deleteCurrency = (idCurrency) => {
         `http://localhost:3000/currencies/${idCurrency}`
       );
       if (data) {
+        dispatch({
+          type: DELETE_CURRENCY,
+          payload: idCurrency
+        });
         Swal.fire({
           title: "Exito",
           text: "Se ha eliminado exitosamente la moneda",
@@ -84,11 +93,45 @@ export const deleteCurrency = (idCurrency) => {
           showConfirmButton: false,
         });
       }
-    } catch (err) {}
+    } catch (err) {
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo eliminar la moneda. Por favor, intente nuevamente.",
+        icon: "error",
+      });
+    }
   };
 };
 
 /* Actions para sucursales */
+export const updateStockCurrency = (currencyId, subOfficeId) => {
+  return async (dispatch) => {
+    try{
+      const { data } = await axios.put(`http://localhost:3000/sub_offices/${subOfficeId}/currencies/${currencyId}`)
+      if(data){
+        dispatch({
+          type: UPDATE_CURRENCY_SUBOFFICES,
+          payload: true
+        });
+        Swal.fire({
+          title: "Exito",
+          text: "Se ha agregado la moneda a la sucursal",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    }catch(err){
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo agregar la moneda. Por favor, intente nuevamente.",
+        icon: "error",
+      });
+
+    }
+  }
+}
+
 export const getSubOffices = () => {
   return async (dispatch) => {
     try {
@@ -105,14 +148,19 @@ export const getSubOffices = () => {
     }
   };
 };
-export const deleteCurrencySubOffice = (idCurrency, idSubOffice) => {
+export const deleteCurrencySubOffice = (currencyId, subOfficeId) => {
+  console.log(currencyId, subOfficeId)
   return async (dispatch) => {
     try {
       const { data } = await axios.delete(
-        `http://localhost:3000/sub_offices/${idSubOffice}/currencies/${idCurrency}`
+        `http://localhost:3000/sub_offices/${subOfficeId}/currencies/${currencyId}`
       );
       console.log(data)
       if (data) {
+        dispatch({
+          type: DELETE_CURRENCY_SUBOFFICES,
+          payload: currencyId
+        });
         Swal.fire({
           title: "Exito",
           text: "Se ha eliminado la moneda de la sucursal",
@@ -121,7 +169,13 @@ export const deleteCurrencySubOffice = (idCurrency, idSubOffice) => {
           showConfirmButton: false,
         });
       }
-    } catch (err) {}
+    } catch (err) {
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo eliminar la moneda. Por favor, intente nuevamente.",
+        icon: "error",
+      });
+    }
   };
 };
 
