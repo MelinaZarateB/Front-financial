@@ -17,7 +17,8 @@ import {
   DELETE_CURRENCY_SUBOFFICES,
   GET_CURRENCIES,
   DELETE_CURRENCY,
-  UPDATE_CURRENCY_SUBOFFICES
+  UPDATE_CURRENCY_SUBOFFICES,
+  OPEN_CASH_REGISTER
 } from "./action-types";
 
 let initialState = {
@@ -33,13 +34,21 @@ let initialState = {
   transactions: [],
   subOffices: [],
   currencies: [],
-  updateCurrencies: false
+  updateCurrencies: false,
+  openCashRegister: false
+
 };
 
 const Reducer = (state = initialState, action) => {
   switch (action.type) {
 
-    case "UPDATE_CURRENCY_SUBOFFICES":
+    case OPEN_CASH_REGISTER:
+      return{
+        ...state,
+        openCashRegister: action.payload
+      }
+
+    case UPDATE_CURRENCY_SUBOFFICES:
       return {
         ...state,
         updateCurrencies: state.updateCurrencies 

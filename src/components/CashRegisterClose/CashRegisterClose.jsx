@@ -3,6 +3,7 @@ import imgArrows from "./../../assets/arrows.svg";
 import imgIncome from "./../../assets/arrowIncome.svg";
 import imgExpense from "./../../assets/arrowExpense.svg";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 
 const movimientos = [
@@ -135,8 +136,12 @@ const movimientos = [
 ];
 
 const CashRegisterClose = () => {
+  const [selectedSubOffice, setSelectedSubOffice] = useState("");
   const [closeRegister, setCloseRegister] = useState(false);
+  const subOffices = useSelector((state) => state.subOffices);
   const [closingTime, setClosingTime] = useState(null);
+  const dispatch = useDispatch();
+
   const handleCloseRegister = () => {
     // Cuando se cierra la caja, guarda la hora actual
     const now = new Date();
@@ -165,6 +170,23 @@ const CashRegisterClose = () => {
             Cerrar caja
           </button>
         </div>
+        <div className="input-group">
+        <div className="input-box-dashboard">
+          <select
+            value={selectedSubOffice}
+            onChange={(e) => setSelectedSubOffice(e.target.value)}
+            className="input-field-dashboard"
+          >
+            <option value="">Seleccionar sucursal</option>
+            {subOffices.map((office) => (
+              <option key={office._id} value={office._id}>
+                {office.name}
+              </option>
+            ))}
+          </select>
+          <label className="label-input-dashboard">Sucursal</label>
+        </div>
+      </div>
         <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
           <h3>Saldo inicial en USD: </h3>
           <span

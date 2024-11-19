@@ -24,11 +24,63 @@ import {
   CREATE_CURRENCIES,
   GET_CURRENCIES,
   DELETE_CURRENCY,
-  UPDATE_CURRENCY_SUBOFFICES
+  UPDATE_CURRENCY_SUBOFFICES,
+  OPEN_CASH_REGISTER,
+  CLOSE_CASH_REGISTER,
 } from "./action-types";
 import axios from "axios";
-
 import Swal from "sweetalert2";
+
+/* Actions para caja registradora */
+export const closeCashRegister = (idCashRegister) => {
+  console.log('id de caja registradora a cerrar', idCashRegister)
+  return async (dispatch) => {
+    try{
+      const { data } = await axios.put(`http://localhost:3000/cash-register/close/${idCashRegister}`)
+    }catch(err){
+      const mensajeError =
+      err.response?.data?.message ||
+      "No se cerrar la caja. Por favor, intente nuevamente.";
+    Swal.fire({
+      title: "Error",
+      text: mensajeError, // Mostrar el mensaje del backend
+      icon: "error",
+    });
+
+    }
+  }
+
+}
+
+export const openCashRegister = (dataOpen) => {
+  console.log("data para abrir caja", dataOpen);
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.post(
+        `http://localhost:3000/cash-register/start`,
+        dataOpen
+      );
+      console.log(data)
+      if (data) {
+        dispatch({
+          type: OPEN_CASH_REGISTER,
+          payload: true,
+        });
+      }
+    } catch (err) {
+      // Obtener el mensaje del servidor o usar un mensaje genérico si no está disponible
+      const mensajeError =
+        err.response?.data?.message ||
+        "No se pudo abrir caja. Por favor, intente nuevamente.";
+
+      Swal.fire({
+        title: "Error",
+        text: mensajeError, // Mostrar el mensaje del backend
+        icon: "error",
+      });
+    }
+  };
+};
 
 /* Actions para currencies */
 export const createCurrencies = (currency) => {
@@ -83,7 +135,7 @@ export const deleteCurrency = (idCurrency) => {
       if (data) {
         dispatch({
           type: DELETE_CURRENCY,
-          payload: idCurrency
+          payload: idCurrency,
         });
         Swal.fire({
           title: "Exito",
@@ -106,12 +158,14 @@ export const deleteCurrency = (idCurrency) => {
 /* Actions para sucursales */
 export const updateStockCurrency = (currencyId, subOfficeId) => {
   return async (dispatch) => {
-    try{
-      const { data } = await axios.put(`http://localhost:3000/sub_offices/${subOfficeId}/currencies/${currencyId}`)
-      if(data){
+    try {
+      const { data } = await axios.put(
+        `http://localhost:3000/sub_offices/${subOfficeId}/currencies/${currencyId}`
+      );
+      if (data) {
         dispatch({
           type: UPDATE_CURRENCY_SUBOFFICES,
-          payload: true
+          payload: true,
         });
         Swal.fire({
           title: "Exito",
@@ -121,16 +175,15 @@ export const updateStockCurrency = (currencyId, subOfficeId) => {
           showConfirmButton: false,
         });
       }
-    }catch(err){
+    } catch (err) {
       Swal.fire({
         title: "Error",
         text: "No se pudo agregar la moneda. Por favor, intente nuevamente.",
         icon: "error",
       });
-
     }
-  }
-}
+  };
+};
 
 export const getSubOffices = () => {
   return async (dispatch) => {
@@ -149,17 +202,17 @@ export const getSubOffices = () => {
   };
 };
 export const deleteCurrencySubOffice = (currencyId, subOfficeId) => {
-  console.log(currencyId, subOfficeId)
+  console.log(currencyId, subOfficeId);
   return async (dispatch) => {
     try {
       const { data } = await axios.delete(
         `http://localhost:3000/sub_offices/${subOfficeId}/currencies/${currencyId}`
       );
-      console.log(data)
+      console.log(data);
       if (data) {
         dispatch({
           type: DELETE_CURRENCY_SUBOFFICES,
-          payload: currencyId
+          payload: currencyId,
         });
         Swal.fire({
           title: "Exito",
