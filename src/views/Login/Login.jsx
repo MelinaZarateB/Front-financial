@@ -9,11 +9,11 @@ import visibilityOff from "./../../assets/visibility-off.svg";
 import { validationsLogin } from "../../utils/validations";
 import Spinner from "../../utils/Spinner/Spinner";
 import { useDispatch } from "react-redux";
-import { login, activateAccount, cleanMessage } from "../../redux/actions";
+import { login, activateAccount, cleanMessage } from "../../redux/actions/authActions";
 
 const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const loginMessage = useSelector((state) => state.loginMessage);
+  const loginMessage = useSelector((state) => state.auth.loginMessage);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

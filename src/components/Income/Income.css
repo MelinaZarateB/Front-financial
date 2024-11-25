@@ -1,3 +1,13 @@
+.section-expense {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
 .textarea-box-dashboard {
   position: relative;
   height: 100%; /* Ocupar toda la altura del contenedor padre */
@@ -99,7 +109,29 @@
   background-color: rgba(255, 255, 255, 0.83);
   width: 100%;
 }
-
+.btn-create-user {
+  background-color: inherit;
+  border: none;
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  color: #003710;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: 500;
+  font-size: 17px;
+  height: 60px;
+  width: 100%;
+  text-align: left;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
+  background-color: rgba(255, 255, 255, 0.83);
+}
+.btn-create-user svg{
+  transform: rotate(90deg);
+}
 .form-container.open {
   max-height: 450px; /* Ajusta este valor según la altura del contenido */
   width: 100%;

@@ -9,7 +9,7 @@ import {
   getAllUsers,
   updateUser,
   deleteUser,
-} from "../../redux/actions";
+} from "../../redux/actions/userActions";
 import Swal from "sweetalert2";
 
 const AdminUsers = ({ handleCreateUser }) => {

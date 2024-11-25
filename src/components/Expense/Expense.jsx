@@ -117,7 +117,7 @@ const Expense = () => {
     }
   };
   const changeForm = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     if (viewForm === false) setViewForm(true);
     else {
       setViewForm(false);
@@ -130,7 +130,14 @@ const Expense = () => {
     <ThemeProvider theme={theme}>
       <section className="section-expense">
         <div>
-          <button className="btn-create-user" onClick={changeForm} style={{borderBottomLeftRadius: viewForm ? '0px' : '4px', borderBottomRightRadius: viewForm ? '0px' : '4px'}}>
+          <button
+            className="btn-create-user"
+            onClick={changeForm}
+            style={{
+              borderBottomLeftRadius: viewForm ? "0px" : "4px",
+              borderBottomRightRadius: viewForm ? "0px" : "4px",
+            }}
+          >
             Registrar egreso
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -138,44 +145,54 @@ const Expense = () => {
               viewBox="0 -960 960 960"
               width="24px"
               fill="#06571f"
-              style={{transform: viewForm ? 'rotate(-90deg)' : '', transition: 'all 0.2s ease-in-out'}}
+              style={{
+                transform: viewForm ? "rotate(-90deg)" : "",
+                transition: "all 0.2s ease-in-out",
+              }}
             >
               <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
             </svg>
           </button>
           <div className={`form-container ${viewForm ? "open" : ""}`}>
-            <form action="" className="form-dashboard" onSubmit={(e) => e.preventDefault()}>
+            <form
+              action=""
+              className="form-dashboard"
+              onSubmit={(e) => e.preventDefault()}
+            >
               <div className="form-columns">
                 <div className="inputs-column">
-                <div className="input-box-dashboard">
-                <div
-                  className={`select-container ${
-                    selectType ? "has-value" : ""
-                  }`}
-                >
-                  <select
-                    name="typeExpense"
-                    className="input-field-dashboard select"
-                    value={selectType}
-                    onChange={handleChangeType}
-                    style={{
-                      color: selectType ? "#000" : "#555",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <option value="all">Filtre por tipo de egreso</option>
-                    {typeExpenses?.map((typeExpense, index) => (
-                      <option key={index} value={typeExpense}>
-                        {typeExpense}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="floating-label" style={{backgroundColor: 'rgba(255, 255, 255)'}}>
-                    Tipo de egreso
+                  <div className="input-box-dashboard">
+                    <div
+                      className={`select-container ${
+                        selectType ? "has-value" : ""
+                      }`}
+                    >
+                      <select
+                        name="typeExpense"
+                        className="input-field-dashboard select"
+                        value={selectType}
+                        onChange={handleChangeType}
+                        style={{
+                          color: selectType ? "#000" : "#555",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <option value="all">Filtre por tipo de egreso</option>
+                        {typeExpenses?.map((typeExpense, index) => (
+                          <option key={index} value={typeExpense}>
+                            {typeExpense}
+                          </option>
+                        ))}
+                      </select>
+                      <div
+                        className="floating-label"
+                        style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                      >
+                        Tipo de egreso
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="input-box-dashboard">
+                  <div className="input-box-dashboard">
                     <input
                       type="text"
                       className="input-field-dashboard"
@@ -183,9 +200,14 @@ const Expense = () => {
                       value={newExpense.amount}
                       onChange={handleChangeNewExpense}
                     />
-                    <label className="label-input-dashboard" style={{backgroundColor: 'rgba(255, 255, 255)'}}>Monto</label>
+                    <label
+                      className="label-input-dashboard"
+                      style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                    >
+                      Monto
+                    </label>
                   </div>
-                
+
                   <div className="textarea-box-dashboard">
                     <textarea
                       className="textarea-field-dashboard"
@@ -194,42 +216,46 @@ const Expense = () => {
                       placeholder=" "
                       onChange={handleChangeNewExpense}
                     ></textarea>
-                    <label className="label-textarea-dashboard" style={{backgroundColor: 'rgba(255, 255, 255)'}}>
+                    <label
+                      className="label-textarea-dashboard"
+                      style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                    >
                       Descripcion del egreso
                     </label>
                   </div>
-    
+
                   <div className="input-box-dashboard">
-                <div
-                  className={`select-container ${
-                    selectType ? "has-value" : ""
-                  }`}
-                >
-                  <select
-                    name="typeExpense"
-                    className="input-field-dashboard select"
-                    value={selectType}
-                    onChange={handleChangeType}
-                    style={{
-                      color: selectType ? "#000" : "#555",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <option value="all">Sucursal</option>
-                   
-                  </select>
-                  <div className="floating-label" style={{backgroundColor: 'rgba(255, 255, 255)'}}>
-                    Sucursal
+                    <div
+                      className={`select-container ${
+                        selectType ? "has-value" : ""
+                      }`}
+                    >
+                      <select
+                        name="typeExpense"
+                        className="input-field-dashboard select"
+                        value={selectType}
+                        onChange={handleChangeType}
+                        style={{
+                          color: selectType ? "#000" : "#555",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <option value="all">Sucursal</option>
+                      </select>
+                      <div
+                        className="floating-label"
+                        style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                      >
+                        Sucursal
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-                </div>
-              
               </div>
 
               <div
                 className="buttons-container"
-                style={{ display: "flex", gap: "5px", justifyContent: 'end' }}
+                style={{ display: "flex", gap: "5px", justifyContent: "end" }}
               >
                 <button className="btn-search-users">
                   Registrar{" "}
@@ -251,7 +277,6 @@ const Expense = () => {
                     viewBox="0 -960 960 960"
                     width="17px"
                     fill="#06571f"
-                    
                   >
                     <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
                   </svg>

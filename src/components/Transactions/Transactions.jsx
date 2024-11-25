@@ -1,6 +1,6 @@
 import "./Transactions.css";
 import { useEffect, useState } from "react";
-import { getTransactions, deleteTransaction } from "../../redux/actions";
+import { getTransactions, deleteTransaction } from "../../redux/actions/transactionsActions";
 import { useDispatch, useSelector } from "react-redux";
 import imgPencil from "./../../assets/pencil.svg";
 import Swal from "sweetalert2";
@@ -47,8 +47,8 @@ const Transactions = () => {
   });
   console.log(clientSelected);
 
-  const transactions = useSelector((state) => state.transactions);
-  const userRol = useSelector((state) => state.userRole);
+  const transactions = useSelector((state) => state.transactions.transactions);
+  const userRol = useSelector((state) => state.auth.userRole);
   const [dataForm, setDataForm] = useState({
     dateFrom: new Date(),
     dateTo: new Date(),

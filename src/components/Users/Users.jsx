@@ -2,7 +2,7 @@ import "./Users.css";
 import { useState, useEffect } from "react";
 import CreateUser from "../CreateUser/CreateUser";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUsers } from "../../redux/actions";
+import { getAllUsers } from "../../redux/actions/userActions";
 import AdminUsers from "../AdminUsers/AdminUsers";
 
 const Users = () => {

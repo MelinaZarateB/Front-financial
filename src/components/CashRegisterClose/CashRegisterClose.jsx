@@ -2,9 +2,15 @@ import "./CashRegisterClose.css";
 import imgArrows from "./../../assets/arrows.svg";
 import imgIncome from "./../../assets/arrowIncome.svg";
 import imgExpense from "./../../assets/arrowExpense.svg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
+import {
+  closeCashRegister,
+  verifyCashRegisterOpen,
+  clearCashRegisterError
+} from "@/redux/actions/cashRegisterActions";
+import Swal from "sweetalert2";
+import Spinner from "@/utils/Spinner/Spinner";
 
 const movimientos = [
   {
@@ -138,9 +144,14 @@ const movimientos = [
 const CashRegisterClose = () => {
   const [selectedSubOffice, setSelectedSubOffice] = useState("");
   const [closeRegister, setCloseRegister] = useState(false);
-  const subOffices = useSelector((state) => state.subOffices);
+  const subOffices = useSelector((state) => state.offices.subOffices);
+  const noConfirmOpenCashRegister = useSelector((state) => state.cashRegister.error)
+  const verificatedCashRegisterOpen = useSelector(
+    (state) => state.cashRegister.verifyCashRegister
+  );
   const [closingTime, setClosingTime] = useState(null);
   const dispatch = useDispatch();
+  console.log(selectedSubOffice);
 
   const handleCloseRegister = () => {
     // Cuando se cierra la caja, guarda la hora actual
@@ -157,36 +168,75 @@ const CashRegisterClose = () => {
     setClosingTime(formattedTime);
     setCloseRegister(true);
   };
+  const handleCloseCashRegister = () => {
+    Swal.fire({
+      title: "¿Seguro que desea cerrar la caja?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Aceptar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(closeCashRegister(selectedSubOffice));
+      }
+    });
+  };
 
+  // Manejador para el cambio en la selección de sucursal
+  const handleSubOfficeChange = (e) => {
+    const selectedOffice = e.target.value;
+    setSelectedSubOffice(selectedOffice);
+    if (selectedOffice) {
+      dispatch(clearCashRegisterError());
+      dispatch(verifyCashRegisterOpen(selectedOffice));
+    }
+  };
+
+  useEffect(() => {
+    if (noConfirmOpenCashRegister !== '') {
+      Swal.fire({
+        text: noConfirmOpenCashRegister,
+        icon: "error",
+        confirmButtonText: "Aceptar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setSelectedSubOffice(""); // Limpia el estado solo después de confirmar
+        }
+      });
+    }
+  }, [noConfirmOpenCashRegister]);
+  
   return (
     <section className="container-cash-closing">
       <div className="first-section-cash-close">
         <div className="container-btn-cash-close">
           <button
             className="btn-close-cash"
-            disabled={closeRegister}
-            onClick={handleCloseRegister}
+            disabled={!selectedSubOffice}
+            onClick={() => {
+              handleCloseCashRegister();
+            }}
           >
             Cerrar caja
           </button>
         </div>
         <div className="input-group">
-        <div className="input-box-dashboard">
-          <select
-            value={selectedSubOffice}
-            onChange={(e) => setSelectedSubOffice(e.target.value)}
-            className="input-field-dashboard"
-          >
-            <option value="">Seleccionar sucursal</option>
-            {subOffices.map((office) => (
-              <option key={office._id} value={office._id}>
-                {office.name}
-              </option>
-            ))}
-          </select>
-          <label className="label-input-dashboard">Sucursal</label>
+          <div className="input-box-dashboard">
+            <select
+              value={selectedSubOffice}
+              onChange={handleSubOfficeChange}
+              className="input-field-dashboard"
+            >
+              <option value="">Seleccionar sucursal</option>
+              {subOffices.map((office) => (
+                <option key={office._id} value={office._id}>
+                  {office.name}
+                </option>
+              ))}
+            </select>
+            <label className="label-input-dashboard">Sucursal</label>
+          </div>
         </div>
-      </div>
         <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
           <h3>Saldo inicial en USD: </h3>
           <span
@@ -199,7 +249,7 @@ const CashRegisterClose = () => {
               justifyContent: "center",
             }}
           >
-            $ 4.000,00
+            {verificatedCashRegisterOpen?.opening_balance ?? " 0.00"}
           </span>
         </div>
       </div>
@@ -300,7 +350,7 @@ const CashRegisterClose = () => {
                       <td data-table="T/C">
                         <span>{movimiento.exchangeRate}</span>
                       </td>
-                   
+
                       <td data-table="Descripcion">
                         <span style={{ whiteSpace: "wrap" }}>
                           {movimiento.description}

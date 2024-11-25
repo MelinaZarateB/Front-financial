@@ -1,112 +1,12 @@
 import {
-  SIGN_UP_FAILURE,
-  SIGN_UP_SUCCESS,
-  LOGIN_FAILURE,
-  LOGIN_SUCCESS,
-  CLEAN_MESSAGE,
-  ACTIVATE_ACCOUNT,
-  RESTORE_PASSWORD,
-  CHANGE_PASSWORD_SUCCESS,
-  CHANGE_PASSWORD_FAILURE,
-  SEARCH_USER_BY_EMAIL,
-  GET_ALL_USERS,
-  CLEAN_FILTER_USER_BY_EMAIL,
-  DELETE_USER_SUCCESS,
-  REGISTER_USER_SUCCESS,
-  REGISTER_USER_FAILURE,
-  UPDATE_USER,
-  GET_TRANSACTIONS,
-  DELETE_TRANSACTION,
-  CREATE_EXPENSE,
-  CREATE_INCOME,
-  GET_SUBOFFICES,
-  DELETE_CURRENCY_SUBOFFICES,
-  CREATE_CURRENCIES,
   GET_CURRENCIES,
   DELETE_CURRENCY,
   UPDATE_CURRENCY_SUBOFFICES,
-  OPEN_CASH_REGISTER,
-  CLOSE_CASH_REGISTER,
-  VERIFY_CASH_REGISTER
-} from "./action-types";
+  DELETE_CURRENCY_SUBOFFICES,
+  GET_SUBOFFICES
+} from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
-
-/* Actions para caja registradora */
-export const verifyCashRegisterOpen = (idSubOffice) => {
-  return async (dispatch) => {
-    try{
-      const { data } = axios.get(`http://localhost:3000/cash-register/current/${idSubOffice}`)
-      if(data){
-        dispatch({
-          type: VERIFY_CASH_REGISTER,
-          payload: data
-        })
-      }
-    }catch(err){
-      const mensajeError =
-      err.response?.data?.message ||
-      "No hay cajas abiertas para esta sucursal.";
-    Swal.fire({
-      title: "Error",
-      text: mensajeError, // Mostrar el mensaje del backend
-      icon: "error",
-    });
-
-
-    }
-  }
-}
-
-export const closeCashRegister = (idCashRegister) => {
-  console.log('id de caja registradora a cerrar', idCashRegister)
-  return async (dispatch) => {
-    try{
-      const { data } = await axios.put(`http://localhost:3000/cash-register/close/${idCashRegister}`)
-    }catch(err){
-      const mensajeError =
-      err.response?.data?.message ||
-      "No se cerrar la caja. Por favor, intente nuevamente.";
-    Swal.fire({
-      title: "Error",
-      text: mensajeError, // Mostrar el mensaje del backend
-      icon: "error",
-    });
-
-    }
-  }
-
-}
-
-export const openCashRegister = (dataOpen) => {
-  console.log("data para abrir caja", dataOpen);
-  return async (dispatch) => {
-    try {
-      const { data } = await axios.post(
-        `http://localhost:3000/cash-register/start`,
-        dataOpen
-      );
-      console.log(data)
-      if (data) {
-        dispatch({
-          type: OPEN_CASH_REGISTER,
-          payload: true,
-        });
-      }
-    } catch (err) {
-      // Obtener el mensaje del servidor o usar un mensaje genérico si no está disponible
-      const mensajeError =
-        err.response?.data?.message ||
-        "No se pudo abrir caja. Por favor, intente nuevamente.";
-
-      Swal.fire({
-        title: "Error",
-        text: mensajeError, // Mostrar el mensaje del backend
-        icon: "error",
-      });
-    }
-  };
-};
 
 /* Actions para currencies */
 export const createCurrencies = (currency) => {
@@ -249,6 +149,7 @@ export const deleteCurrencySubOffice = (currencyId, subOfficeId) => {
         });
       }
     } catch (err) {
+      console.log(err)
       Swal.fire({
         title: "Error",
         text: "No se pudo eliminar la moneda. Por favor, intente nuevamente.",
@@ -257,5 +158,3 @@ export const deleteCurrencySubOffice = (currencyId, subOfficeId) => {
     }
   };
 };
-
-

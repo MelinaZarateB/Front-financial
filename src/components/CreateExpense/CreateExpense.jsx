@@ -1,7 +1,7 @@
 import './CreateExpense.css';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CreateExpense, cleanMessage, createExpense } from "../../redux/actions";
+import { cleanMessage, createExpense } from "../../redux/actions/expensesActions";
 import SpinnerSmall from './../../utils/Spinner/SpinnerSmall';
 
 const CreateExpense = ({ handleCreateExpense }) => {

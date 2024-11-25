@@ -6,7 +6,7 @@ import warning from "./../../assets/warning.svg";
 import alert from "./../../assets/alert.svg";
 import { useNavigate } from "react-router-dom";
 import { validationsSignUp } from "../../utils/validations";
-import { signUp, cleanMessage } from "../../redux/actions";
+import { signUp, cleanMessage } from "../../redux/actions/authActions";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../../utils/Spinner/Spinner";
 import queryString from "query-string";
@@ -14,7 +14,7 @@ import queryString from "query-string";
 const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const signUpMessage = useSelector((state) => state.signUpMessage);
+  const signUpMessage = useSelector((state) => state.auth.signUpMessage);
   /* States */
   const [newUser, setNewUser] = useState({
     username: "",

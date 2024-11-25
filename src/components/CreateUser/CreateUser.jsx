@@ -1,12 +1,12 @@
 import "./CreateUser.css";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser, cleanMessage } from "../../redux/actions";
+import { registerUser, cleanMessage } from "../../redux/actions/userActions";
 import SpinnerSmall from './../../utils/Spinner/SpinnerSmall';
 
 const CreateUser = ({ handleCreateUser }) => {
   const dispatch = useDispatch();
-  const stateRegisterUser = useSelector((state) => state.registerUser);
+  const stateRegisterUser = useSelector((state) => state.user.registerUser);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import visibilityOff from "./../../assets/visibility-off.svg";
 import visibilityOn from "./../../assets/visibility-on.svg";
 import warning from "./../../assets/warning.svg";
 import { changePassword } from "../../utils/validations";
-import { changePasswordAction } from "../../redux/actions";
+import { changePasswordAction } from "../../redux/actions/authActions";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";

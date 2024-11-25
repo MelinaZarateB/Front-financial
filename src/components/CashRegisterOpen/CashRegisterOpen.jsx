@@ -5,28 +5,30 @@ import arrowDown from "./../../assets/arrow-down.svg";
 import {
   getCurrencies,
   deleteCurrency,
-  getSubOffices,
   openCashRegister,
-} from "@/redux/actions";
+} from "@/redux/actions/cashRegisterActions";
+import { getSubOffices } from "../../redux/actions/subOfficesActions";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "@/utils/Spinner/Spinner";
 import Swal from "sweetalert2";
+import imgPencil from './../../assets/pencil.svg';
 
 const CashRegisterOpen = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [showCurrencies, setShowCurrencies] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [closingTime, setClosingTime] = useState(null);
-  const currencies = useSelector((state) => state.currencies);
-  const subOffices = useSelector((state) => state.subOffices);
-  const confirmOpenCashRegister = useSelector(
-    (state) => state.openCashRegister
-  );
   const [monedasLocales, setMonedasLocales] = useState([]);
-  const dispatch = useDispatch();
-
   const [selectedSubOffice, setSelectedSubOffice] = useState("");
   const [totalDolarizado, setTotalDolarizado] = useState(0);
+  const [editingId, setEditingId] = useState(null);
+  const [editValue, setEditValue] = useState('');
+  const [updates, setUpdates] = useState([]);
+
+  const dispatch = useDispatch();
+  const currencies = useSelector((state) => state.offices.currencies);
+  const subOffices = useSelector((state) => state.offices.subOffices);
+  const confirmOpenCashRegister = useSelector((state) => state.cashRegister.openCashRegister);
 
   useEffect(() => {
     dispatch(getCurrencies());
@@ -36,14 +38,16 @@ const CashRegisterOpen = () => {
   useEffect(() => {
     if (selectedSubOffice) {
       setIsLoading(true);
-      const office = subOffices.find(
-        (office) => office._id === selectedSubOffice
-      );
+      const office = subOffices.find((office) => office._id === selectedSubOffice);
       if (office) {
-        setMonedasLocales(
-          office.currencies.map((c) => ({ ...c, operation: "divide" }))
-        );
-        calcularTotalDolarizado(office.currencies);
+        const updatedCurrencies = office.currencies.map((c) => ({
+          ...c,
+          operation: "divide",
+          exchangeRate: c.currency.exchangeRate,
+          stock: c.stock || 0,
+        }));
+        setMonedasLocales(updatedCurrencies);
+        calcularTotalDolarizado(updatedCurrencies);
       }
       setTimeout(() => {
         setIsLoading(false);
@@ -51,15 +55,21 @@ const CashRegisterOpen = () => {
     }
   }, [selectedSubOffice, subOffices]);
 
-  const handleDeleteCurrency = (idCurrency) => {
-    dispatch(deleteCurrency(idCurrency));
-  };
-
-  const recalcularTotal = () => {
-    const total = monedasLocales.reduce((acc, currency) => {
+  const calcularTotalDolarizado = (currencies = monedasLocales) => {
+    const total = currencies.reduce((acc, currency) => {
       return acc + calcularValorEnDolares(currency);
     }, 0);
     setTotalDolarizado(total);
+  };
+
+  const calcularValorEnDolares = (currency) => {
+    let valor;
+    if (currency.operation === "multiply") {
+      valor = currency.stock * currency.exchangeRate;
+    } else {
+      valor = currency.stock / currency.exchangeRate;
+    }
+    return isNaN(valor) ? 0 : valor;
   };
 
   const actualizarStock = (currencyId, nuevoStock) => {
@@ -90,8 +100,7 @@ const CashRegisterOpen = () => {
       currency._id === currencyId
         ? {
             ...currency,
-            operation:
-              currency.operation === "multiply" ? "divide" : "multiply",
+            operation: currency.operation === "multiply" ? "divide" : "multiply",
           }
         : currency
     );
@@ -99,47 +108,18 @@ const CashRegisterOpen = () => {
     calcularTotalDolarizado(actualizado);
   };
 
-  const calcularTotalDolarizado = (currencies = monedasLocales) => {
-    const total = currencies.reduce((acc, currency) => {
-      return acc + calcularValorEnDolares(currency);
-    }, 0);
-    setTotalDolarizado(total);
+  const handleDeleteCurrency = (idCurrency) => {
+    dispatch(deleteCurrency(idCurrency));
   };
 
-  const calcularValorEnDolares = (currency) => {
-    let valor;
-    if (currency.operation === "multiply") {
-      valor = currency.stock * currency.exchangeRate;
-    } else {
-      valor = currency.stock / currency.exchangeRate;
-    }
-    return isNaN(valor) ? 0 : valor;
-  };
+  const handleOpenModal = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
+  const toggleCurrenciesVisibility = () => setShowCurrencies(!showCurrencies);
 
-  const handleOpenModal = () => {
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
-
-  const toggleCurrenciesVisibility = () => {
-    setShowCurrencies(!showCurrencies);
-  };
-  const obtenerFechaActual = () => {
-    const hoy = new Date();
-    const year = hoy.getFullYear();
-    const month = String(hoy.getMonth() + 1).padStart(2, "0"); // Los meses empiezan en 0
-    const day = String(hoy.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
   const handleOpenCashRegister = () => {
-    const fechaActual = obtenerFechaActual();
     Swal.fire({
       title: "¿Desea abrir caja?",
       text: `Total en USD: ${totalDolarizado.toFixed(2)}`,
-      icon: "question",
       showCancelButton: true,
       confirmButtonText: "Aceptar",
       cancelButtonText: "Cancelar",
@@ -153,30 +133,57 @@ const CashRegisterOpen = () => {
             opening_balance: totalDolarizado,
           })
         );
+        handleCloseRegister();
       }
     });
   };
+
   const handleCloseRegister = () => {
-    // Cuando se cierra la caja, guarda la hora actual
     const now = new Date();
-    const formattedTime = now.toLocaleString("es-ES", {
+    setClosingTime(now.toLocaleString("es-ES", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
-      
-    });
-    setClosingTime(formattedTime);
+    }));
   };
+
+  const handleEditStart = (currency) => {
+    setEditingId(currency._id);
+    setEditValue(currency.exchangeRate.toString());
+  };
+
+  const handleEditEnd = (currency) => {
+    setEditingId(null);
+    if (editValue !== currency.exchangeRate.toString()) {
+      const newAmount = parseFloat(editValue);
+      
+      setUpdates(prevUpdates => {
+        const existingUpdateIndex = prevUpdates.findIndex(update => update.currencyId === currency._id);
+        
+        if (existingUpdateIndex !== -1) {
+          const newUpdates = [...prevUpdates];
+          newUpdates[existingUpdateIndex].amount = newAmount;
+          return newUpdates;
+        } else {
+          return [...prevUpdates, { currencyId: currency._id, amount: newAmount }];
+        }
+      });
+
+      actualizarTasaAplicada(currency._id, editValue);
+    }
+  };
+
+  const handleKeyDown = (e, currency) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleEditEnd(currency);
+    }
+  };
+
   return (
     <div className="section-cash-opening">
       <div className="container-btn-cash-close">
-        <button
-          className="btn-close-cash"
-          onClick={() => {
-            handleOpenCashRegister();
-            handleCloseRegister();
-          }}
-        >
+        <button className="btn-close-cash" onClick={handleOpenCashRegister}>
           Abrir caja
         </button>
       </div>
@@ -189,7 +196,7 @@ const CashRegisterOpen = () => {
             className="input-field-dashboard"
           >
             <option value="">Seleccionar sucursal</option>
-            {subOffices.map((office) => (
+            {subOffices?.map((office) => (
               <option key={office._id} value={office._id}>
                 {office.name}
               </option>
@@ -198,12 +205,11 @@ const CashRegisterOpen = () => {
           <label className="label-input-dashboard">Sucursal</label>
         </div>
       </div>
-      {confirmOpenCashRegister ? (
+      
+      {confirmOpenCashRegister && (
         <div className="section-cash-closing">
           <div>Apertura de caja exitosa hoy {closingTime}</div>
         </div>
-      ) : (
-        ""
       )}
 
       {selectedSubOffice && (
@@ -232,8 +238,8 @@ const CashRegisterOpen = () => {
                 ) : (
                   monedasLocales.map((currency) => (
                     <tr key={currency._id}>
-                      <td>{currency.currency.name}</td>
-                      <td>{currency.currency.code}</td>
+                      <td>{currency.currency?.name || "No disponible"}</td>
+                      <td>{currency.currency?.code || "No disponible"}</td>
                       <td>
                         <input
                           style={{
@@ -242,22 +248,31 @@ const CashRegisterOpen = () => {
                           }}
                           type="text"
                           value={currency.stock}
-                          onChange={(e) =>
-                            actualizarStock(currency._id, e.target.value)
-                          }
+                          onChange={(e) => actualizarStock(currency._id, e.target.value)}
                         />
                       </td>
                       <td>
-                        <input
-                          style={{
-                            border: "1px solid #555",
-                            borderRadius: "4px",
-                          }}
-                          type="text"
-                          onChange={(e) =>
-                            actualizarTasaAplicada(currency._id, e.target.value)
-                          }
-                        />
+                        {editingId === currency._id ? (
+                          <input
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            onBlur={() => handleEditEnd(currency)}
+                            onKeyDown={(e) => handleKeyDown(e, currency)}
+                            autoFocus
+                            style={{
+                              border: "1px solid #555",
+                              borderRadius: "4px",
+                            }}
+                          />
+                        ) : (
+                          <span
+                            onClick={() => handleEditStart(currency)}
+                            style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}
+                          >
+                            {currency.exchangeRate}
+                            <img src={imgPencil} alt="Edit" style={{marginLeft: '5px', width: '16px', height: '16px'}} />
+                          </span>
+                        )}
                       </td>
                       <td>
                         <button
@@ -266,10 +281,7 @@ const CashRegisterOpen = () => {
                             padding: "5px 10px",
                             borderRadius: "4px",
                             border: "none",
-                            background:
-                              currency.operation === "multiply"
-                                ? "#4CAF50"
-                                : "#f44336",
+                            background: currency.operation === "multiply" ? "#4CAF50" : "#f44336",
                             color: "white",
                             cursor: "pointer",
                           }}
@@ -278,9 +290,7 @@ const CashRegisterOpen = () => {
                         </button>
                       </td>
                       <td>
-                        {isNaN(calcularValorEnDolares(currency))
-                          ? "0.00"
-                          : calcularValorEnDolares(currency).toFixed(2)}
+                        {calcularValorEnDolares(currency).toFixed(2)}
                       </td>
                     </tr>
                   ))
@@ -291,10 +301,7 @@ const CashRegisterOpen = () => {
         </div>
       )}
 
-      <div
-        className="total"
-        style={{ display: "flex", alignItems: "center", gap: "4px" }}
-      >
+      <div className="total" style={{ display: "flex", alignItems: "center", gap: "4px" }}>
         <h3>Total en USD:</h3>
         <span
           style={{
@@ -306,7 +313,7 @@ const CashRegisterOpen = () => {
             justifyContent: "center",
           }}
         >
-          {isNaN(totalDolarizado) ? "0.00" : totalDolarizado.toFixed(2)}
+          {totalDolarizado.toFixed(2)}
         </span>
       </div>
 
@@ -366,6 +373,7 @@ const CashRegisterOpen = () => {
           </table>
         </div>
       )}
+      <pre>{JSON.stringify(updates, null, 2)}</pre>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { validationRestorePassword } from "../../utils/validations";
 import queryString from 'query-string';
-import { restorePassword } from "../../redux/actions";
+import { restorePassword } from "../../redux/actions/authActions";
 import { useDispatch } from "react-redux";
 
 

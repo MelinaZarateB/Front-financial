@@ -12,15 +12,18 @@ import {
   getSubOffices,
   getCurrencies,
   deleteCurrencySubOffice,
-  updateStockCurrency
-} from "@/redux/actions";
+  updateStockCurrency,
+} from "../../redux/actions/subOfficesActions";
 import "./Offices.css";
 
 const Offices = () => {
   const dispatch = useDispatch();
-  const subOffices = useSelector((state) => state.subOffices);
-  const currencies = useSelector((state) => state.currencies);
-  const updaCurrency = useSelector((state) => state.updateCurrencies)
+  const subOffices = useSelector((state) => state.offices.subOffices);
+  console.log(subOffices)
+  const currencies = useSelector((state) => state.offices.currencies);
+  const updaCurrency = useSelector(
+    (state) => state.offices._idupdateCurrencies
+  );
   const [selectedCurrencyId, setSelectedCurrencyId] = useState("");
   const [viewForm, setViewForm] = useState(false);
   const [selectType, setSelectType] = useState("");
@@ -59,8 +62,9 @@ const Offices = () => {
   };
 
   const handleUpdateStockCurrency = (idCurrency, idOffice) => {
-    dispatch(updateStockCurrency(idCurrency, idOffice)) && setSelectedCurrencyId("");
-  }
+    dispatch(updateStockCurrency(idCurrency, idOffice)) &&
+      setSelectedCurrencyId("");
+  };
   const toggleCurrencyVisibility = (officeId) => {
     setVisibleCurrencies((prev) => ({
       ...prev,
@@ -74,8 +78,8 @@ const Offices = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getSubOffices())
-  }, [updaCurrency])
+    dispatch(getSubOffices());
+  }, [updaCurrency]);
 
   return (
     <div className="container-users">
@@ -202,7 +206,7 @@ const Offices = () => {
             <img src={officeIcon} alt="" />
             <h4>Suboficinas</h4>
           </div>
-          {subOffices.map((office) => (
+          {subOffices?.map((office) => (
             <div key={office._id} className="container-parent-suboffices">
               <div>
                 <h5 style={{ fontWeight: "600" }}>{office.name}</h5>
@@ -253,7 +257,7 @@ const Offices = () => {
                       </div>
                     </div>
                     <div className="container-buttons-offices">
-                      <button className="btn-search-users" >
+                      <button className="btn-search-users">
                         Agregar usuario
                       </button>
                     </div>
@@ -299,7 +303,7 @@ const Offices = () => {
                           }}
                         >
                           <option value="all">Seleccionar moneda</option>
-                          {currencies.map((currency) => (
+                          {currencies?.map((currency) => (
                             <option key={currency._id} value={currency._id}>
                               {currency.name} ({currency.code})
                             </option>
@@ -315,7 +319,15 @@ const Offices = () => {
                       </div>
                     </div>
                     <div className="container-buttons-offices">
-                      <button className="btn-search-users" onClick={() => handleUpdateStockCurrency(selectedCurrencyId, office._id)}>
+                      <button
+                        className="btn-search-users"
+                        onClick={() =>
+                          handleUpdateStockCurrency(
+                            selectedCurrencyId,
+                            office._id
+                          )
+                        }
+                      >
                         Agregar moneda
                       </button>
                     </div>
@@ -333,7 +345,15 @@ const Offices = () => {
                     {visibleCurrencies[office._id]
                       ? "Ocultar monedas de la sucursal"
                       : "Ver monedas de la sucursal"}{" "}
-                    <img src={arrowDown} alt="" style={{ transform: visibleCurrencies[office._id] ? 'rotate(180deg)' : 'rotate(0deg)'}} />
+                    <img
+                      src={arrowDown}
+                      alt=""
+                      style={{
+                        transform: visibleCurrencies[office._id]
+                          ? "rotate(180deg)"
+                          : "rotate(0deg)",
+                      }}
+                    />
                   </span>
                   <div
                     className={`container-table ${
@@ -358,8 +378,12 @@ const Offices = () => {
                         <tbody>
                           {office.currencies.map((currency) => (
                             <tr key={currency._id}>
-                              <td>{currency.currency.name}</td>
-                              <td>{currency.currency.code}</td>
+                              <td>
+                                {currency.currency?.name || "No disponible"}
+                              </td>
+                              <td>
+                                {currency.currency?.code || "No disponible"}
+                              </td>
                               <td>
                                 {" "}
                                 <button
