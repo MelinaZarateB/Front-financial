@@ -137,8 +137,12 @@ const CashRegisterOpen = () => {
             opening_balance: totalDolarizado,
           })
         );
-        dispatch(updateMultipleCurrencies(updates));
-        dispatch(updateMultipleStockCurrencies(selectedSubOffice, stockUpdates));
+        if(updates){
+          dispatch(updateMultipleCurrencies(updates));
+        }
+        if(stockUpdates){
+          dispatch(updateMultipleStockCurrencies(selectedSubOffice, stockUpdates));
+        }
         handleCloseRegister();
       }
     });
