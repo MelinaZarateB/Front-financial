@@ -6,6 +6,8 @@ import {
   getCurrencies,
   deleteCurrency,
   openCashRegister,
+  updateMultipleStockCurrencies,
+  updateMultipleCurrencies
 } from "@/redux/actions/cashRegisterActions";
 import { getSubOffices } from "../../redux/actions/subOfficesActions";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,8 +24,10 @@ const CashRegisterOpen = () => {
   const [selectedSubOffice, setSelectedSubOffice] = useState("");
   const [totalDolarizado, setTotalDolarizado] = useState(0);
   const [editingId, setEditingId] = useState(null);
+  const [editingField, setEditingField] = useState(null);
   const [editValue, setEditValue] = useState('');
   const [updates, setUpdates] = useState([]);
+  const [stockUpdates, setStockUpdates] = useState([]);
 
   const dispatch = useDispatch();
   const currencies = useSelector((state) => state.offices.currencies);
@@ -133,6 +137,8 @@ const CashRegisterOpen = () => {
             opening_balance: totalDolarizado,
           })
         );
+        dispatch(updateMultipleCurrencies(updates));
+        dispatch(updateMultipleStockCurrencies(selectedSubOffice, stockUpdates));
         handleCloseRegister();
       }
     });
@@ -147,29 +153,59 @@ const CashRegisterOpen = () => {
     }));
   };
 
-  const handleEditStart = (currency) => {
-    setEditingId(currency._id);
-    setEditValue(currency.exchangeRate.toString());
+  const handleEditStart = (currency, field) => {
+    setEditingId(currency.currency._id);
+    setEditingField(field);
+    setEditValue(field === 'exchangeRate' ? currency.exchangeRate.toString() : currency.stock.toString());
   };
 
   const handleEditEnd = (currency) => {
     setEditingId(null);
-    if (editValue !== currency.exchangeRate.toString()) {
-      const newAmount = parseFloat(editValue);
+    setEditingField(null);
+    if (editValue !== (editingField === 'exchangeRate' ? currency.exchangeRate.toString() : currency.stock.toString())) {
+      const newValue = parseFloat(editValue);
       
-      setUpdates(prevUpdates => {
-        const existingUpdateIndex = prevUpdates.findIndex(update => update.currencyId === currency._id);
-        
-        if (existingUpdateIndex !== -1) {
-          const newUpdates = [...prevUpdates];
-          newUpdates[existingUpdateIndex].amount = newAmount;
-          return newUpdates;
-        } else {
-          return [...prevUpdates, { currencyId: currency._id, amount: newAmount }];
-        }
-      });
-
-      actualizarTasaAplicada(currency._id, editValue);
+      if (editingField === 'exchangeRate') {
+        setUpdates(prevUpdates => {
+          const existingUpdateIndex = prevUpdates.findIndex(update => update.currencyId === currency.currency._id);
+          
+          if (existingUpdateIndex !== -1) {
+            const newUpdates = [...prevUpdates];
+            newUpdates[existingUpdateIndex] = {
+              ...newUpdates[existingUpdateIndex],
+              exchangeRate: newValue,
+            };
+            return newUpdates;
+          } else {
+            return [...prevUpdates, { 
+              currencyId: currency.currency._id, 
+              exchangeRate: newValue,
+            }];
+          }
+        });
+        actualizarTasaAplicada(currency._id, editValue);
+      } else if (editingField === 'stock') {
+        setStockUpdates(prevUpdates => {
+          const existingUpdateIndex = prevUpdates.findIndex(update => update.currencyId === currency.currency._id);
+          
+          if (existingUpdateIndex !== -1) {
+            const newUpdates = [...prevUpdates];
+            newUpdates[existingUpdateIndex] = {
+              ...newUpdates[existingUpdateIndex],
+              amount: newValue,
+              operation: 'set'
+            };
+            return newUpdates;
+          } else {
+            return [...prevUpdates, { 
+              currencyId: currency.currency._id, 
+              amount: newValue,
+              operation: 'set'
+            }];
+          }
+        });
+        actualizarStock(currency._id, editValue);
+      }
     }
   };
 
@@ -241,18 +277,7 @@ const CashRegisterOpen = () => {
                       <td>{currency.currency?.name || "No disponible"}</td>
                       <td>{currency.currency?.code || "No disponible"}</td>
                       <td>
-                        <input
-                          style={{
-                            border: "1px solid #555",
-                            borderRadius: "4px",
-                          }}
-                          type="text"
-                          value={currency.stock}
-                          onChange={(e) => actualizarStock(currency._id, e.target.value)}
-                        />
-                      </td>
-                      <td>
-                        {editingId === currency._id ? (
+                        {editingId === currency.currency._id && editingField === 'stock' ? (
                           <input
                             value={editValue}
                             onChange={(e) => setEditValue(e.target.value)}
@@ -266,7 +291,30 @@ const CashRegisterOpen = () => {
                           />
                         ) : (
                           <span
-                            onClick={() => handleEditStart(currency)}
+                            onClick={() => handleEditStart(currency, 'stock')}
+                            style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}
+                          >
+                            {currency.stock}
+                            <img src={imgPencil} alt="Edit" style={{marginLeft: '5px', width: '16px', height: '16px'}} />
+                          </span>
+                        )}
+                      </td>
+                      <td>
+                        {editingId === currency.currency._id && editingField === 'exchangeRate' ? (
+                          <input
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            onBlur={() => handleEditEnd(currency)}
+                            onKeyDown={(e) => handleKeyDown(e, currency)}
+                            autoFocus
+                            style={{
+                              border: "1px solid #555",
+                              borderRadius: "4px",
+                            }}
+                          />
+                        ) : (
+                          <span
+                            onClick={() => handleEditStart(currency, 'exchangeRate')}
                             style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}
                           >
                             {currency.exchangeRate}
@@ -373,7 +421,6 @@ const CashRegisterOpen = () => {
           </table>
         </div>
       )}
-      <pre>{JSON.stringify(updates, null, 2)}</pre>
     </div>
   );
 };

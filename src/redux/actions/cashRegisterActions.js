@@ -33,15 +33,42 @@ export const getCurrencies = () => {
     }
   };
 };
-export const updateMultipleStockCurrencies = (subOfficeId, currencyId) => {
+export const updateMultipleStockCurrencies = (subOfficeId, updates) => {
+  console.log('Monedas a actualizar:', subOfficeId, updates);
   return async (dispatch) => {
     try {
+     const payload = { updates }; 
       const { data } = await axios.put(
-        `http://localhost:3000/sub_offices/${subOfficeId}/currencies/${currencyId}`
+        `http://localhost:3000/sub_offices/${subOfficeId}/currencies/`,
+        payload
       );
-    } catch (err) {}
+      console.log('Monedas actualizadas:', data);
+    } catch (err) {
+      console.error('Error actualizando monedas:', err.response?.data || err.message);
+    }
   };
 };
+export const updateMultipleCurrencies = (updates) => {
+  return async (dispatch) => {
+    try {
+     const payload = { updates }; 
+      const { data } = await axios.put(
+        `http://localhost:3000/currencies/multiple`,
+        payload
+      );
+      console.log('Tasas de monedas actualizadas:', data);
+    } catch (err) {
+      const mensajeError =
+        err.response?.data?.message || 'Ocurrio un error al actualizar los stocks'
+      Swal.fire({
+        title: "Error",
+        text: mensajeError,
+        icon: "error",
+      });
+    }
+  };
+}
+
 export const deleteCurrency = (idCurrency) => {
   return async (dispatch) => {
     try {

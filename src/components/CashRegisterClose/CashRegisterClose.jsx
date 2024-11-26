@@ -12,7 +12,7 @@ import {
 import Swal from "sweetalert2";
 import Spinner from "@/utils/Spinner/Spinner";
 
-const movimientos = [
+const movimientos1 = [
   {
     _id: 1,
     type: "venta",
@@ -144,17 +144,20 @@ const movimientos = [
 const CashRegisterClose = () => {
   const [selectedSubOffice, setSelectedSubOffice] = useState("");
   const [closeRegister, setCloseRegister] = useState(false);
+  const [closingTime, setClosingTime] = useState(null);
+  const [pesoRate, setPesoRate] = useState("");
+  const [dollarRate, setDollarRate] = useState("");
+
   const subOffices = useSelector((state) => state.offices.subOffices);
-  const noConfirmOpenCashRegister = useSelector((state) => state.cashRegister.error)
+  const noConfirmOpenCashRegister = useSelector((state) => state.cashRegister.error);
   const verificatedCashRegisterOpen = useSelector(
     (state) => state.cashRegister.verifyCashRegister
   );
-  const [closingTime, setClosingTime] = useState(null);
+  const movimientos = useSelector((state) => state.cashRegister.movements);
+
   const dispatch = useDispatch();
-  console.log(selectedSubOffice);
 
   const handleCloseRegister = () => {
-    // Cuando se cierra la caja, guarda la hora actual
     const now = new Date();
     const formattedTime = now.toLocaleString("es-ES", {
       day: "2-digit",
@@ -163,32 +166,44 @@ const CashRegisterClose = () => {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
-      hour12: true, // Para formato 12h con AM/PM
+      hour12: true,
     });
     setClosingTime(formattedTime);
     setCloseRegister(true);
   };
+
   const handleCloseCashRegister = () => {
     Swal.fire({
       title: "¿Seguro que desea cerrar la caja?",
-      icon: "question",
       showCancelButton: true,
       confirmButtonText: "Aceptar",
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(closeCashRegister(selectedSubOffice));
+        handleCloseRegister();
       }
     });
   };
 
-  // Manejador para el cambio en la selección de sucursal
   const handleSubOfficeChange = (e) => {
     const selectedOffice = e.target.value;
     setSelectedSubOffice(selectedOffice);
     if (selectedOffice) {
       dispatch(clearCashRegisterError());
       dispatch(verifyCashRegisterOpen(selectedOffice));
+    }
+  };
+
+  const handleExchangeRateSubmit = (e) => {
+    e.preventDefault();
+    if (pesoRate && dollarRate) {
+      dispatch(updateExchangeRates(selectedSubOffice, { pesoRate, dollarRate }));
+      Swal.fire({
+        title: "Tasas de cambio actualizadas",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -200,7 +215,7 @@ const CashRegisterClose = () => {
         confirmButtonText: "Aceptar",
       }).then((result) => {
         if (result.isConfirmed) {
-          setSelectedSubOffice(""); // Limpia el estado solo después de confirmar
+          setSelectedSubOffice("");
         }
       });
     }
@@ -213,9 +228,7 @@ const CashRegisterClose = () => {
           <button
             className="btn-close-cash"
             disabled={!selectedSubOffice}
-            onClick={() => {
-              handleCloseCashRegister();
-            }}
+            onClick={handleCloseCashRegister}
           >
             Cerrar caja
           </button>
@@ -253,6 +266,39 @@ const CashRegisterClose = () => {
           </span>
         </div>
       </div>
+
+      {verificatedCashRegisterOpen && !closeRegister && (
+        <form onSubmit={handleExchangeRateSubmit} className="exchange-rate-form">
+          <div className="input-group">
+            <div className="input-box-dashboard">
+              <input
+                type="text"
+                value={pesoRate}
+                onChange={(e) => setPesoRate(e.target.value)}
+                className="input-field-dashboard"
+              
+                required
+              />
+              <label className="label-input-dashboard">Tasa en pesos</label>
+            </div>
+          </div>
+          <div className="input-group">
+            <div className="input-box-dashboard">
+              <input
+                type="text"
+                value={dollarRate}
+                onChange={(e) => setDollarRate(e.target.value)}
+                className="input-field-dashboard"
+              
+                required
+              />
+              <label className="label-input-dashboard">Tasa en dólares</label>
+            </div>
+          </div>
+          <button type="submit" className="btn-update-rates">Actualizar tasas</button>
+        </form>
+      )}
+
       <div className="container-balance">
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <span className="span-balance">Balance final en USD: </span>
@@ -261,13 +307,12 @@ const CashRegisterClose = () => {
         <div className="difference-balance">Diferencia: $ 1.500,00</div>
       </div>
 
-      {closeRegister ? (
+      {closeRegister && (
         <div className="section-cash-closing">
           <div>Caja cerrada exitosamente el {closingTime}</div>
         </div>
-      ) : (
-        ""
       )}
+
       <div>
         <div style={{ backgroundColor: "white", padding: "15px" }}>
           <h3 style={{ fontWeight: "500" }}>Operaciones del día</h3>
@@ -287,12 +332,12 @@ const CashRegisterClose = () => {
                   <th>Descripcion</th>
                   <th>Hora</th>
                   <th>Sucursal</th>
-                  {!closeRegister ? <th colSpan="1"></th> : ""}
+                  {!closeRegister && <th></th>}
                 </tr>
               </thead>
               <tbody>
-                {movimientos && movimientos.length > 0 ? (
-                  movimientos.map((movimiento) => (
+                {movimientos1 && movimientos1.length > 0 ? (
+                  movimientos1.map((movimiento) => (
                     <tr key={movimiento._id}>
                       <td data-table="Tipo">
                         {["compra", "venta", "cambio de cheque"].includes(
@@ -307,7 +352,7 @@ const CashRegisterClose = () => {
                               justifyContent: "center",
                               margin: "0 auto",
                             }}
-                          /> // Para compra, venta, y cambio de cheque
+                          />
                         ) : movimiento.type === "ingreso" ? (
                           <img
                             style={{
@@ -318,7 +363,7 @@ const CashRegisterClose = () => {
                             src={imgIncome}
                             alt="Ingreso"
                             title="Ingreso"
-                          /> // Emoji o icono para ingreso con tooltip
+                          />
                         ) : movimiento.type === "egreso" ? (
                           <img
                             src={imgExpense}
@@ -329,12 +374,11 @@ const CashRegisterClose = () => {
                             }}
                             alt="Egreso"
                             title="Egreso"
-                          /> // Emoji o icono para egreso con tooltip
+                          />
                         ) : (
                           ""
                         )}
                       </td>
-
                       <td data-table="Usuario">
                         <span>{movimiento.userName}</span>
                       </td>
@@ -350,7 +394,6 @@ const CashRegisterClose = () => {
                       <td data-table="T/C">
                         <span>{movimiento.exchangeRate}</span>
                       </td>
-
                       <td data-table="Descripcion">
                         <span style={{ whiteSpace: "wrap" }}>
                           {movimiento.description}
@@ -368,17 +411,13 @@ const CashRegisterClose = () => {
                           )}
                         </span>
                       </td>
-
                       <td data-table="Sucursal">
                         <span>{movimiento.subOfficeName}</span>
                       </td>
-
-                      {!closeRegister ? (
+                      {!closeRegister && (
                         <td>
-                          <button className="btn-trash">Eliminar</button>{" "}
+                          <button className="btn-trash">Eliminar</button>
                         </td>
-                      ) : (
-                        ""
                       )}
                     </tr>
                   ))
@@ -397,4 +436,5 @@ const CashRegisterClose = () => {
     </section>
   );
 };
+
 export default CashRegisterClose;
