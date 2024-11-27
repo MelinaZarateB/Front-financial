@@ -148,12 +148,15 @@ const CashRegisterClose = () => {
   const [pesoRate, setPesoRate] = useState("");
   const [dollarRate, setDollarRate] = useState("");
 
+
   const subOffices = useSelector((state) => state.offices.subOffices);
   const noConfirmOpenCashRegister = useSelector((state) => state.cashRegister.error);
   const verificatedCashRegisterOpen = useSelector(
     (state) => state.cashRegister.verifyCashRegister
   );
   const movimientos = useSelector((state) => state.cashRegister.movements);
+  const closedCashRegister = useSelector((state) => state.cashRegister.closedCashRegister)
+  console.log(closedCashRegister)
 
   const dispatch = useDispatch();
 
@@ -180,7 +183,7 @@ const CashRegisterClose = () => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(closeCashRegister(selectedSubOffice));
+        dispatch(closeCashRegister(verificatedCashRegisterOpen._id, dollarRate, pesoRate));
         handleCloseRegister();
       }
     });
@@ -207,6 +210,17 @@ const CashRegisterClose = () => {
     }
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (closedCashRegister) {
+      setIsLoading(true);
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [closedCashRegister]);
   useEffect(() => {
     if (noConfirmOpenCashRegister !== '') {
       Swal.fire({
@@ -227,7 +241,7 @@ const CashRegisterClose = () => {
         <div className="container-btn-cash-close">
           <button
             className="btn-close-cash"
-            disabled={!selectedSubOffice}
+            disabled={!selectedSubOffice || !pesoRate || !dollarRate}
             onClick={handleCloseCashRegister}
           >
             Cerrar caja
@@ -250,25 +264,8 @@ const CashRegisterClose = () => {
             <label className="label-input-dashboard">Sucursal</label>
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <h3>Saldo inicial en USD: </h3>
-          <span
-            style={{
-              backgroundColor: "white",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              padding: "0.4rem",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            {verificatedCashRegisterOpen?.opening_balance ?? " 0.00"}
-          </span>
-        </div>
-      </div>
-
-      {verificatedCashRegisterOpen && !closeRegister && (
-        <form onSubmit={handleExchangeRateSubmit} className="exchange-rate-form">
+        {verificatedCashRegisterOpen && selectedSubOffice &&(
+        <form onSubmit={handleExchangeRateSubmit} style={{display: 'flex', gap: '5px'}}>
           <div className="input-group">
             <div className="input-box-dashboard">
               <input
@@ -289,25 +286,54 @@ const CashRegisterClose = () => {
                 value={dollarRate}
                 onChange={(e) => setDollarRate(e.target.value)}
                 className="input-field-dashboard"
-              
                 required
               />
               <label className="label-input-dashboard">Tasa en dólares</label>
             </div>
           </div>
-          <button type="submit" className="btn-update-rates">Actualizar tasas</button>
         </form>
       )}
 
-      <div className="container-balance">
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <span className="span-balance">Balance final en USD: </span>
-          <span className="span-monto-balance">$ 5.500,00</span>
-        </div>
-        <div className="difference-balance">Diferencia: $ 1.500,00</div>
       </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          <h3>Saldo inicial en USD: </h3>
+          <span
+            style={{
+              backgroundColor: "white",
+              border: "1px solid #ddd",
+              borderRadius: "4px",
+              padding: "0.4rem",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {verificatedCashRegisterOpen?.opening_balance ?? " 0.00"}
+          </span>
+        </div>
 
-      {closeRegister && (
+      {closedCashRegister  && (
+        <div className="container-balance">
+          {isLoading ? (
+            <div style={{display: 'flex', justifyContent: 'center'}}> 
+              <Spinner />
+            </div>
+          ) : (
+            <>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span className="span-balance">Balance final en USD: </span>
+                <span className="span-monto-balance">
+                  $ {closedCashRegister.closing_balance}
+                </span>
+              </div>
+              <div className="difference-balance">
+                Diferencia: $ {closedCashRegister.difference}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {closedCashRegister && !isLoading && (
         <div className="section-cash-closing">
           <div>Caja cerrada exitosamente el {closingTime}</div>
         </div>

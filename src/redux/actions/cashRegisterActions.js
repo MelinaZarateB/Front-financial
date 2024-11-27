@@ -1,10 +1,11 @@
 import {
   OPEN_CASH_REGISTER,
+  CLOSE_CASH_REGISTER,
   VERIFY_CASH_REGISTER,
   DELETE_CURRENCY,
   GET_CURRENCIES,
   VERIFY_CASH_REGISTER_ERROR,
-  CLEAR_CASH_REGISTER_ERROR
+  CLEAR_CASH_REGISTER_ERROR,
 } from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -34,32 +35,36 @@ export const getCurrencies = () => {
   };
 };
 export const updateMultipleStockCurrencies = (subOfficeId, updates) => {
-  console.log('Monedas a actualizar:', subOfficeId, updates);
+  console.log("Monedas a actualizar:", subOfficeId, updates);
   return async (dispatch) => {
     try {
-     const payload = { updates }; 
+      const payload = { updates };
       const { data } = await axios.put(
         `http://localhost:3000/sub_offices/${subOfficeId}/currencies/`,
         payload
       );
-      console.log('Monedas actualizadas:', data);
+      console.log("Monedas actualizadas:", data);
     } catch (err) {
-      console.error('Error actualizando monedas:', err.response?.data || err.message);
+      console.error(
+        "Error actualizando monedas:",
+        err.response?.data || err.message
+      );
     }
   };
 };
 export const updateMultipleCurrencies = (updates) => {
   return async (dispatch) => {
     try {
-     const payload = { updates }; 
+      const payload = { updates };
       const { data } = await axios.put(
         `http://localhost:3000/currencies/multiple`,
         payload
       );
-      console.log('Tasas de monedas actualizadas:', data);
+      console.log("Tasas de monedas actualizadas:", data);
     } catch (err) {
       const mensajeError =
-        err.response?.data?.message || 'Ocurrio un error al actualizar los stocks'
+        err.response?.data?.message ||
+        "Ocurrio un error al actualizar los stocks";
       Swal.fire({
         title: "Error",
         text: mensajeError,
@@ -67,7 +72,7 @@ export const updateMultipleCurrencies = (updates) => {
       });
     }
   };
-}
+};
 
 export const deleteCurrency = (idCurrency) => {
   return async (dispatch) => {
@@ -115,10 +120,10 @@ export const verifyCashRegisterOpen = (idSubOffice) => {
       const mensajeError =
         err.response?.data?.message ||
         "No hay cajas abiertas para esta sucursal.";
-        console.log('mensaje error caja', mensajeError)
+      console.log("mensaje error caja", mensajeError);
       dispatch({
         type: VERIFY_CASH_REGISTER_ERROR,
-        payload: mensajeError, 
+        payload: mensajeError,
       });
 
       /*Swal.fire({
@@ -130,13 +135,29 @@ export const verifyCashRegisterOpen = (idSubOffice) => {
   };
 };
 
-export const closeCashRegister = (idCashRegister) => {
-  console.log("id de caja registradora a cerrar", idCashRegister);
+export const closeCashRegister = (idCashRegister, usdRate, arsRate) => {
+  console.log(
+    "id de caja registradora a cerrar",
+    idCashRegister,
+    usdRate,
+    arsRate
+  );
   return async (dispatch) => {
     try {
       const { data } = await axios.put(
-        `http://localhost:3000/cash-register/close/${idCashRegister}`
+        `http://localhost:3000/cash-register/close/${idCashRegister}`,
+        {
+          usd_rate: usdRate,
+          ars_rate: arsRate,
+        }
       );
+      if (data) {
+        dispatch({
+          type: CLOSE_CASH_REGISTER,
+          payload: data,
+        });
+      }
+      console.log(data);
     } catch (err) {
       const mensajeError =
         err.response?.data?.message ||

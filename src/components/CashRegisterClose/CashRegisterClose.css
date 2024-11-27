@@ -12,6 +12,7 @@
 .first-section-cash-close {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 .container-btn-cash-close {
   display: flex;
