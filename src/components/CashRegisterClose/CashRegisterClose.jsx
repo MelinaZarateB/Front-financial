@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   closeCashRegister,
   verifyCashRegisterOpen,
-  clearCashRegisterError
+  clearCashRegisterError,
 } from "@/redux/actions/cashRegisterActions";
 import Swal from "sweetalert2";
 import Spinner from "@/utils/Spinner/Spinner";
@@ -140,25 +140,28 @@ const movimientos1 = [
     subOfficeName: "Sucursal Oeste",
   },
 ];
+const fieldFilter = ["Moneda/Cuenta", "Usuario"];
 
 const CashRegisterClose = () => {
+  const dispatch = useDispatch();
   const [selectedSubOffice, setSelectedSubOffice] = useState("");
   const [closeRegister, setCloseRegister] = useState(false);
   const [closingTime, setClosingTime] = useState(null);
   const [pesoRate, setPesoRate] = useState("");
   const [dollarRate, setDollarRate] = useState("");
-
+  const [selectType, setSelectType] = useState("");
 
   const subOffices = useSelector((state) => state.offices.subOffices);
-  const noConfirmOpenCashRegister = useSelector((state) => state.cashRegister.error);
+  const noConfirmOpenCashRegister = useSelector(
+    (state) => state.cashRegister.error
+  );
   const verificatedCashRegisterOpen = useSelector(
     (state) => state.cashRegister.verifyCashRegister
   );
   const movimientos = useSelector((state) => state.cashRegister.movements);
-  const closedCashRegister = useSelector((state) => state.cashRegister.closedCashRegister)
-  console.log(closedCashRegister)
-
-  const dispatch = useDispatch();
+  const closedCashRegister = useSelector(
+    (state) => state.cashRegister.closedCashRegister
+  );
 
   const handleCloseRegister = () => {
     const now = new Date();
@@ -183,7 +186,13 @@ const CashRegisterClose = () => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(closeCashRegister(verificatedCashRegisterOpen._id, dollarRate, pesoRate));
+        dispatch(
+          closeCashRegister(
+            verificatedCashRegisterOpen._id,
+            dollarRate,
+            pesoRate
+          )
+        );
         handleCloseRegister();
       }
     });
@@ -201,7 +210,9 @@ const CashRegisterClose = () => {
   const handleExchangeRateSubmit = (e) => {
     e.preventDefault();
     if (pesoRate && dollarRate) {
-      dispatch(updateExchangeRates(selectedSubOffice, { pesoRate, dollarRate }));
+      dispatch(
+        updateExchangeRates(selectedSubOffice, { pesoRate, dollarRate })
+      );
       Swal.fire({
         title: "Tasas de cambio actualizadas",
         icon: "success",
@@ -222,7 +233,7 @@ const CashRegisterClose = () => {
     }
   }, [closedCashRegister]);
   useEffect(() => {
-    if (noConfirmOpenCashRegister !== '') {
+    if (noConfirmOpenCashRegister !== "") {
       Swal.fire({
         text: noConfirmOpenCashRegister,
         icon: "error",
@@ -234,7 +245,7 @@ const CashRegisterClose = () => {
       });
     }
   }, [noConfirmOpenCashRegister]);
-  
+
   return (
     <section className="container-cash-closing">
       <div className="first-section-cash-close">
@@ -253,6 +264,10 @@ const CashRegisterClose = () => {
               value={selectedSubOffice}
               onChange={handleSubOfficeChange}
               className="input-field-dashboard"
+              style={{
+                color: selectedSubOffice ? "#000" : "#555",
+                cursor: "pointer",
+              }}
             >
               <option value="">Seleccionar sucursal</option>
               {subOffices.map((office) => (
@@ -264,57 +279,58 @@ const CashRegisterClose = () => {
             <label className="label-input-dashboard">Sucursal</label>
           </div>
         </div>
-        {verificatedCashRegisterOpen && selectedSubOffice &&(
-        <form onSubmit={handleExchangeRateSubmit} style={{display: 'flex', gap: '5px'}}>
-          <div className="input-group">
-            <div className="input-box-dashboard">
-              <input
-                type="text"
-                value={pesoRate}
-                onChange={(e) => setPesoRate(e.target.value)}
-                className="input-field-dashboard"
-              
-                required
-              />
-              <label className="label-input-dashboard">Tasa en pesos</label>
-            </div>
-          </div>
-          <div className="input-group">
-            <div className="input-box-dashboard">
-              <input
-                type="text"
-                value={dollarRate}
-                onChange={(e) => setDollarRate(e.target.value)}
-                className="input-field-dashboard"
-                required
-              />
-              <label className="label-input-dashboard">Tasa en dólares</label>
-            </div>
-          </div>
-        </form>
-      )}
-
-      </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <h3>Saldo inicial en USD: </h3>
-          <span
-            style={{
-              backgroundColor: "white",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              padding: "0.4rem",
-              display: "flex",
-              justifyContent: "center",
-            }}
+        {verificatedCashRegisterOpen && selectedSubOffice && (
+          <form
+            onSubmit={handleExchangeRateSubmit}
+            style={{ display: "flex", gap: "5px" }}
           >
-            {verificatedCashRegisterOpen?.opening_balance ?? " 0.00"}
-          </span>
-        </div>
+            <div className="input-group">
+              <div className="input-box-dashboard">
+                <input
+                  type="text"
+                  value={pesoRate}
+                  onChange={(e) => setPesoRate(e.target.value)}
+                  className="input-field-dashboard"
+                  required
+                />
+                <label className="label-input-dashboard">Tasa en pesos</label>
+              </div>
+            </div>
+            <div className="input-group">
+              <div className="input-box-dashboard">
+                <input
+                  type="text"
+                  value={dollarRate}
+                  onChange={(e) => setDollarRate(e.target.value)}
+                  className="input-field-dashboard"
+                  required
+                />
+                <label className="label-input-dashboard">Tasa en dólares</label>
+              </div>
+            </div>
+          </form>
+        )}
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+        <h3>Saldo inicial en USD: </h3>
+        <span
+          style={{
+            backgroundColor: "white",
+            border: "1px solid #ddd",
+            borderRadius: "4px",
+            padding: "0.4rem",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          {verificatedCashRegisterOpen?.opening_balance ?? " 0.00"}
+        </span>
+      </div>
 
-      {closedCashRegister  && (
+      {closedCashRegister && (
         <div className="container-balance">
           {isLoading ? (
-            <div style={{display: 'flex', justifyContent: 'center'}}> 
+            <div style={{ display: "flex", justifyContent: "center" }}>
               <Spinner />
             </div>
           ) : (
@@ -340,8 +356,52 @@ const CashRegisterClose = () => {
       )}
 
       <div>
-        <div style={{ backgroundColor: "white", padding: "15px" }}>
-          <h3 style={{ fontWeight: "500" }}>Operaciones del día</h3>
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: "15px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "15px",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <h2 style={{ fontWeight: "500" }}>Operaciones del día</h2>
+          </div>
+          <div style={{ display: "flex", gap: "5px" }}>
+            <div className="input-group">
+              <div className="input-box-dashboard">
+                <select
+                  className="input-field-dashboard"
+                  style={{
+                    color: selectType ? "#000" : "#555",
+                    cursor: "pointer",
+                  }}
+                >
+                  <option value="">Seleccione un campo para filtrar</option>
+                  {fieldFilter.map((field, index) => (
+                    <option key={index} value={field}>
+                      {field}
+                    </option>
+                  ))}
+                </select>
+                <label className="label-input-dashboard-close-register"></label>
+              </div>
+            </div>
+            <div className="input-group">
+              <div className="input-box-dashboard">
+                <input
+                  type="text"
+                  value={selectType}
+                  className="input-field-dashboard"
+                  required
+                />
+                <label className="label-input-dashboard-close-register">
+                  Ingrese valor
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="container-table">
