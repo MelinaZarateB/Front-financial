@@ -16,6 +16,7 @@ import Swal from "sweetalert2";
 import imgPencil from './../../assets/pencil.svg';
 
 const CashRegisterOpen = () => {
+  // Estados locales del componente
   const [isModalOpen, setModalOpen] = useState(false);
   const [showCurrencies, setShowCurrencies] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +29,9 @@ const CashRegisterOpen = () => {
   const [editValue, setEditValue] = useState('');
   const [updates, setUpdates] = useState([]);
   const [stockUpdates, setStockUpdates] = useState([]);
+  const [exchangeRate, setExchangeRate] = useState(1); // Nuevo estado para la tasa de cambio en dólares
 
+  // Hooks de Redux
   const dispatch = useDispatch();
   const currencies = useSelector((state) => state.offices.currencies);
   const subOffices = useSelector((state) => state.offices.subOffices);
@@ -46,7 +49,6 @@ const CashRegisterOpen = () => {
       if (office) {
         const updatedCurrencies = office.currencies.map((c) => ({
           ...c,
-          operation: "divide",
           exchangeRate: c.currency.exchangeRate,
           stock: c.stock || 0,
         }));
@@ -60,20 +62,11 @@ const CashRegisterOpen = () => {
   }, [selectedSubOffice, subOffices]);
 
   const calcularTotalDolarizado = (currencies = monedasLocales) => {
-    const total = currencies.reduce((acc, currency) => {
-      return acc + calcularValorEnDolares(currency);
+    const totalPesos = currencies.reduce((acc, currency) => {
+      return acc + (currency.stock * currency.exchangeRate);
     }, 0);
+    const total = totalPesos / exchangeRate;
     setTotalDolarizado(total);
-  };
-
-  const calcularValorEnDolares = (currency) => {
-    let valor;
-    if (currency.operation === "multiply") {
-      valor = currency.stock * currency.exchangeRate;
-    } else {
-      valor = currency.stock / currency.exchangeRate;
-    }
-    return isNaN(valor) ? 0 : valor;
   };
 
   const actualizarStock = (currencyId, nuevoStock) => {
@@ -99,25 +92,13 @@ const CashRegisterOpen = () => {
     }
   };
 
-  const toggleOperation = (currencyId) => {
-    const actualizado = monedasLocales.map((currency) =>
-      currency._id === currencyId
-        ? {
-            ...currency,
-            operation: currency.operation === "multiply" ? "divide" : "multiply",
-          }
-        : currency
-    );
-    setMonedasLocales(actualizado);
-    calcularTotalDolarizado(actualizado);
-  };
-
   const handleDeleteCurrency = (idCurrency) => {
     dispatch(deleteCurrency(idCurrency));
   };
 
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
+
   const toggleCurrenciesVisibility = () => setShowCurrencies(!showCurrencies);
 
   const handleOpenCashRegister = () => {
@@ -168,11 +149,9 @@ const CashRegisterOpen = () => {
     setEditingField(null);
     if (editValue !== (editingField === 'exchangeRate' ? currency.exchangeRate.toString() : currency.stock.toString())) {
       const newValue = parseFloat(editValue);
-      
       if (editingField === 'exchangeRate') {
         setUpdates(prevUpdates => {
           const existingUpdateIndex = prevUpdates.findIndex(update => update.currencyId === currency.currency._id);
-          
           if (existingUpdateIndex !== -1) {
             const newUpdates = [...prevUpdates];
             newUpdates[existingUpdateIndex] = {
@@ -181,7 +160,7 @@ const CashRegisterOpen = () => {
             };
             return newUpdates;
           } else {
-            return [...prevUpdates, { 
+            return [...prevUpdates, {
               currencyId: currency.currency._id, 
               exchangeRate: newValue,
             }];
@@ -191,7 +170,6 @@ const CashRegisterOpen = () => {
       } else if (editingField === 'stock') {
         setStockUpdates(prevUpdates => {
           const existingUpdateIndex = prevUpdates.findIndex(update => update.currencyId === currency.currency._id);
-          
           if (existingUpdateIndex !== -1) {
             const newUpdates = [...prevUpdates];
             newUpdates[existingUpdateIndex] = {
@@ -201,7 +179,7 @@ const CashRegisterOpen = () => {
             };
             return newUpdates;
           } else {
-            return [...prevUpdates, { 
+            return [...prevUpdates, {
               currencyId: currency.currency._id, 
               amount: newValue,
               operation: 'set'
@@ -217,6 +195,15 @@ const CashRegisterOpen = () => {
     if (e.key === 'Enter') {
       e.preventDefault();
       handleEditEnd(currency);
+    }
+  };
+
+  // Nuevo manejador para actualizar la tasa de cambio en dólares
+  const handleExchangeRateChange = (e) => {
+    const newRate = parseFloat(e.target.value);
+    if (!isNaN(newRate) && newRate > 0) {
+      setExchangeRate(newRate);
+      calcularTotalDolarizado();
     }
   };
 
@@ -245,7 +232,22 @@ const CashRegisterOpen = () => {
           <label className="label-input-dashboard">Sucursal</label>
         </div>
       </div>
-      
+
+      {/* Nuevo input para la tasa de cambio en dólares */}
+      <div className="input-group">
+        <div className="input-box-dashboard">
+          <input
+            type="text"
+            value={exchangeRate}
+            onChange={handleExchangeRateChange}
+            className="input-field-dashboard"
+            step="0.01"
+            min="0.01"
+          />
+          <label className="label-input-dashboard">Tasa de cambio en dólares</label>
+        </div>
+      </div>
+
       {confirmOpenCashRegister && (
         <div className="section-cash-closing">
           <div>Apertura de caja exitosa hoy {closingTime}</div>
@@ -262,14 +264,12 @@ const CashRegisterOpen = () => {
                   <th>Código</th>
                   <th>Stock</th>
                   <th>Tasa de cambio</th>
-                  <th>Operación</th>
-                  <th>Valor en USD</th>
                 </tr>
               </thead>
               <tbody>
                 {isLoading ? (
                   <tr>
-                    <td colSpan={6}>
+                    <td colSpan={4}>
                       <div className="spinner-container">
                         <Spinner />
                       </div>
@@ -326,24 +326,6 @@ const CashRegisterOpen = () => {
                           </span>
                         )}
                       </td>
-                      <td>
-                        <button
-                          onClick={() => toggleOperation(currency._id)}
-                          style={{
-                            padding: "5px 10px",
-                            borderRadius: "4px",
-                            border: "none",
-                            background: currency.operation === "multiply" ? "#4CAF50" : "#f44336",
-                            color: "white",
-                            cursor: "pointer",
-                          }}
-                        >
-                          {currency.operation === "multiply" ? "x" : "÷"}
-                        </button>
-                      </td>
-                      <td>
-                        {calcularValorEnDolares(currency).toFixed(2)}
-                      </td>
                     </tr>
                   ))
                 )}
@@ -368,8 +350,8 @@ const CashRegisterOpen = () => {
           {totalDolarizado.toFixed(2)}
         </span>
       </div>
-
       <hr />
+
       <div className="agregar-moneda">
         <button onClick={handleOpenModal} className="btn-search-users">
           Crear moneda
