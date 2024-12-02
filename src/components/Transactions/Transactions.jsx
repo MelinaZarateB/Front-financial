@@ -1,10 +1,11 @@
 import "./Transactions.css";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getTransactions,
   deleteTransaction,
 } from "../../redux/actions/transactionsActions";
-import { useDispatch, useSelector } from "react-redux";
+import { getClients } from "@/redux/actions/clientsActions";
 import imgPencil from "./../../assets/pencil.svg";
 import Swal from "sweetalert2";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -20,53 +21,40 @@ import {
   getCurrencies,
 } from "@/redux/actions/subOfficesActions";
 
-const clients = [
-  {
-    _id: 1,
-    firstName: "Juan",
-    lastName: "Pérez",
-  },
-  {
-    _id: 2,
-    firstName: "Ana",
-    lastName: "González",
-  },
-  {
-    _id: 3,
-    firstName: "Carlos",
-    lastName: "Martínez",
-  },
-];
 const Transactions = () => {
   // Redux hooks
   const dispatch = useDispatch();
   const subOffices = useSelector((state) => state.offices.subOffices);
   const transactions = useSelector((state) => state.transactions.transactions);
   const userRol = useSelector((state) => state.auth.userRole);
+  const clients = useSelector((state) => state.clients.clients);
 
   // Local state
   const [viewForm, setViewForm] = useState(false);
   const [hasGuardedBalance, setHasGuardedBalance] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [subOfficeCurrencies, setSubOfficeCurrencies] = useState([]);
-  const [clientSelected, setClientSelected] = useState({
-    id: "",
-    firstName: "",
-  });
+  const [clientSelected, setClientSelected] = useState({});
   const [dataForm, setDataForm] = useState({
     dateFrom: new Date(),
     dateTo: new Date(),
   });
   const [newTransaction, setNewTransaction] = useState({
+    user: "",
     type: "",
     amount: "",
+    sourceCurrency: "",
     sourceCurrencyCode: "",
+    targetCurrency: "",
     targetCurrencyCode: "",
     exchangeRate: "",
     commission: "",
     subOffice: "",
+    subOfficeName: "",
   });
-
+  console.log(newTransaction);
+  const [searchClient, setSearchClient] = useState("");
+  const [balanceInCustody, setbalanceInCustody] = useState("");
   // Constants
   const typesTransactions = [
     { value: "check", label: "Cambio de cheque" },
@@ -80,24 +68,61 @@ const Transactions = () => {
     dispatch(getSubOffices());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (hasGuardedBalance) {
+      dispatch(getClients());
+    } else {
+      setClientSelected({});
+    }
+  }, [hasGuardedBalance, dispatch, setClientSelected]);
+
   // Event handlers
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
-    setNewTransaction({ ...newTransaction, [name]: value });
 
-    if (name === "subOffice") {
-      if (value === "") {
-        setSubOfficeCurrencies([]);
-      } else {
-        const selectedOffice = subOffices.find(
-          (office) => office.name === value
+    if (name === "subOfficeName") {
+      const selectedOffice = subOffices.find((office) => office.name === value);
+      if (selectedOffice) {
+        setNewTransaction({
+          ...newTransaction,
+          subOfficeName: value,
+          subOffice: selectedOffice._id,
+        });
+        setSubOfficeCurrencies(
+          selectedOffice.currencies.map((c) => c.currency)
         );
-        if (selectedOffice) {
-          setSubOfficeCurrencies(
-            selectedOffice.currencies.map((c) => c.currency)
-          );
-        }
+      } else {
+        setNewTransaction({
+          ...newTransaction,
+          subOfficeName: "",
+          subOffice: "",
+        });
+        setSubOfficeCurrencies([]);
       }
+    } else if (name === "sourceCurrencyCode") {
+      const selectedCurrency = subOfficeCurrencies.find(
+        (currency) => `${currency.name} - ${currency.code}` === value
+      );
+      if (selectedCurrency) {
+        setNewTransaction({
+          ...newTransaction,
+          sourceCurrencyCode: value,
+          sourceCurrency: selectedCurrency._id,
+        });
+      }
+    } else if (name === "targetCurrencyCode") {
+      const selectedCurrency = subOfficeCurrencies.find(
+        (currency) => `${currency.name} - ${currency.code}` === value
+      );
+      if (selectedCurrency) {
+        setNewTransaction({
+          ...newTransaction,
+          targetCurrencyCode: value,
+          targetCurrency: selectedCurrency._id,
+        });
+      }
+    } else {
+      setNewTransaction({ ...newTransaction, [name]: value });
     }
   };
 
@@ -164,17 +189,17 @@ const Transactions = () => {
                   <div className="input-box-dashboard">
                     <div
                       className={`select-container ${
-                        newTransaction.subOffice ? "has-value" : ""
+                        newTransaction.subOfficeName ? "has-value" : ""
                       }`}
                     >
                       <select
-                        name="subOffice" // Este name debe coincidir con la propiedad en newTransaction
+                        name="subOfficeName" // Este name debe coincidir con la propiedad en newTransaction
                         className="input-field-dashboard select"
                         style={{
-                          color: newTransaction.subOffice ? "#000" : "#555",
+                          color: newTransaction.subOfficeName ? "#000" : "#555",
                           cursor: "pointer",
                         }}
-                        value={newTransaction.subOffice} // Asegura que esté sincronizado
+                        value={newTransaction.subOfficeName} // Asegura que esté sincronizado
                         onChange={handleSelectChange}
                       >
                         <option value="">Sucursal</option>
@@ -230,6 +255,7 @@ const Transactions = () => {
                       className="input-field-dashboard"
                       name="amount"
                       value={newTransaction.amount}
+                      onChange={handleSelectChange}
                     />
                     <label
                       className="label-input-dashboard"
@@ -259,9 +285,10 @@ const Transactions = () => {
                       >
                         <option value="">Paga</option>
                         {subOfficeCurrencies.map((currency) => (
-                          <option key={currency._id} value={currency.name}>
-                            {currency.name} - {currency.code}
-                          </option>
+                          <option
+                            key={currency._id}
+                            value={`${currency.name} - ${currency.code}`}
+                          >{`${currency.name} - ${currency.code}`}</option>
                         ))}
                       </select>
                       <div
@@ -293,9 +320,10 @@ const Transactions = () => {
                       >
                         <option value="">Compra</option>
                         {subOfficeCurrencies.map((currency) => (
-                          <option key={currency._id} value={currency.name}>
-                            {currency.name} - {currency.code}
-                          </option>
+                          <option
+                            key={currency._id}
+                            value={`${currency.name} - ${currency.code}`}
+                          >{`${currency.name} - ${currency.code}`}</option>
                         ))}
                       </select>
                       <div
@@ -313,6 +341,7 @@ const Transactions = () => {
                       className="input-field-dashboard"
                       name="exchangeRate"
                       value={newTransaction.exchangeRate}
+                      onChange={handleSelectChange}
                     />
                     <label
                       className="label-input-dashboard"
@@ -334,7 +363,12 @@ const Transactions = () => {
                 <Switch
                   id="guarded-balance"
                   checked={hasGuardedBalance}
-                  onCheckedChange={setHasGuardedBalance}
+                  onCheckedChange={(checked) => {
+                    setHasGuardedBalance(checked);
+                    if (!checked) {
+                      setClientSelected({});
+                    }
+                  }}
                 />
                 <label htmlFor="">Registrar Saldo en Guarda</label>
               </div>
@@ -346,8 +380,9 @@ const Transactions = () => {
                       <input
                         type="text"
                         className="input-field-dashboard"
-                        name="exchangeRate"
-                        value={newTransaction.exchangeRate}
+                        name="client"
+                        value={searchClient}
+                        onChange={""}
                       />
                       <label
                         className="label-input-dashboard"
@@ -371,30 +406,29 @@ const Transactions = () => {
                       <div
                         key={client._id}
                         className="container-client-saldo"
-                        onClick={() =>
-                          setClientSelected({
-                            id: client._id,
-                            firstName: `${client.firstName} ${client.lastName}`,
-                          })
-                        }
+                        onClick={() => setClientSelected(client)}
                         style={{
                           backgroundColor:
-                            clientSelected.id === client._id ? "#EFF6FF" : "",
+                            clientSelected._id === client._id ? "#EFF6FF" : "",
                           border:
-                            clientSelected.id === client._id
+                            clientSelected._id === client._id
                               ? "1px solid #1F97F3"
                               : "",
                         }}
                       >
-                        <span>{client.firstName}</span>{" "}
-                        <span>{client.lastName}</span>
+                        <span>{client.name}</span>{" "}
+                        <span>{client.lastname}</span>
                       </div>
                     ))}
                   </div>
-                  {clientSelected.firstName && (
+                  {clientSelected.name && (
                     <div>
                       <div className="input-box-dashboard">
-                        <input type="text" className="input-field-dashboard" />
+                        <input
+                          type="text"
+                          className="input-field-dashboard"
+                          value={balanceInCustody}
+                        />
                         <label
                           className="label-input-dashboard"
                           style={{ backgroundColor: "rgba(255, 255, 255)" }}
@@ -410,7 +444,7 @@ const Transactions = () => {
                         }}
                       >
                         Este monto quedará registrado como saldo en guarda para{" "}
-                        {clientSelected.firstName}
+                        {clientSelected.name} {clientSelected.lastname}
                       </p>
                     </div>
                   )}
