@@ -366,7 +366,7 @@ const CashRegisterClose = () => {
           }}
         >
           <div style={{ display: "flex", justifyContent: "center" }}>
-            <h2 style={{ fontWeight: "500" }}>Operaciones del día</h2>
+            <h2 style={{ fontWeight: "600" }}>Operaciones del día</h2>
           </div>
           <div style={{ display: "flex", gap: "5px" }}>
             <div className="input-group">

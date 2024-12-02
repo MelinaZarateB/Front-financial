@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createCurrencies } from "@/redux/actions";
+
 import SpinnerSmall from './../../../utils/Spinner/SpinnerSmall';
 
 const ModalCreateCurrency = ({ isOpen, onClose }) => {

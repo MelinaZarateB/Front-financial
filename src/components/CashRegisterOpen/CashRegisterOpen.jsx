@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./CashRegisterOpen.css";
 import ModalCreateCurrency from "@/visuals/Modals/ModalCreateCurrency/ModalCreateCurrency";
 import arrowDown from "./../../assets/arrow-down.svg";
@@ -39,7 +39,6 @@ const CashRegisterOpen = () => {
 
   useEffect(() => {
     dispatch(getCurrencies());
-    dispatch(getSubOffices());
   }, [dispatch]);
 
   useEffect(() => {

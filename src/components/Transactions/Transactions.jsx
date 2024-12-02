@@ -1,6 +1,9 @@
 import "./Transactions.css";
 import { useEffect, useState } from "react";
-import { getTransactions, deleteTransaction } from "../../redux/actions/transactionsActions";
+import {
+  getTransactions,
+  deleteTransaction,
+} from "../../redux/actions/transactionsActions";
 import { useDispatch, useSelector } from "react-redux";
 import imgPencil from "./../../assets/pencil.svg";
 import Swal from "sweetalert2";
@@ -11,6 +14,11 @@ import { Switch } from "@/components/ui/switch";
 import theme from "../../utils/theme";
 import plusIcon from "./../../assets/plus.svg";
 import ModalNewClient from "@/visuals/Modals/ModalNewClient/ModalNewClient";
+import { createTransactions } from "../../redux/actions/transactionsActions";
+import {
+  getSubOffices,
+  getCurrencies,
+} from "@/redux/actions/subOfficesActions";
 
 const clients = [
   {
@@ -30,75 +38,82 @@ const clients = [
   },
 ];
 const Transactions = () => {
-  const dispatch = useDispatch();
-  const [viewForm, setViewForm] = useState(false);
-  const [selectType, setSelectType] = useState("");
-  const [hasGuardedBalance, setHasGuardedBalance] = useState(false);
-  const [clientSelected, setClientSelected] = useState({ id: "", firstName: "" });
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [newTransaction, setNewTransaction] = useState({
-    type: "",
-    amount: "",
-    sourceCurrencyCode: "",
-    targetCurrencyCode: "",
-    exchangeRate: "",
-    commission: "",
-    office: "",
-  });
-  console.log(clientSelected);
-
-  const transactions = useSelector((state) => state.transactions.transactions);
-  const userRol = useSelector((state) => state.auth.userRole);
-  const [dataForm, setDataForm] = useState({
-    dateFrom: new Date(),
-    dateTo: new Date(),
-  });
-  console.log(transactions);
-
-  useEffect(() => {
-    dispatch(getTransactions());
-  }, []);
-
-  const handleOpenModal = () => {
-    setModalOpen(true); // Abre el modal
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false); // Cierra el modal
-  };
-
-  /* Handles */
-  const handleDeleteTransaction = (transactionId) => {
-    Swal.fire({
-      title: "¿Seguro que desea eliminar esta transaccion?",
-      icon: "warning",
-      showCancelButton: true, // Muestra el botón de cancelar
-      confirmButtonText: "Eliminar", // Texto del botón de confirmación
-      cancelButtonText: "Cancelar", // Texto del botón de cancelación
-      reverseButtons: true, // Opcional: intercambia el orden de los botones
-      customClass: {
-        confirmButton: "my-confirm-button", // Clase personalizada para el botón de confirmación
-        cancelButton: "my-cancel-button", // Clase personalizada para el botón de cancelación
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Si el usuario confirma, ejecutamos la acción deleteUser
-        dispatch(deleteTransaction(transactionId));
+    // Redux hooks
+    const dispatch = useDispatch();
+    const subOffices = useSelector((state) => state.offices.subOffices);
+    const transactions = useSelector((state) => state.transactions.transactions);
+    const userRol = useSelector((state) => state.auth.userRole);
+  
+    // Local state
+    const [viewForm, setViewForm] = useState(false);
+    const [hasGuardedBalance, setHasGuardedBalance] = useState(false);
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [subOfficeCurrencies, setSubOfficeCurrencies] = useState([]);
+    const [clientSelected, setClientSelected] = useState({ id: "", firstName: "" });
+    const [dataForm, setDataForm] = useState({ dateFrom: new Date(), dateTo: new Date() });
+    const [newTransaction, setNewTransaction] = useState({
+      type: "",
+      amount: "",
+      sourceCurrencyCode: "",
+      targetCurrencyCode: "",
+      exchangeRate: "",
+      commission: "",
+      subOffice: "",
+    });
+  
+    // Constants
+    const typesTransactions = [
+      { value: "check", label: "Cambio de cheque" },
+      { value: "buy", label: "Compra" },
+      { value: "sell", label: "Venta" },
+    ];
+  
+    // Effects
+    useEffect(() => {
+      dispatch(getTransactions());
+      dispatch(getSubOffices());
+    }, [dispatch]);
+  
+    // Event handlers
+    const handleSelectChange = (e) => {
+      const { name, value } = e.target;
+      setNewTransaction({ ...newTransaction, [name]: value });
+  
+      if (name === "subOffice") {
+        if (value === "") {
+          setSubOfficeCurrencies([]);
+        } else {
+          const selectedOffice = subOffices.find((office) => office.name === value);
+          if (selectedOffice) {
+            setSubOfficeCurrencies(selectedOffice.currencies.map((c) => c.currency));
+          }
+        }
       }
-    });
-  };
-  const changeForm = () => {
-    if (viewForm === false) setViewForm(true);
-    else {
-      setViewForm(false);
-    }
-  };
-  const handleChangeNewIncome = (event) => {
-    setNewTransaction({
-      ...newTransaction,
-      [event.target.name]: event.target.value,
-    });
-  };
+    };
+  
+    const handleOpenModal = () => setModalOpen(true);
+    const handleCloseModal = () => setModalOpen(false);
+  
+    const handleDeleteTransaction = (transactionId) => {
+      Swal.fire({
+        title: "¿Seguro que desea eliminar esta transaccion?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Eliminar",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true,
+        customClass: {
+          confirmButton: "my-confirm-button",
+          cancelButton: "my-cancel-button",
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(deleteTransaction(transactionId));
+        }
+      });
+    };
+  
+    const changeForm = () => setViewForm(!viewForm);
   return (
     <ThemeProvider theme={theme}>
       <section className="container-transactions">
@@ -136,96 +151,27 @@ const Transactions = () => {
                 {/* Primera columna con los inputs apilados */}
                 <div className="inputs-column">
                   <div className="input-box-dashboard">
-                    <input
-                      type="text"
-                      className="input-field-dashboard"
-                      name="type"
-                      value={newTransaction.type}
-                      onChange={handleChangeNewIncome}
-                    />
-                    <label
-                      className="label-input-dashboard"
-                      style={{ backgroundColor: "rgba(255, 255, 255)" }}
-                    >
-                      Tipo de transacción
-                    </label>
-                  </div>
-
-                  <div className="input-box-dashboard">
-                    <input
-                      type="text"
-                      className="input-field-dashboard"
-                      name="amount"
-                      value={newTransaction.amount}
-                      onChange={handleChangeNewIncome}
-                    />
-                    <label
-                      className="label-input-dashboard"
-                      style={{ backgroundColor: "rgba(255, 255, 255)" }}
-                    >
-                      Monto
-                    </label>
-                  </div>
-                  <div className="input-box-dashboard">
-                    <input
-                      type="text"
-                      className="input-field-dashboard"
-                      name="sourceCurrencyCode"
-                      value={newTransaction.sourceCurrencyCode}
-                      onChange={handleChangeNewIncome}
-                    />
-                    <label
-                      className="label-input-dashboard"
-                      style={{ backgroundColor: "rgba(255, 255, 255)" }}
-                    >
-                      Paga
-                    </label>
-                  </div>
-                  <div className="input-box-dashboard">
-                    <input
-                      type="text"
-                      className="input-field-dashboard"
-                      name="targetCurrencyCode"
-                      value={newTransaction.targetCurrencyCode}
-                      onChange={handleChangeNewIncome}
-                    />
-                    <label
-                      className="label-input-dashboard"
-                      style={{ backgroundColor: "rgba(255, 255, 255)" }}
-                    >
-                      Compra
-                    </label>
-                  </div>
-                  <div className="input-box-dashboard">
-                    <input
-                      type="text"
-                      className="input-field-dashboard"
-                      name="exchangeRate"
-                      value={newTransaction.exchangeRate}
-                      onChange={handleChangeNewIncome}
-                    />
-                    <label
-                      className="label-input-dashboard"
-                      style={{ backgroundColor: "rgba(255, 255, 255)" }}
-                    >
-                      Tasa de cambio
-                    </label>
-                  </div>
-                  <div className="input-box-dashboard">
                     <div
                       className={`select-container ${
-                        selectType ? "has-value" : ""
+                        newTransaction.subOffice ? "has-value" : ""
                       }`}
                     >
                       <select
-                        name="typeExpense"
+                        name="subOffice" // Este name debe coincidir con la propiedad en newTransaction
                         className="input-field-dashboard select"
                         style={{
-                          color: selectType ? "#000" : "#555",
+                          color: newTransaction.subOffice ? "#000" : "#555",
                           cursor: "pointer",
                         }}
+                        value={newTransaction.subOffice} // Asegura que esté sincronizado
+                        onChange={handleSelectChange}
                       >
-                        <option value="all">Sucursal</option>
+                        <option value="">Sucursal</option>
+                        {subOffices.map((office) => (
+                          <option key={office._id} value={office.name}>
+                            {office.name}
+                          </option>
+                        ))}
                       </select>
                       <div
                         className="floating-label"
@@ -235,10 +181,144 @@ const Transactions = () => {
                       </div>
                     </div>
                   </div>
+                  <div className="input-box-dashboard">
+                    <div
+                      className={`select-container ${
+                        newTransaction.type ? "has-value" : ""
+                      }`}
+                    >
+                      <select
+                        name="type"
+                        className="input-field-dashboard select"
+                        style={{
+                          color: newTransaction.type ? "#000" : "#555",
+                          cursor: "pointer",
+                        }}
+                        value={newTransaction.type}
+                        onChange={handleSelectChange}
+                      >
+                        <option value="">Tipo de transacción</option>
+                        {typesTransactions.map((type) => (
+                          <option key={type.value} value={type.value}>
+                            {type.label}
+                          </option>
+                        ))}
+                      </select>
+                      <div
+                        className="floating-label"
+                        style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                      >
+                        Transacción
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="input-box-dashboard">
+                    <input
+                      type="text"
+                      className="input-field-dashboard"
+                      name="amount"
+                      value={newTransaction.amount}
+                    />
+                    <label
+                      className="label-input-dashboard"
+                      style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                    >
+                      Monto
+                    </label>
+                  </div>
+
+                  <div className="input-box-dashboard">
+                    <div
+                      className={`select-container ${
+                        newTransaction.sourceCurrencyCode ? "has-value" : ""
+                      }`}
+                    >
+                      <select
+                        name="sourceCurrencyCode" // Este name debe coincidir con la propiedad en newTransaction
+                        className="input-field-dashboard select"
+                        style={{
+                          color: newTransaction.sourceCurrencyCode
+                            ? "#000"
+                            : "#555",
+                          cursor: "pointer",
+                        }}
+                        value={newTransaction.sourceCurrencyCode} // Asegura que esté sincronizado
+                        onChange={handleSelectChange}
+                      >
+                        <option value="">Paga</option>
+                        {subOfficeCurrencies.map((currency) => (
+                          <option key={currency._id} value={currency.name}>
+                            {currency.name} - {currency.code}
+                          </option>
+                        ))}
+                      </select>
+                      <div
+                        className="floating-label"
+                        style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                      >
+                        Paga
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="input-box-dashboard">
+                    <div
+                      className={`select-container ${
+                        newTransaction.targetCurrencyCode ? "has-value" : ""
+                      }`}
+                    >
+                      <select
+                        name="targetCurrencyCode" // Este name debe coincidir con la propiedad en newTransaction
+                        className="input-field-dashboard select"
+                        style={{
+                          color: newTransaction.targetCurrencyCode
+                            ? "#000"
+                            : "#555",
+                          cursor: "pointer",
+                        }}
+                        value={newTransaction.targetCurrencyCode} // Asegura que esté sincronizado
+                        onChange={handleSelectChange}
+                      >
+                        <option value="">Compra</option>
+                        {subOfficeCurrencies.map((currency) => (
+                          <option key={currency._id} value={currency.name}>
+                            {currency.name} - {currency.code}
+                          </option>
+                        ))}
+                      </select>
+                      <div
+                        className="floating-label"
+                        style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                      >
+                        Compra
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="input-box-dashboard">
+                    <input
+                      type="text"
+                      className="input-field-dashboard"
+                      name="exchangeRate"
+                      value={newTransaction.exchangeRate}
+                    />
+                    <label
+                      className="label-input-dashboard"
+                      style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                    >
+                      Tasa de cambio
+                    </label>
+                  </div>
                 </div>
               </div>
               <div
-                style={{ display: "flex", alignItems: "center", gap: "5px", marginBottom: '5px' }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "5px",
+                  marginBottom: "5px",
+                }}
               >
                 <Switch
                   id="guarded-balance"
@@ -320,7 +400,7 @@ const Transactions = () => {
                         }}
                       >
                         Este monto quedará registrado como saldo en guarda para{" "}
-                        {clientSelected.firstName} 
+                        {clientSelected.firstName}
                       </p>
                     </div>
                   )}
@@ -457,7 +537,7 @@ const Transactions = () => {
                         <td data-table="T/C">
                           <span>{transaction.exchangeRate}</span>
                         </td>
-                       
+
                         <td data-table="Fecha">
                           <span>
                             {new Date(transaction.createdAt)

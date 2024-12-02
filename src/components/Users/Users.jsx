@@ -7,12 +7,11 @@ import AdminUsers from "../AdminUsers/AdminUsers";
 
 const Users = () => {
   const [createUser, setCreateUser] = useState(false);
-
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.users);
-  const userByEmail = useSelector((state) => state.userByEmail);
-  const stateRegisterUser = useSelector((state) => state.registerUser)
-  const deleteUser = useSelector((state) => state.deleteUserSuccess)
+  const users = useSelector((state) => state.user.users);
+  const userByEmail = useSelector((state) => state.user.userByEmail);
+  const stateRegisterUser = useSelector((state) => state.user.registerUser)
+  const deleteUser = useSelector((state) => state.user.deleteUserSuccess)
   
   useEffect(() => {
     dispatch(getAllUsers());

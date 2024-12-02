@@ -15,8 +15,8 @@ import Swal from "sweetalert2";
 const AdminUsers = ({ handleCreateUser }) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
-  const users = useSelector((state) => state.users);
-  const userByEmail = useSelector((state) => state.userByEmail);
+  const users = useSelector((state) => state.user.users);
+  const userByEmail = useSelector((state) => state.user.userByEmail);
   const [selectType, setSelectType] = useState("");
   const [viewForm, setViewForm] = useState(false);
   const [type, setType] = useState("");
