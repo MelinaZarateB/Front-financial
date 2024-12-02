@@ -38,82 +38,93 @@ const clients = [
   },
 ];
 const Transactions = () => {
-    // Redux hooks
-    const dispatch = useDispatch();
-    const subOffices = useSelector((state) => state.offices.subOffices);
-    const transactions = useSelector((state) => state.transactions.transactions);
-    const userRol = useSelector((state) => state.auth.userRole);
-  
-    // Local state
-    const [viewForm, setViewForm] = useState(false);
-    const [hasGuardedBalance, setHasGuardedBalance] = useState(false);
-    const [isModalOpen, setModalOpen] = useState(false);
-    const [subOfficeCurrencies, setSubOfficeCurrencies] = useState([]);
-    const [clientSelected, setClientSelected] = useState({ id: "", firstName: "" });
-    const [dataForm, setDataForm] = useState({ dateFrom: new Date(), dateTo: new Date() });
-    const [newTransaction, setNewTransaction] = useState({
-      type: "",
-      amount: "",
-      sourceCurrencyCode: "",
-      targetCurrencyCode: "",
-      exchangeRate: "",
-      commission: "",
-      subOffice: "",
-    });
-  
-    // Constants
-    const typesTransactions = [
-      { value: "check", label: "Cambio de cheque" },
-      { value: "buy", label: "Compra" },
-      { value: "sell", label: "Venta" },
-    ];
-  
-    // Effects
-    useEffect(() => {
-      dispatch(getTransactions());
-      dispatch(getSubOffices());
-    }, [dispatch]);
-  
-    // Event handlers
-    const handleSelectChange = (e) => {
-      const { name, value } = e.target;
-      setNewTransaction({ ...newTransaction, [name]: value });
-  
-      if (name === "subOffice") {
-        if (value === "") {
-          setSubOfficeCurrencies([]);
-        } else {
-          const selectedOffice = subOffices.find((office) => office.name === value);
-          if (selectedOffice) {
-            setSubOfficeCurrencies(selectedOffice.currencies.map((c) => c.currency));
-          }
+  // Redux hooks
+  const dispatch = useDispatch();
+  const subOffices = useSelector((state) => state.offices.subOffices);
+  const transactions = useSelector((state) => state.transactions.transactions);
+  const userRol = useSelector((state) => state.auth.userRole);
+
+  // Local state
+  const [viewForm, setViewForm] = useState(false);
+  const [hasGuardedBalance, setHasGuardedBalance] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [subOfficeCurrencies, setSubOfficeCurrencies] = useState([]);
+  const [clientSelected, setClientSelected] = useState({
+    id: "",
+    firstName: "",
+  });
+  const [dataForm, setDataForm] = useState({
+    dateFrom: new Date(),
+    dateTo: new Date(),
+  });
+  const [newTransaction, setNewTransaction] = useState({
+    type: "",
+    amount: "",
+    sourceCurrencyCode: "",
+    targetCurrencyCode: "",
+    exchangeRate: "",
+    commission: "",
+    subOffice: "",
+  });
+
+  // Constants
+  const typesTransactions = [
+    { value: "check", label: "Cambio de cheque" },
+    { value: "buy", label: "Compra" },
+    { value: "sell", label: "Venta" },
+  ];
+
+  // Effects
+  useEffect(() => {
+    dispatch(getTransactions());
+    dispatch(getSubOffices());
+  }, [dispatch]);
+
+  // Event handlers
+  const handleSelectChange = (e) => {
+    const { name, value } = e.target;
+    setNewTransaction({ ...newTransaction, [name]: value });
+
+    if (name === "subOffice") {
+      if (value === "") {
+        setSubOfficeCurrencies([]);
+      } else {
+        const selectedOffice = subOffices.find(
+          (office) => office.name === value
+        );
+        if (selectedOffice) {
+          setSubOfficeCurrencies(
+            selectedOffice.currencies.map((c) => c.currency)
+          );
         }
       }
-    };
-  
-    const handleOpenModal = () => setModalOpen(true);
-    const handleCloseModal = () => setModalOpen(false);
-  
-    const handleDeleteTransaction = (transactionId) => {
-      Swal.fire({
-        title: "¿Seguro que desea eliminar esta transaccion?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Eliminar",
-        cancelButtonText: "Cancelar",
-        reverseButtons: true,
-        customClass: {
-          confirmButton: "my-confirm-button",
-          cancelButton: "my-cancel-button",
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          dispatch(deleteTransaction(transactionId));
-        }
-      });
-    };
-  
-    const changeForm = () => setViewForm(!viewForm);
+    }
+  };
+
+  const handleOpenModal = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
+
+  const handleDeleteTransaction = (transactionId) => {
+    Swal.fire({
+      title: "¿Seguro que desea eliminar esta transaccion?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+      customClass: {
+        confirmButton: "my-confirm-button",
+        cancelButton: "my-cancel-button",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteTransaction(transactionId));
+      }
+    });
+  };
+
+  const changeForm = () => setViewForm(!viewForm);
+
   return (
     <ThemeProvider theme={theme}>
       <section className="container-transactions">
@@ -337,7 +348,6 @@ const Transactions = () => {
                         className="input-field-dashboard"
                         name="exchangeRate"
                         value={newTransaction.exchangeRate}
-                        onChange={handleChangeNewIncome}
                       />
                       <label
                         className="label-input-dashboard"
