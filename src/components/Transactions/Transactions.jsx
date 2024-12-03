@@ -26,9 +26,10 @@ const Transactions = () => {
   const dispatch = useDispatch();
   const subOffices = useSelector((state) => state.offices.subOffices);
   const transactions = useSelector((state) => state.transactions.transactions);
+  const deleteTransactionsSuccess = useSelector((state) => state.transactions.deleteTransactionsSuccess);
+  const createTransactionsSuccess = useSelector((state) => state.transactions.createTransactionsSuccess);
   const userRol = useSelector((state) => state.auth.userRole);
   const clients = useSelector((state) => state.clients.clients);
-
   // Local state
   const [viewForm, setViewForm] = useState(false);
   const [hasGuardedBalance, setHasGuardedBalance] = useState(false);
@@ -40,7 +41,8 @@ const Transactions = () => {
     dateTo: new Date(),
   });
   const [newTransaction, setNewTransaction] = useState({
-    user: "",
+    user: '67082fa26acbb95ff05fa33e',
+    userName: 'Usuario no disponible',
     type: "",
     amount: "",
     sourceCurrency: "",
@@ -48,25 +50,27 @@ const Transactions = () => {
     targetCurrency: "",
     targetCurrencyCode: "",
     exchangeRate: "",
-    commission: "",
     subOffice: "",
     subOfficeName: "",
   });
-  console.log(newTransaction);
+
   const [searchClient, setSearchClient] = useState("");
   const [balanceInCustody, setbalanceInCustody] = useState("");
+
   // Constants
   const typesTransactions = [
     { value: "check", label: "Cambio de cheque" },
     { value: "buy", label: "Compra" },
     { value: "sell", label: "Venta" },
   ];
-
   // Effects
   useEffect(() => {
-    dispatch(getTransactions());
     dispatch(getSubOffices());
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getTransactions());
+  }, [createTransactionsSuccess, deleteTransactionsSuccess])
 
   useEffect(() => {
     if (hasGuardedBalance) {
@@ -79,7 +83,6 @@ const Transactions = () => {
   // Event handlers
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
-
     if (name === "subOfficeName") {
       const selectedOffice = subOffices.find((office) => office.name === value);
       if (selectedOffice) {
@@ -121,18 +124,25 @@ const Transactions = () => {
           targetCurrency: selectedCurrency._id,
         });
       }
-    } else {
+    }else if (name === "exchangeRate") {
+      const numValue = value === "" ? 0 : Number(value)
+      setNewTransaction({ ...newTransaction, [name]: numValue })}
+    else if (name === "amount") {
+      const numericValue = parseFloat(value);
+      setNewTransaction({ ...newTransaction, [name]: isNaN(numericValue) ? 0 : numericValue });
+    }
+    else {
       setNewTransaction({ ...newTransaction, [name]: value });
     }
   };
-
+  const handleNewTransaction = () => {
+    dispatch(createTransactions(newTransaction));
+  }
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
-
   const handleDeleteTransaction = (transactionId) => {
     Swal.fire({
       title: "¿Seguro que desea eliminar esta transaccion?",
-      icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Eliminar",
       cancelButtonText: "Cancelar",
@@ -147,9 +157,7 @@ const Transactions = () => {
       }
     });
   };
-
   const changeForm = () => setViewForm(!viewForm);
-
   return (
     <ThemeProvider theme={theme}>
       <section className="container-transactions">
@@ -248,10 +256,9 @@ const Transactions = () => {
                       </div>
                     </div>
                   </div>
-
                   <div className="input-box-dashboard">
                     <input
-                      type="text"
+                      type="number"
                       className="input-field-dashboard"
                       name="amount"
                       value={newTransaction.amount}
@@ -264,7 +271,6 @@ const Transactions = () => {
                       Monto
                     </label>
                   </div>
-
                   <div className="input-box-dashboard">
                     <div
                       className={`select-container ${
@@ -299,7 +305,6 @@ const Transactions = () => {
                       </div>
                     </div>
                   </div>
-
                   <div className="input-box-dashboard">
                     <div
                       className={`select-container ${
@@ -334,7 +339,6 @@ const Transactions = () => {
                       </div>
                     </div>
                   </div>
-
                   <div className="input-box-dashboard">
                     <input
                       type="text"
@@ -372,7 +376,6 @@ const Transactions = () => {
                 />
                 <label htmlFor="">Registrar Saldo en Guarda</label>
               </div>
-
               {hasGuardedBalance && (
                 <div className="space-y-4 border-t pt-4">
                   <div className="container-input-btn">
@@ -455,7 +458,7 @@ const Transactions = () => {
                 className="buttons-container"
                 style={{ display: "flex", gap: "5px", justifyContent: "end" }}
               >
-                <button className="btn-search-users">
+                <button className="btn-search-users" onClick={handleNewTransaction}>
                   Registrar{" "}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -544,10 +547,11 @@ const Transactions = () => {
                   <tr>
                     <th>Tipo</th>
                     <th>Usuario</th>
-                    <th>Monto</th>
+                    <th>Monto de origen</th>
                     <th>Paga</th>
-                    <th>Compra</th>
                     <th>T/C</th>
+                    <th>Monto de egreso</th>
+                    <th>Compra</th>
                     <th>Fecha</th>
                     <th>Sucursal</th>
                     <th colSpan="1"></th>
@@ -569,19 +573,21 @@ const Transactions = () => {
                         <td data-table="Usuario">
                           <span>{transaction.userName}</span>
                         </td>
-                        <td data-table="Monto">
-                          <span>{transaction.targetAmount}</span>
+                        <td data-table="Monto de origen">
+                          <span>{transaction.sourceAmount}</span>
                         </td>
                         <td data-table="Paga">
                           <span>{transaction.sourceCurrencyCode}</span>
                         </td>
-                        <td data-table="Compra">
-                          <span>{transaction.targetCurrencyCode}</span>
-                        </td>
                         <td data-table="T/C">
                           <span>{transaction.exchangeRate}</span>
                         </td>
-
+                        <td data-table= "Monto de destino">
+                          <span>{transaction.targetAmount}</span>
+                        </td>
+                        <td data-table="Compra">
+                          <span>{transaction.targetCurrencyCode}</span>
+                        </td>
                         <td data-table="Fecha">
                           <span>
                             {new Date(transaction.createdAt)
@@ -599,7 +605,7 @@ const Transactions = () => {
                         <td data-table="Sucursal">
                           <span>{transaction.subOfficeName}</span>
                         </td>
-                        {userRol === "administrador" ? (
+                        {userRol === "administrador" || userRol === "superadmin" ? (
                           <td data-table="Estado">
                             <button
                               className="btn-trash"
@@ -631,5 +637,4 @@ const Transactions = () => {
     </ThemeProvider>
   );
 };
-
 export default Transactions;

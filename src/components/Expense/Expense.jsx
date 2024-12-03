@@ -161,6 +161,34 @@ const Expense = () => {
             >
               <div className="form-columns">
                 <div className="inputs-column">
+
+                <div className="input-box-dashboard">
+                    <div
+                      className={`select-container ${
+                        selectType ? "has-value" : ""
+                      }`}
+                    >
+                      <select
+                        name="typeExpense"
+                        className="input-field-dashboard select"
+                        value={selectType}
+                        onChange={handleChangeType}
+                        style={{
+                          color: selectType ? "#000" : "#555",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <option value="all">Sucursal</option>
+                      </select>
+                      <div
+                        className="floating-label"
+                        style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                      >
+                        Sucursal
+                      </div>
+                    </div>
+                  </div>
+                  
                   <div className="input-box-dashboard">
                     <div
                       className={`select-container ${
@@ -222,33 +250,6 @@ const Expense = () => {
                     >
                       Descripcion del egreso
                     </label>
-                  </div>
-
-                  <div className="input-box-dashboard">
-                    <div
-                      className={`select-container ${
-                        selectType ? "has-value" : ""
-                      }`}
-                    >
-                      <select
-                        name="typeExpense"
-                        className="input-field-dashboard select"
-                        value={selectType}
-                        onChange={handleChangeType}
-                        style={{
-                          color: selectType ? "#000" : "#555",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <option value="all">Sucursal</option>
-                      </select>
-                      <div
-                        className="floating-label"
-                        style={{ backgroundColor: "rgba(255, 255, 255)" }}
-                      >
-                        Sucursal
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>

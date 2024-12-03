@@ -109,7 +109,7 @@ const Income = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <section className="section-expense">
+      <section className="container-transactions">
         <div>
           <button
             className="btn-create-user"
@@ -126,7 +126,10 @@ const Income = () => {
               viewBox="0 -960 960 960"
               width="24px"
               fill="#06571f"
-              style={{transform: viewForm ? 'rotate(-90deg)' : '', transition: 'all 0.2s ease-in-out'}}
+              style={{
+                transform: viewForm ? "rotate(-90deg)" : "",
+                transition: "all 0.2s ease-in-out",
+              }}
             >
               <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
             </svg>
@@ -141,6 +144,31 @@ const Income = () => {
               <div className="form-columns">
                 {/* Primera columna con los inputs apilados */}
                 <div className="inputs-column">
+                <div className="input-box-dashboard">
+                    <div
+                      className={`select-container ${
+                        selectType ? "has-value" : ""
+                      }`}
+                    >
+                      <select
+                        name="typeExpense"
+                        className="input-field-dashboard select"
+                        style={{
+                          color: selectType ? "#000" : "#555",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <option value="all">Sucursal</option>
+                      </select>
+                      <div
+                        className="floating-label"
+                        style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                      >
+                        Sucursal
+                      </div>
+                    </div>
+                  </div>
+                  
                   <div className="input-box-dashboard">
                     <input
                       type="text"
@@ -172,45 +200,20 @@ const Income = () => {
                       Monto
                     </label>
                   </div>
-                <div className="textarea-box-dashboard">
-                  <textarea
-                    className="textarea-field-dashboard"
-                    name="description"
-                    value={newIncome.description}
-                    placeholder=" "
-                    onChange={handleChangeNewIncome}
-                  ></textarea>
-                  <label className="label-textarea-dashboard">
-                    Descripcion del ingreso
-                  </label>
-                </div>
-                <div className="input-box-dashboard">
-                  <div
-                    className={`select-container ${
-                      selectType ? "has-value" : ""
-                    }`}
-                  >
-                    <select
-                      name="typeExpense"
-                      className="input-field-dashboard select"
-                      style={{
-                        color: selectType ? "#000" : "#555",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <option value="all">Sucursal</option>
-                    </select>
-                    <div
-                      className="floating-label"
-                      style={{ backgroundColor: "rgba(255, 255, 255)" }}
-                    >
-                      Sucursal
-                    </div>
+
+                  <div className="textarea-box-dashboard">
+                    <textarea
+                      className="textarea-field-dashboard"
+                      name="description"
+                      value={newIncome.description}
+                      placeholder=" "
+                      onChange={handleChangeNewIncome}
+                    ></textarea>
+                    <label className="label-textarea-dashboard">
+                      Descripcion del ingreso
+                    </label>
                   </div>
                 </div>
-                </div>
-
-
               </div>
 
               <div

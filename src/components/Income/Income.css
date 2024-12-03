@@ -95,6 +95,7 @@
 .inputs-column {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Configura dos columnas adaptables */
+  align-items: center;
   gap: 1rem;
 }
 
