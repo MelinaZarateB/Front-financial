@@ -5,6 +5,25 @@ const ModalNewClient = ({ isOpen, onClose, onSubmit }) => {
   const [description, setDescription] = useState("");
   const [currency, setCurrency] = useState(""); // Estado para la moneda seleccionada
 
+  const [newClient, setNewClient] = useState({
+    name: '',
+    lastname: '',
+    phone: '',
+    mail: '',
+    money: 0,
+    totalDebts: 0,
+    totalPayments: 0,
+    phone: "",
+    mail: "",
+    transactions: [],
+    movements: [],
+    observations: [],
+  })
+
+  const handleClients = (e) => {
+    [e.target.name] = e.target.value;
+  }
+
   const handleSubmit = () => {
     onSubmit(amount, description, currency);
     setAmount("");
@@ -23,7 +42,8 @@ const ModalNewClient = ({ isOpen, onClose, onSubmit }) => {
             className="input-field-dashboard"
             type="text"
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            name="name"
+            onChange={handleClients}
           />
           <label
             className="label-input-dashboard"
@@ -37,13 +57,44 @@ const ModalNewClient = ({ isOpen, onClose, onSubmit }) => {
             className="input-field-dashboard"
             type="text"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            name="lastname"
+            onChange={handleClients}
           />
           <label
             className="label-input-dashboard"
             style={{ backgroundColor: "rgba(255, 255, 255)" }}
           >
             Apellido
+          </label>
+        </div>
+        <div className="input-box-dashboard">
+          <input
+            className="input-field-dashboard"
+            type="text"
+            name="phone"
+            value={description}
+            onChange={handleClients}
+          />
+          <label
+            className="label-input-dashboard"
+            style={{ backgroundColor: "rgba(255, 255, 255)" }}
+          >
+            Telefono
+          </label>
+        </div>
+        <div className="input-box-dashboard">
+          <input
+            className="input-field-dashboard"
+            type="text"
+            name="mail"
+            value={description}
+            onChange={handleClients}
+          />
+          <label
+            className="label-input-dashboard"
+            style={{ backgroundColor: "rgba(255, 255, 255)" }}
+          >
+            Email
           </label>
         </div>
         <div

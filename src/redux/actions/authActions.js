@@ -49,9 +49,11 @@ export const login = (user) => {
 
       if (response) {
         const { access_token, user } = response.data; // Extrae el token y el user
-        const { role } = user; // Extrae el rol del usuario
+        const { role, username, lastname, _id } = user; // Extrae el rol, nombre y apellido del usuario
         // Guarda el token en localStorage
         localStorage.setItem("token", access_token);
+        const userInfo = { username, lastname, role, _id };
+        localStorage.setItem("userInfo", JSON.stringify(userInfo));
 
         // Despacha el éxito del login y pasa el rol del usuario
         dispatch({

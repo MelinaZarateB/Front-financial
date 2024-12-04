@@ -5,6 +5,7 @@ import {
   getTransactions,
   deleteTransaction,
 } from "../../redux/actions/transactionsActions";
+import { Link } from "react-router-dom";
 import { getClients } from "@/redux/actions/clientsActions";
 import imgPencil from "./../../assets/pencil.svg";
 import Swal from "sweetalert2";
@@ -14,6 +15,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { Switch } from "@/components/ui/switch";
 import theme from "../../utils/theme";
 import plusIcon from "./../../assets/plus.svg";
+import arrow from "./../../assets/arrow-right.svg";
 import ModalNewClient from "@/visuals/Modals/ModalNewClient/ModalNewClient";
 import { createTransactions } from "../../redux/actions/transactionsActions";
 import {
@@ -26,10 +28,15 @@ const Transactions = () => {
   const dispatch = useDispatch();
   const subOffices = useSelector((state) => state.offices.subOffices);
   const transactions = useSelector((state) => state.transactions.transactions);
-  const deleteTransactionsSuccess = useSelector((state) => state.transactions.deleteTransactionsSuccess);
-  const createTransactionsSuccess = useSelector((state) => state.transactions.createTransactionsSuccess);
+  const deleteTransactionsSuccess = useSelector(
+    (state) => state.transactions.deleteTransactionsSuccess
+  );
+  const createTransactionsSuccess = useSelector(
+    (state) => state.transactions.createTransactionsSuccess
+  );
   const userRol = useSelector((state) => state.auth.userRole);
   const clients = useSelector((state) => state.clients.clients);
+
   // Local state
   const [viewForm, setViewForm] = useState(false);
   const [hasGuardedBalance, setHasGuardedBalance] = useState(false);
@@ -41,8 +48,8 @@ const Transactions = () => {
     dateTo: new Date(),
   });
   const [newTransaction, setNewTransaction] = useState({
-    user: '67082fa26acbb95ff05fa33e',
-    userName: 'Usuario no disponible',
+    user: "",
+    userName: "",
     type: "",
     amount: "",
     sourceCurrency: "",
@@ -52,25 +59,59 @@ const Transactions = () => {
     exchangeRate: "",
     subOffice: "",
     subOfficeName: "",
+    checkNumber: "",
+    checkDueDate: "",
+    bankName: "",
   });
+  console.log(newTransaction)
 
   const [searchClient, setSearchClient] = useState("");
   const [balanceInCustody, setbalanceInCustody] = useState("");
 
   // Constants
   const typesTransactions = [
-    { value: "check", label: "Cambio de cheque" },
     { value: "buy", label: "Compra" },
     { value: "sell", label: "Venta" },
+    { value: "check", label: "Cambio de cheque" },
   ];
+
   // Effects
   useEffect(() => {
     dispatch(getSubOffices());
+
+    // Obtener información del usuario del localStorage
+    const userInfoString = localStorage.getItem("userInfo");
+    if (userInfoString) {
+      const userInfo = JSON.parse(userInfoString);
+      setNewTransaction((prevState) => ({
+        ...prevState,
+        user: userInfo._id,
+        userName: `${userInfo.username} ${userInfo.lastname}`,
+      }));
+    }
   }, [dispatch]);
 
   useEffect(() => {
     dispatch(getTransactions());
-  }, [createTransactionsSuccess, deleteTransactionsSuccess])
+
+    if (createTransactionsSuccess) {
+      setNewTransaction((prevState) => ({
+        ...prevState,
+        type: "",
+        amount: "",
+        sourceCurrency: "",
+        sourceCurrencyCode: "",
+        targetCurrency: "",
+        targetCurrencyCode: "",
+        exchangeRate: "",
+        subOffice: "",
+        subOfficeName: "",
+        checkNumber: "",
+        checkDueDate: "",
+        bankName: "",
+      }));
+    }
+  }, [createTransactionsSuccess, deleteTransactionsSuccess]);
 
   useEffect(() => {
     if (hasGuardedBalance) {
@@ -78,7 +119,7 @@ const Transactions = () => {
     } else {
       setClientSelected({});
     }
-  }, [hasGuardedBalance, dispatch, setClientSelected]);
+  }, [hasGuardedBalance, dispatch]);
 
   // Event handlers
   const handleSelectChange = (e) => {
@@ -124,22 +165,31 @@ const Transactions = () => {
           targetCurrency: selectedCurrency._id,
         });
       }
-    }else if (name === "exchangeRate") {
-      const numValue = value === "" ? 0 : Number(value)
-      setNewTransaction({ ...newTransaction, [name]: numValue })}
-    else if (name === "amount") {
+    } else if (name === "exchangeRate") {
+      const numValue = value === "" ? 0 : Number(value);
+      setNewTransaction({ ...newTransaction, [name]: numValue });
+    } else if (name === "amount") {
       const numericValue = parseFloat(value);
-      setNewTransaction({ ...newTransaction, [name]: isNaN(numericValue) ? 0 : numericValue });
-    }
-    else {
+      setNewTransaction({
+        ...newTransaction,
+        [name]: isNaN(numericValue) ? 0 : numericValue,
+      });
+    } else if (name === "checkNumber" || name === "bankName") {
+      setNewTransaction({ ...newTransaction, [name]: value });
+    } else if (name === "checkDueDate") {
+      setNewTransaction({ ...newTransaction, [name]: value });
+    } else {
       setNewTransaction({ ...newTransaction, [name]: value });
     }
   };
+
   const handleNewTransaction = () => {
     dispatch(createTransactions(newTransaction));
-  }
+  };
+
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
+
   const handleDeleteTransaction = (transactionId) => {
     Swal.fire({
       title: "¿Seguro que desea eliminar esta transaccion?",
@@ -157,6 +207,7 @@ const Transactions = () => {
       }
     });
   };
+
   const changeForm = () => setViewForm(!viewForm);
   return (
     <ThemeProvider theme={theme}>
@@ -258,7 +309,7 @@ const Transactions = () => {
                   </div>
                   <div className="input-box-dashboard">
                     <input
-                      type="number"
+                      type="text"
                       className="input-field-dashboard"
                       name="amount"
                       value={newTransaction.amount}
@@ -354,6 +405,55 @@ const Transactions = () => {
                       Tasa de cambio
                     </label>
                   </div>
+                  {newTransaction.type === "check" && (
+                    <>
+                      <div className="input-box-dashboard">
+                        <input
+                          type="text"
+                          className="input-field-dashboard"
+                          name="checkNumber"
+                          value={newTransaction.checkNumber}
+                          onChange={handleSelectChange}
+                        />
+                        <label
+                          className="label-input-dashboard"
+                          style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                        >
+                          Número de cheque
+                        </label>
+                      </div>
+                      <div className="input-box-dashboard">
+                        <input
+                          type="date"
+                          className="input-field-dashboard"
+                          name="checkDueDate"
+                          value={newTransaction.checkDueDate}
+                          onChange={handleSelectChange}
+                        />
+                        <label
+                          className="label-input-dashboard"
+                          style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                        >
+                          Fecha del cheque
+                        </label>
+                      </div>
+                      <div className="input-box-dashboard">
+                        <input
+                          type="text"
+                          className="input-field-dashboard"
+                          name="bankName"
+                          value={newTransaction.bankName}
+                          onChange={handleSelectChange}
+                        />
+                        <label
+                          className="label-input-dashboard"
+                          style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                        >
+                          Banco emisor
+                        </label>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
               <div
@@ -378,30 +478,47 @@ const Transactions = () => {
               </div>
               {hasGuardedBalance && (
                 <div className="space-y-4 border-t pt-4">
-                  <div className="container-input-btn">
-                    <div className="input-box-dashboard">
-                      <input
-                        type="text"
-                        className="input-field-dashboard"
-                        name="client"
-                        value={searchClient}
-                        onChange={""}
-                      />
-                      <label
-                        className="label-input-dashboard"
-                        style={{ backgroundColor: "rgba(255, 255, 255)" }}
-                      >
-                        Buscar cliente por nombre
-                      </label>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <div className="container-input-btn">
+                      <div className="input-box-dashboard">
+                        <input
+                          type="text"
+                          className="input-field-dashboard"
+                          name="client"
+                          value={searchClient}
+                          onChange={""}
+                        />
+                        <label
+                          className="label-input-dashboard"
+                          style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                        >
+                          Buscar cliente por nombre
+                        </label>
+                      </div>
+                      <div>
+                        <button
+                          className="btn-new-client"
+                          onClick={handleOpenModal}
+                        >
+                          <span>Nuevo cliente</span>
+                          <img src={plusIcon} alt="" />
+                        </button>
+                      </div>
                     </div>
+
                     <div>
-                      <button
-                        className="btn-new-client"
-                        onClick={handleOpenModal}
+                      <span
+                        style={{
+                          fontSize: "14px",
+                          color: "rgb(31, 151, 243)",
+                          display: "flex",
+                          cursor: "pointer",
+                        }}
                       >
-                        <span>Nuevo cliente</span>
-                        <img src={plusIcon} alt="" />
-                      </button>
+                        Ver clientes <img src={arrow} alt="" />
+                      </span>
                     </div>
                   </div>
                   <div className="container-client-first-section">
@@ -458,7 +575,10 @@ const Transactions = () => {
                 className="buttons-container"
                 style={{ display: "flex", gap: "5px", justifyContent: "end" }}
               >
-                <button className="btn-search-users" onClick={handleNewTransaction}>
+                <button
+                  className="btn-search-users"
+                  onClick={handleNewTransaction}
+                >
                   Registrar{" "}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -552,6 +672,9 @@ const Transactions = () => {
                     <th>T/C</th>
                     <th>Monto de egreso</th>
                     <th>Compra</th>
+                    <th>Numero de cheque</th>
+                    <th>Fecha de cheque</th>
+                    <th>Banco emisor</th>
                     <th>Fecha</th>
                     <th>Sucursal</th>
                     <th colSpan="1"></th>
@@ -582,11 +705,20 @@ const Transactions = () => {
                         <td data-table="T/C">
                           <span>{transaction.exchangeRate}</span>
                         </td>
-                        <td data-table= "Monto de destino">
+                        <td data-table="Monto de destino">
                           <span>{transaction.targetAmount}</span>
                         </td>
                         <td data-table="Compra">
                           <span>{transaction.targetCurrencyCode}</span>
+                        </td>
+                        <td>
+                          <span>{transaction.checkNumber || "N/A"}</span>
+                        </td>
+                        <td>
+                          <span>{transaction.checkDueDate || "N/A"}</span>
+                        </td>
+                        <td>
+                          <span>{transaction.bankName || "N/A"}</span>
                         </td>
                         <td data-table="Fecha">
                           <span>
@@ -605,7 +737,8 @@ const Transactions = () => {
                         <td data-table="Sucursal">
                           <span>{transaction.subOfficeName}</span>
                         </td>
-                        {userRol === "administrador" || userRol === "superadmin" ? (
+                        {userRol === "administrador" ||
+                        userRol === "superadmin" ? (
                           <td data-table="Estado">
                             <button
                               className="btn-trash"

@@ -53,8 +53,9 @@
 .btn-new-client{
   display: flex;
   align-items: center;
-  gap: 4px;
   background-color: #191919;
+  white-space: nowrap;
+  width: 120px;
   color: white;
   padding: 4px;
   border-radius: 4px;
@@ -69,6 +70,7 @@
   background-color: rgba(255, 255, 255, 0.83);
   width: 100%;
 }
+
 .form-container.open {
   max-height: 450px; /* Ajusta este valor según la altura del contenido */
   width: 100%;

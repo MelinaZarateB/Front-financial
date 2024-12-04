@@ -18,6 +18,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { X } from "lucide-react";
+import LinkClients from "@/utils/LinkClients";
 
 const Dashboard = () => {
   const [selectedNavItem, setSelectedNavItem] = useState("transactions");
@@ -139,7 +140,7 @@ const Dashboard = () => {
                     display: pestañaActiva === nombreComponente ? 'block' : 'none'
                   }}
                 >
-                  <ComponenteActual />
+                  <ComponenteActual linkClients={LinkClients}/>
                 </div>
               );
             })}
