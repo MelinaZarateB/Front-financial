@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import "./CashRegisterOpen.css";
 import ModalCreateCurrency from "@/visuals/Modals/ModalCreateCurrency/ModalCreateCurrency";
 import arrowDown from "./../../assets/arrow-down.svg";
@@ -41,32 +41,8 @@ const CashRegisterOpen = () => {
     dispatch(getCurrencies());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (selectedSubOffice) {
-      setIsLoading(true);
-      const office = subOffices.find((office) => office._id === selectedSubOffice);
-      if (office) {
-        const updatedCurrencies = office.currencies.map((c) => ({
-          ...c,
-          exchangeRate: c.currency.exchangeRate,
-          stock: c.stock || 0,
-        }));
-        setMonedasLocales(updatedCurrencies);
-        calcularTotalDolarizado(updatedCurrencies);
-      }
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
-    }
-  }, [selectedSubOffice, subOffices]);
 
-  const calcularTotalDolarizado = (currencies = monedasLocales) => {
-    const totalPesos = currencies.reduce((acc, currency) => {
-      return acc + (currency.stock * currency.exchangeRate);
-    }, 0);
-    const total = totalPesos / exchangeRate;
-    setTotalDolarizado(total);
-  };
+ 
 
   const actualizarStock = (currencyId, nuevoStock) => {
     const actualizado = monedasLocales.map((currency) =>
@@ -198,14 +174,42 @@ const CashRegisterOpen = () => {
   };
 
   // Nuevo manejador para actualizar la tasa de cambio en dólares
+  const calcularTotalDolarizado = useCallback(() => {
+    const totalPesos = monedasLocales.reduce((acc, currency) => {
+      return acc + (currency.stock * currency.exchangeRate);
+    }, 0);
+    const total = exchangeRate > 0 ? totalPesos / exchangeRate : 0;
+    setTotalDolarizado(total);
+  }, [monedasLocales, exchangeRate]);
+
+  useEffect(() => {
+    if (selectedSubOffice) {
+      setIsLoading(true);
+      const office = subOffices.find((office) => office._id === selectedSubOffice);
+      if (office) {
+        const updatedCurrencies = office.currencies.map((c) => ({
+          ...c,
+          exchangeRate: c.currency.exchangeRate,
+          stock: c.stock || 0,
+        }));
+        setMonedasLocales(updatedCurrencies);
+      }
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+    }
+  }, [selectedSubOffice, subOffices]);
+
+  useEffect(() => {
+    calcularTotalDolarizado();
+  }, [monedasLocales, exchangeRate, calcularTotalDolarizado]);
+
   const handleExchangeRateChange = (e) => {
     const newRate = parseFloat(e.target.value);
     if (!isNaN(newRate) && newRate > 0) {
       setExchangeRate(newRate);
-      calcularTotalDolarizado();
     }
   };
-
   return (
     <div className="section-cash-opening">
       <div className="container-btn-cash-close">
@@ -237,11 +241,8 @@ const CashRegisterOpen = () => {
         <div className="input-box-dashboard">
           <input
             type="text"
-            value={exchangeRate}
             onChange={handleExchangeRateChange}
             className="input-field-dashboard"
-            step="0.01"
-            min="0.01"
           />
           <label className="label-input-dashboard">Tasa de cambio en dólares</label>
         </div>

@@ -49,7 +49,6 @@ const Transactions = () => {
   });
   const [newTransaction, setNewTransaction] = useState({
     user: "",
-    userName: "",
     type: "",
     amount: "",
     sourceCurrency: "",
@@ -86,7 +85,6 @@ const Transactions = () => {
       setNewTransaction((prevState) => ({
         ...prevState,
         user: userInfo._id,
-        userName: `${userInfo.username} ${userInfo.lastname}`,
       }));
     }
   }, [dispatch]);
