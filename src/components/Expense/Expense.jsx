@@ -336,6 +336,8 @@ const Expense = () => {
                   </div>
                 </div>
               </div>
+              {/* 
+              
               <div>
                 <DatePicker
                   label="Filtre desde"
@@ -356,6 +358,7 @@ const Expense = () => {
                   }}
                 />
               </div>
+              */}
 
               <button className="btn-search-users">
                 Buscar{" "}

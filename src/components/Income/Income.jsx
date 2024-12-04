@@ -144,7 +144,7 @@ const Income = () => {
               <div className="form-columns">
                 {/* Primera columna con los inputs apilados */}
                 <div className="inputs-column">
-                <div className="input-box-dashboard">
+                  <div className="input-box-dashboard">
                     <div
                       className={`select-container ${
                         selectType ? "has-value" : ""
@@ -168,7 +168,7 @@ const Income = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="input-box-dashboard">
                     <input
                       type="text"
@@ -271,7 +271,8 @@ const Income = () => {
                   Buscar ingreso por tipo
                 </label>
               </div>
-              <div>
+              {/*
+             <div>
                 <DatePicker
                   label="Filtre desde"
                   value={dataForm.dateFrom}
@@ -291,6 +292,7 @@ const Income = () => {
                   }}
                 />
               </div>
+             */}
 
               <button className="btn-search-users">
                 Buscar{" "}

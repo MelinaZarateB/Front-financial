@@ -15,13 +15,17 @@ export const DELETE_USER_SUCCESS = 'DELETE_USER_SUCCESS';
 export const REGISTER_USER_SUCCESS = 'REGISTER_USER_SUCCESS';
 export const REGISTER_USER_FAILURE = 'REGISTER_USER_FAILURE';
 export const UPDATE_USER = 'UPDATE_USER';
+
+/* Types para transacciones */
 export const GET_TRANSACTIONS = 'GET_TRANSACTIONS';
 export const DELETE_TRANSACTION = 'DELETE_TRANSACTION';
 export const CREATE_TRANSACTIONS = 'CREATE_TRANSACTIONS';
 
-/* Types para Egresos - Ingresos */
+/* Types para Egresos - Ingresos(Movimientos) */
 export const CREATE_EXPENSE = 'CREATE_EXPENSE';
 export const CREATE_INCOME = 'CREATE_INCOME';
+export const GET_ALL_MOVEMENTS = 'GET_ALL_MOVEMENTS';
+export const DELETE_MOVEMENT = 'DELETE_MOVEMENT';
 
 /* Types para sucursales */
 export const GET_SUBOFFICES = 'GET_SUBOFFICES';

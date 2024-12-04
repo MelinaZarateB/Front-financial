@@ -5,6 +5,7 @@ import subOfficesReducer from "./subOfficesReducer";
 import transactionsReducer from "./transactionsReducer";
 import cashRegisterReducer from "./cashRegisterReducer";
 import clientsReducer from "./clientsReducer";
+import movementsReducer from "./movementsReducer";
 
 const rootReducer = combineReducers({
   user: userReducer,       
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   offices: subOfficesReducer,
   transactions: transactionsReducer,
   cashRegister: cashRegisterReducer,
-  clients: clientsReducer
+  clients: clientsReducer,
+  movements: movementsReducer
 });
 
 export default rootReducer;
