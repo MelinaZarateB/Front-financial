@@ -1,9 +1,12 @@
 import "./Income.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
 import TextField from "@mui/material/TextField";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../utils/theme";
+import { useDispatch, useSelector } from "react-redux";
+import { createIncome } from "@/redux/actions/incomesActions";
+
 
 const incomesArray = [
   {
@@ -72,27 +75,57 @@ const incomesArray = [
 ];
 
 const Income = () => {
+  const dispatch = useDispatch();
+  const subOffices = useSelector((state) => state.offices.subOffices);
+  const createdIncome = useSelector((state) => state.incomes.createdIncome);
   const [type, setType] = useState("");
+  const [subOfficeCurrencies, setSubOfficeCurrencies] = useState([]);
+  const [viewForm, setViewForm] = useState(false);
   const [selectType, setSelectType] = useState("");
   const [newIncome, setNewIncome] = useState({
-    type: "",
-    description: "",
+    subOffice: "",
     amount: "",
-    office: "",
+    type: "",
+    category: "ingreso",
+    user: "",
+    description: "",
+    currency: ""
   });
-  console.log(newIncome.type);
-  const [viewForm, setViewForm] = useState(false);
+  console.log(newIncome)
+
+  const handleChangeNewIncome = (event) => {
+    const { name, value } = event.target;
+    setNewIncome(prevState => ({
+      ...prevState,
+      [name]: name === 'amount' ? parseFloat(value) || '' : value
+    }));
+  };
+  const handleSelectChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "subOffice") {
+      const selectedOffice = subOffices.find((office) => office.name === value);
+      if (selectedOffice) {
+        setNewIncome({
+          ...newIncome,
+          subOffice: selectedOffice._id,
+        });
+        setSubOfficeCurrencies(
+          selectedOffice.currencies.map((c) => c.currency)
+        );
+      } else {
+        setNewIncome({
+          ...newIncome,
+          subOffice: "",
+        });
+        setSubOfficeCurrencies([]);
+      }}
+  }
 
   const [dataForm, setDataForm] = useState({
     dateFrom: new Date(),
     dateTo: new Date(),
   });
-  const handleChangeNewIncome = (event) => {
-    setNewIncome({
-      ...newIncome,
-      [event.target.name]: event.target.value,
-    });
-  };
+ 
 
   const handleChangeType = (event) => {
     setSelectType(event.target.value);
@@ -102,6 +135,21 @@ const Income = () => {
     else {
       setViewForm(false);
     }
+  };
+
+  useEffect(() => {
+    const userInfoString = localStorage.getItem("userInfo");
+    if (userInfoString) {
+      const userInfo = JSON.parse(userInfoString);
+      setNewIncome((prevState) => ({
+        ...prevState,
+        user: userInfo._id,
+      }));
+    }
+
+  }, [])
+  const handleNewIncome = () => {
+    dispatch(createIncome(newIncome));
   };
 
   // Calcular el total de los montos
@@ -144,21 +192,27 @@ const Income = () => {
               <div className="form-columns">
                 {/* Primera columna con los inputs apilados */}
                 <div className="inputs-column">
-                  <div className="input-box-dashboard">
-                    <div
+                <div
                       className={`select-container ${
-                        selectType ? "has-value" : ""
+                        newIncome.subOffice ? "has-value" : ""
                       }`}
                     >
                       <select
-                        name="typeExpense"
+                        name="subOffice" // Este name debe coincidir con la propiedad en newTransaction
                         className="input-field-dashboard select"
                         style={{
-                          color: selectType ? "#000" : "#555",
+                          color: newIncome.subOffice ? "#000" : "#555",
                           cursor: "pointer",
                         }}
+                        // Asegura que esté sincronizado
+                        onChange={handleSelectChange}
                       >
-                        <option value="all">Sucursal</option>
+                        <option value="">Sucursal</option>
+                        {subOffices.map((office) => (
+                          <option key={office._id} value={office.name}>
+                            {office.name}
+                          </option>
+                        ))}
                       </select>
                       <div
                         className="floating-label"
@@ -167,7 +221,6 @@ const Income = () => {
                         Sucursal
                       </div>
                     </div>
-                  </div>
 
                   <div className="input-box-dashboard">
                     <input
@@ -201,6 +254,41 @@ const Income = () => {
                     </label>
                   </div>
 
+                 <div className="input-box-dashboard">
+                    <div
+                      className={`select-container ${
+                        newIncome.currency ? "has-value" : ""
+                      }`}
+                    >
+                      <select
+                        name="currency" // Este name debe coincidir con la propiedad en newTransaction
+                        className="input-field-dashboard select"
+                        style={{
+                          color: newIncome.currency
+                            ? "#000"
+                            : "#555",
+                          cursor: "pointer",
+                        }}
+                        value={newIncome.currency} // Asegura que esté sincronizado
+                        onChange={handleChangeNewIncome}
+                      >
+                        <option value="">Moneda</option>
+                        {subOfficeCurrencies.map((currency) => (
+                          <option
+                            key={currency._id}
+                            value={currency._id}
+                          >{`${currency.name} - ${currency.code}`}</option>
+                        ))}
+                      </select>
+                      <div
+                        className="floating-label"
+                        style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                      >
+                        Moneda
+                      </div>
+                    </div>
+                    </div>
+
                   <div className="textarea-box-dashboard">
                     <textarea
                       className="textarea-field-dashboard"
@@ -220,7 +308,7 @@ const Income = () => {
                 className="buttons-container"
                 style={{ display: "flex", gap: "5px", justifyContent: "end" }}
               >
-                <button className="btn-search-users">
+                <button className="btn-search-users" onClick={handleNewIncome}>
                   Registrar{" "}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -271,28 +359,7 @@ const Income = () => {
                   Buscar ingreso por tipo
                 </label>
               </div>
-              {/*
-             <div>
-                <DatePicker
-                  label="Filtre desde"
-                  value={dataForm.dateFrom}
-                  renderInput={(params) => <TextField {...params} />}
-                  onChange={(newValue) => {
-                    setDataForm({ ...dataForm, dateFrom: newValue });
-                  }}
-                />
-              </div>
-              <div>
-                <DatePicker
-                  label="Hasta"
-                  value={dataForm.dateTo}
-                  renderInput={(params) => <TextField {...params} />}
-                  onChange={(newValue) => {
-                    setDataForm({ ...dataForm, dateTo: newValue });
-                  }}
-                />
-              </div>
-             */}
+           
 
               <button className="btn-search-users">
                 Buscar{" "}

@@ -1,9 +1,11 @@
 import "./Expense.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
 import TextField from "@mui/material/TextField";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../utils/theme";
+import { useDispatch, useSelector } from "react-redux";
+import { createExpense } from "@/redux/actions/expensesActions";
 
 const typeExpenses = [
   "Servicios Públicos",
@@ -86,14 +88,20 @@ const expensesArray = [
 ];
 
 const Expense = () => {
+  const subOffices = useSelector((state) => state.offices.subOffices);
+  const createdExpense = useSelector((state) => state.expenses.createdExpense);
   const [type, setType] = useState("");
+  const [subOfficeCurrencies, setSubOfficeCurrencies] = useState([]);
   const [selectType, setSelectType] = useState("");
   const [viewForm, setViewForm] = useState(false);
   const [newExpense, setNewExpense] = useState({
     type: "",
     description: "",
     amount: "",
-    office: "",
+    subOffice: "",
+    currency: "",
+    category: "egreso",
+    user: "",
   });
   const [dataForm, setDataForm] = useState({
     dateFrom: new Date(),
@@ -101,12 +109,12 @@ const Expense = () => {
   });
 
   const handleChangeNewExpense = (event) => {
-    setNewExpense({
-      ...newExpense,
-      [event.target.name]: event.target.value,
-    });
+    const { name, value } = event.target;
+    setNewExpense((prevState) => ({
+      ...prevState,
+      [name]: name === "amount" ? parseFloat(value) || "" : value,
+    }));
   };
-
   const handleChangeType = (event) => {
     const selectedValue = event.target.value;
 
@@ -122,6 +130,41 @@ const Expense = () => {
     else {
       setViewForm(false);
     }
+  };
+  const handleSelectChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "subOffice") {
+      const selectedOffice = subOffices.find((office) => office.name === value);
+      if (selectedOffice) {
+        setNewExpense({
+          ...newExpense,
+          subOffice: selectedOffice._id,
+        });
+        setSubOfficeCurrencies(
+          selectedOffice.currencies.map((c) => c.currency)
+        );
+      } else {
+        setNewExpense({
+          ...newExpense,
+          subOffice: "",
+        });
+        setSubOfficeCurrencies([]);
+      }
+    }
+  };
+  useEffect(() => {
+    const userInfoString = localStorage.getItem("userInfo");
+    if (userInfoString) {
+      const userInfo = JSON.parse(userInfoString);
+      setNewExpense((prevState) => ({
+        ...prevState,
+        user: userInfo._id,
+      }));
+    }
+
+  }, [])
+  const handleNewExpense = () => {
+    dispatch(createExpense(newExpense));
   };
   // Calcular el total de los montos
   const total = expensesArray.reduce((acc, expense) => acc + expense.monto, 0);
@@ -161,51 +204,53 @@ const Expense = () => {
             >
               <div className="form-columns">
                 <div className="inputs-column">
-
-                <div className="input-box-dashboard">
-                    <div
-                      className={`select-container ${
-                        selectType ? "has-value" : ""
-                      }`}
+                  <div
+                    className={`select-container ${
+                      newExpense.subOffice ? "has-value" : ""
+                    }`}
+                  >
+                    <select
+                      name="subOffice" // Este name debe coincidir con la propiedad en newTransaction
+                      className="input-field-dashboard select"
+                      style={{
+                        color: newExpense.subOffice ? "#000" : "#555",
+                        cursor: "pointer",
+                      }}
+                      value={newExpense.subOffice} // Asegura que esté sincronizado
+                      onChange={handleSelectChange}
                     >
-                      <select
-                        name="typeExpense"
-                        className="input-field-dashboard select"
-                        value={selectType}
-                        onChange={handleChangeType}
-                        style={{
-                          color: selectType ? "#000" : "#555",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <option value="all">Sucursal</option>
-                      </select>
-                      <div
-                        className="floating-label"
-                        style={{ backgroundColor: "rgba(255, 255, 255)" }}
-                      >
-                        Sucursal
-                      </div>
+                      <option value="">Sucursal</option>
+                      {subOffices.map((office) => (
+                        <option key={office._id} value={office.name}>
+                          {office.name}
+                        </option>
+                      ))}
+                    </select>
+                    <div
+                      className="floating-label"
+                      style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                    >
+                      Sucursal
                     </div>
                   </div>
-                  
+
                   <div className="input-box-dashboard">
                     <div
                       className={`select-container ${
-                        selectType ? "has-value" : ""
+                        newExpense.type ? "has-value" : ""
                       }`}
                     >
                       <select
-                        name="typeExpense"
+                        name="type"
                         className="input-field-dashboard select"
-                        value={selectType}
-                        onChange={handleChangeType}
+                        value={newExpense.type}
+                        onChange={handleChangeNewExpense}
                         style={{
-                          color: selectType ? "#000" : "#555",
+                          color: newExpense.type ? "#000" : "#555",
                           cursor: "pointer",
                         }}
                       >
-                        <option value="all">Filtre por tipo de egreso</option>
+                        <option value="all"> Tipo de egreso</option>
                         {typeExpenses?.map((typeExpense, index) => (
                           <option key={index} value={typeExpense}>
                             {typeExpense}
@@ -235,6 +280,38 @@ const Expense = () => {
                       Monto
                     </label>
                   </div>
+                  <div className="input-box-dashboard">
+                    <div
+                      className={`select-container ${
+                        newExpense.currency ? "has-value" : ""
+                      }`}
+                    >
+                      <select
+                        name="currency" // Este name debe coincidir con la propiedad en newTransaction
+                        className="input-field-dashboard select"
+                        style={{
+                          color: newExpense.currency ? "#000" : "#555",
+                          cursor: "pointer",
+                        }}
+                        value={newExpense.currency}
+                        onChange={handleChangeNewExpense}
+                      >
+                        <option value="">Moneda</option>
+                        {subOfficeCurrencies.map((currency) => (
+                          <option
+                            key={currency._id}
+                            value={`${currency.name} - ${currency.code}`}
+                          >{`${currency.name} - ${currency.code}`}</option>
+                        ))}
+                      </select>
+                      <div
+                        className="floating-label"
+                        style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                      >
+                        Moneda
+                      </div>
+                    </div>
+                  </div>
 
                   <div className="textarea-box-dashboard">
                     <textarea
@@ -258,7 +335,7 @@ const Expense = () => {
                 className="buttons-container"
                 style={{ display: "flex", gap: "5px", justifyContent: "end" }}
               >
-                <button className="btn-search-users">
+                <button className="btn-search-users" onClick={handleNewExpense}>
                   Registrar{" "}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
