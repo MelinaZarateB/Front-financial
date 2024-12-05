@@ -103,6 +103,21 @@ const Expense = () => {
     category: "egreso",
     user: "",
   });
+
+  useEffect(() => {
+    if (createdExpense) {
+      setNewExpense({
+        type: "",
+        description: "",
+        amount: "",
+        subOffice: "",
+        currency: "",
+        category: "egreso",
+        user: "",
+      });
+    }
+  }, [createdExpense]);
+
   const [dataForm, setDataForm] = useState({
     dateFrom: new Date(),
     dateTo: new Date(),
@@ -161,8 +176,7 @@ const Expense = () => {
         user: userInfo._id,
       }));
     }
-
-  }, [])
+  }, []);
   const handleNewExpense = () => {
     dispatch(createExpense(newExpense));
   };

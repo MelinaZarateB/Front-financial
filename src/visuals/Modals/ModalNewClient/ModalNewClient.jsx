@@ -13,8 +13,6 @@ const ModalNewClient = ({ isOpen, onClose, onSubmit }) => {
     money: 0,
     totalDebts: 0,
     totalPayments: 0,
-    phone: "",
-    mail: "",
     transactions: [],
     movements: [],
     observations: [],

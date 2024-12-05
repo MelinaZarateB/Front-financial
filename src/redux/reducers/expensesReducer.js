@@ -9,7 +9,7 @@ const expensesReducer = (state = initialState, action) => {
     case CREATE_EXPENSE:
       return {
         ...state,
-        createdExpense: action.payload,
+        createdExpense: state.createdExpense ? false : action.payload
       };
     default:
       return state;

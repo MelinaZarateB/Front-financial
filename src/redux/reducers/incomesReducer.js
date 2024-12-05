@@ -1,19 +1,18 @@
 import { CREATE_INCOME } from "../action-types";
 
 let initialState = {
-    createdIncome : false
+  createdIncome: false,
 };
 
 const incomesReducer = (state = initialState, action) => {
-    switch(action.type){
-        case CREATE_INCOME: 
-        return{
-            ...state,
-            createdIncome: action.payload
-        }
-        default:
-            return state;
-    }
-
-}
+  switch (action.type) {
+    case CREATE_INCOME:
+      return {
+        ...state,
+        createdIncome: state.createdIncome ? false : action.payload
+      };
+    default:
+      return state;
+  }
+};
 export default incomesReducer;

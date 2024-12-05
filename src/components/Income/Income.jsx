@@ -137,6 +137,8 @@ const Income = () => {
     }
   };
 
+
+
   useEffect(() => {
     const userInfoString = localStorage.getItem("userInfo");
     if (userInfoString) {
@@ -148,9 +150,24 @@ const Income = () => {
     }
 
   }, [])
+
   const handleNewIncome = () => {
     dispatch(createIncome(newIncome));
   };
+  useEffect(() => {
+
+    if(createdIncome){
+      setNewIncome({
+        type: "",
+        description: "",
+        amount: "",
+        subOffice: "",
+        currency: "",
+        category: "ingreso",
+        user: "",
+      });
+    }
+  }, [createdIncome]);
 
   // Calcular el total de los montos
   const total = incomesArray.reduce((acc, income) => acc + income.monto, 0);
