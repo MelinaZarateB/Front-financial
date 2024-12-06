@@ -92,6 +92,7 @@ const Movements = () => {
                   Buscar movimiento
                 </label>
               </div>
+              {/* 
               <div>
                 <DatePicker
                   label="Filtre desde"
@@ -112,6 +113,7 @@ const Movements = () => {
                   }
                 />
               </div>
+              */}
               <button className="btn-search-users">
                 Buscar{" "}
                 <svg

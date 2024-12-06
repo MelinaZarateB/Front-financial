@@ -243,8 +243,8 @@ const Offices = () => {
                         >
                           <option value="all">Seleccionar usuario</option>
                           {office.users.map((user) => (
-                            <option key={user} value={user}>
-                              {user}
+                            <option key={user._id} value={user.name}>
+                              {user.name}
                             </option>
                           ))}
                         </select>
