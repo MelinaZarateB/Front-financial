@@ -7,7 +7,6 @@ import theme from "../../utils/theme";
 import { useDispatch, useSelector } from "react-redux";
 import { createIncome } from "@/redux/actions/incomesActions";
 
-
 const incomesArray = [
   {
     _id: 1,
@@ -89,15 +88,17 @@ const Income = () => {
     category: "ingreso",
     user: "",
     description: "",
-    currency: ""
+    currency: "",
   });
-  console.log(newIncome)
+  console.log(newIncome);
+  console.log(subOffices)
+  console.log(subOfficeCurrencies)
 
   const handleChangeNewIncome = (event) => {
     const { name, value } = event.target;
-    setNewIncome(prevState => ({
+    setNewIncome((prevState) => ({
       ...prevState,
-      [name]: name === 'amount' ? parseFloat(value) || '' : value
+      [name]: name === "amount" ? parseFloat(value) || "" : value,
     }));
   };
   const handleSelectChange = (e) => {
@@ -118,14 +119,14 @@ const Income = () => {
           subOffice: "",
         });
         setSubOfficeCurrencies([]);
-      }}
-  }
+      }
+    }
+  };
 
   const [dataForm, setDataForm] = useState({
     dateFrom: new Date(),
     dateTo: new Date(),
   });
- 
 
   const handleChangeType = (event) => {
     setSelectType(event.target.value);
@@ -137,8 +138,6 @@ const Income = () => {
     }
   };
 
-
-
   useEffect(() => {
     const userInfoString = localStorage.getItem("userInfo");
     if (userInfoString) {
@@ -148,15 +147,13 @@ const Income = () => {
         user: userInfo._id,
       }));
     }
-
-  }, [])
+  }, []);
 
   const handleNewIncome = () => {
     dispatch(createIncome(newIncome));
   };
   useEffect(() => {
-
-    if(createdIncome){
+    if (createdIncome) {
       setNewIncome({
         type: "",
         description: "",
@@ -209,35 +206,35 @@ const Income = () => {
               <div className="form-columns">
                 {/* Primera columna con los inputs apilados */}
                 <div className="inputs-column">
-                <div
-                      className={`select-container ${
-                        newIncome.subOffice ? "has-value" : ""
-                      }`}
+                  <div
+                    className={`select-container ${
+                      newIncome.subOffice ? "has-value" : ""
+                    }`}
+                  >
+                    <select
+                      name="subOffice" // Este name debe coincidir con la propiedad en newTransaction
+                      className="input-field-dashboard select"
+                      style={{
+                        color: newIncome.subOffice ? "#000" : "#555",
+                        cursor: "pointer",
+                      }}
+                      // Asegura que esté sincronizado
+                      onChange={handleSelectChange}
                     >
-                      <select
-                        name="subOffice" // Este name debe coincidir con la propiedad en newTransaction
-                        className="input-field-dashboard select"
-                        style={{
-                          color: newIncome.subOffice ? "#000" : "#555",
-                          cursor: "pointer",
-                        }}
-                        // Asegura que esté sincronizado
-                        onChange={handleSelectChange}
-                      >
-                        <option value="">Sucursal</option>
-                        {subOffices.map((office) => (
-                          <option key={office._id} value={office.name}>
-                            {office.name}
-                          </option>
-                        ))}
-                      </select>
-                      <div
-                        className="floating-label"
-                        style={{ backgroundColor: "rgba(255, 255, 255)" }}
-                      >
-                        Sucursal
-                      </div>
+                      <option value="">Sucursal</option>
+                      {subOffices.map((office) => (
+                        <option key={office._id} value={office.name}>
+                          {office.name}
+                        </option>
+                      ))}
+                    </select>
+                    <div
+                      className="floating-label"
+                      style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                    >
+                      Sucursal
                     </div>
+                  </div>
 
                   <div className="input-box-dashboard">
                     <input
@@ -271,7 +268,7 @@ const Income = () => {
                     </label>
                   </div>
 
-                 <div className="input-box-dashboard">
+                  <div className="input-box-dashboard">
                     <div
                       className={`select-container ${
                         newIncome.currency ? "has-value" : ""
@@ -281,9 +278,7 @@ const Income = () => {
                         name="currency" // Este name debe coincidir con la propiedad en newTransaction
                         className="input-field-dashboard select"
                         style={{
-                          color: newIncome.currency
-                            ? "#000"
-                            : "#555",
+                          color: newIncome.currency ? "#000" : "#555",
                           cursor: "pointer",
                         }}
                         value={newIncome.currency} // Asegura que esté sincronizado
@@ -304,7 +299,7 @@ const Income = () => {
                         Moneda
                       </div>
                     </div>
-                    </div>
+                  </div>
 
                   <div className="textarea-box-dashboard">
                     <textarea
@@ -376,7 +371,6 @@ const Income = () => {
                   Buscar ingreso por tipo
                 </label>
               </div>
-           
 
               <button className="btn-search-users">
                 Buscar{" "}

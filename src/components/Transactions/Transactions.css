@@ -55,7 +55,7 @@
   align-items: center;
   background-color: #191919;
   white-space: nowrap;
-  width: 120px;
+  /*width: 120px;*/
   color: white;
   padding: 4px;
   border-radius: 4px;
@@ -98,3 +98,29 @@
   flex-direction: column;
   gap: 5px;
 }
+.transaction-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.transaction-table th,
+.transaction-table td {
+  padding: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.input-transaction{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 4px;
+  border-bottom: 1px solid #666;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.transaction-table .edit-button {
+  white-space: nowrap;
+}
+

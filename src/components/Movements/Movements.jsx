@@ -144,12 +144,13 @@ const Movements = () => {
                 <thead>
                   <tr>
                     <th>Categoría</th>
+                    <th>Usuario</th>
                     <th>Monto</th>
                     <th>Descripción</th>
+                    <th>Moneda</th>
                     <th>Fecha</th>
                     <th>Sucursal</th>
-                    <th>Moneda</th>
-                    {userRol === "administrador" || userRol === "superadmin" ? (
+                    {userRol === "administrador" ? (
                       <th colSpan="1"></th>
                     ) : (
                       ""
@@ -167,6 +168,7 @@ const Movements = () => {
                             {movement.category} {getTypeIcon(movement.category)}
                           </span>
                         </td>
+                        <td data-table="Usuario">{movement.user.username}</td>
                         <td data-table="Monto">
                           <span>$ {movement.amount}</span>
                         </td>
@@ -174,6 +176,9 @@ const Movements = () => {
                           <span>{movement.description}</span>
                         </td>
 
+                        <td data-table="Moneda">
+                          <span>{movement.currency.name} - {movement.currency.code}</span>
+                        </td>
                         <td data-table="Fecha">
                           <span>
                             {new Date(movement.date)
@@ -189,13 +194,9 @@ const Movements = () => {
                           </span>
                         </td>
                         <td data-table="Sucursal">
-                          <span>{movement.sub_office}</span>
+                          <span>{movement.sub_office.name}</span>
                         </td>
-                        <td data-table="Moneda">
-                          <span>{movement.currency}</span>
-                        </td>
-                        {userRol === "administrador" ||
-                        userRol === "superadmin" ? (
+                        {userRol === "administrador" ? (
                           <td data-table="Estado">
                             <button
                               className="btn-trash"

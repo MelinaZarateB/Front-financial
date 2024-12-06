@@ -22,6 +22,9 @@ import {
   getSubOffices,
   getCurrencies,
 } from "@/redux/actions/subOfficesActions";
+import Spinner from "@/utils/Spinner/Spinner";
+import { useRef } from "react";
+import { useCallback } from "react";
 
 const Transactions = () => {
   // Redux hooks
@@ -62,7 +65,7 @@ const Transactions = () => {
     checkDueDate: "",
     bankName: "",
   });
-  console.log(newTransaction)
+  console.log(newTransaction);
 
   const [searchClient, setSearchClient] = useState("");
   const [balanceInCustody, setbalanceInCustody] = useState("");
@@ -187,25 +190,61 @@ const Transactions = () => {
 
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
+  const [editingTransaction, setEditingTransaction] = useState(null);
+  const [editedFields, setEditedFields] = useState({});
+  const tableRef = useRef(null);
+
+
+
+  const handleClickOutside = useCallback((event) => {
+    if (tableRef.current && !tableRef.current.contains(event.target)) {
+      setEditingTransaction(null);
+      setEditedFields({});
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [handleClickOutside]);
+
+  const handleEditClick = (transaction) => {
+    setEditingTransaction(transaction._id);
+    setEditedFields({
+      sourceAmount: transaction.sourceAmount,
+      exchangeRate: transaction.exchangeRate,
+      targetAmount: transaction.targetAmount,
+      checkNumber: transaction.checkNumber || "",
+      checkDueDate: transaction.checkDueDate || "",
+      bankName: transaction.bankName || "",
+    });
+  };
+
+  const handleEditChange = (field, value) => {
+    setEditedFields((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveEdit = () => {
+    dispatch(updateTransaction(editingTransaction, editedFields));
+    setEditingTransaction(null);
+    setEditedFields({});
+  };
 
   const handleDeleteTransaction = (transactionId) => {
     Swal.fire({
-      title: "¿Seguro que desea eliminar esta transaccion?",
+      title: "¿Seguro que desea eliminar esta transacción?",
       showCancelButton: true,
       confirmButtonText: "Eliminar",
       cancelButtonText: "Cancelar",
       reverseButtons: true,
-      customClass: {
-        confirmButton: "my-confirm-button",
-        cancelButton: "my-cancel-button",
-      },
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(deleteTransaction(transactionId));
       }
     });
   };
-
   const changeForm = () => setViewForm(!viewForm);
   return (
     <ThemeProvider theme={theme}>
@@ -658,7 +697,7 @@ const Transactions = () => {
               </svg>
             </button>
           </div>
-          <div className="container-table">
+          <div className="container-table" ref={tableRef}>
             <div className="tbl-container">
               <table className="tbl">
                 <thead>
@@ -675,69 +714,136 @@ const Transactions = () => {
                     <th>Banco emisor</th>
                     <th>Fecha</th>
                     <th>Sucursal</th>
-                    <th colSpan="1"></th>
+                    <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   {transactions && transactions.length > 0 ? (
                     transactions.map((transaction) => (
                       <tr key={transaction._id}>
-                        <td data-table="Tipo">
-                          <span
-                            data-editable={transaction.type}
-                            data-transaction-id={transaction._id}
-                            data-field="type"
+                        <td>{transaction.type}</td>
+                        <td>{transaction.userName}</td>
+                        <td>
+                          {editingTransaction === transaction._id ? (
+                            <input
+                              type="text"
+                              className="input-transaction"
+                              value={editedFields.sourceAmount}
+                              onChange={(e) =>
+                                handleEditChange("sourceAmount", e.target.value)
+                              }
+                            />
+                          ) : (
+                            transaction.sourceAmount
+                          )}
+                        </td>
+                        <td>{transaction.sourceCurrencyCode}</td>
+                        <td>
+                          {editingTransaction === transaction._id ? (
+                            <input
+                              type="text"
+                              className="input-transaction"
+                              value={editedFields.exchangeRate}
+                              onChange={(e) =>
+                                handleEditChange("exchangeRate", e.target.value)
+                              }
+                            />
+                          ) : (
+                            transaction.exchangeRate
+                          )}
+                        </td>
+                        <td>
+                          {editingTransaction === transaction._id ? (
+                            <input
+                              type="text"
+                              className="input-transaction"
+                              value={editedFields.targetAmount}
+                              onChange={(e) =>
+                                handleEditChange("targetAmount", e.target.value)
+                              }
+                            />
+                          ) : (
+                            transaction.targetAmount
+                          )}
+                        </td>
+                        <td>{transaction.targetCurrencyCode}</td>
+                        <td>
+                          {editingTransaction === transaction._id ? (
+                            <input
+                              type="text"
+                              className="input-transaction"
+                              value={editedFields.checkNumber}
+                              onChange={(e) =>
+                                handleEditChange("checkNumber", e.target.value)
+                              }
+                            />
+                          ) : (
+                            transaction.checkNumber || "N/A"
+                          )}
+                        </td>
+                        <td>
+                          {editingTransaction === transaction._id ? (
+                            <input
+                              type="date"
+                              className="input-transaction"
+                              value={editedFields.checkDueDate}
+                              onChange={(e) =>
+                                handleEditChange("checkDueDate", e.target.value)
+                              }
+                            />
+                          ) : (
+                            transaction.checkDueDate || "N/A"
+                          )}
+                        </td>
+                        <td>
+                          {editingTransaction === transaction._id ? (
+                            <input
+                              type="text"
+                              className="input-transaction"
+                              value={editedFields.bankName}
+                              onChange={(e) =>
+                                handleEditChange("bankName", e.target.value)
+                              }
+                            />
+                          ) : (
+                            transaction.bankName || "N/A"
+                          )}
+                        </td>
+                        <td>
+                          {new Date(transaction.createdAt)
+                            .toLocaleString("es-ES", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false,
+                            })
+                            .replace(",", "")}
+                        </td>
+                        <td>{transaction.subOfficeName}</td>
+                        <td>
+                          <button
+                            className="btn-edit edit-button"
+                            onClick={() =>
+                              editingTransaction === transaction._id
+                                ? handleSaveEdit()
+                                : handleEditClick(transaction)
+                            }
                           >
-                            {transaction.type} <img src={imgPencil} alt="" />
-                          </span>
-                        </td>
-                        <td data-table="Usuario">
-                          <span>{transaction.userName}</span>
-                        </td>
-                        <td data-table="Monto de origen">
-                          <span>{transaction.sourceAmount}</span>
-                        </td>
-                        <td data-table="Paga">
-                          <span>{transaction.sourceCurrencyCode}</span>
-                        </td>
-                        <td data-table="T/C">
-                          <span>{transaction.exchangeRate}</span>
-                        </td>
-                        <td data-table="Monto de destino">
-                          <span>{transaction.targetAmount}</span>
-                        </td>
-                        <td data-table="Compra">
-                          <span>{transaction.targetCurrencyCode}</span>
-                        </td>
-                        <td>
-                          <span>{transaction.checkNumber || "N/A"}</span>
-                        </td>
-                        <td>
-                          <span>{transaction.checkDueDate || "N/A"}</span>
-                        </td>
-                        <td>
-                          <span>{transaction.bankName || "N/A"}</span>
-                        </td>
-                        <td data-table="Fecha">
-                          <span>
-                            {new Date(transaction.createdAt)
-                              .toLocaleString("es-ES", {
-                                day: "2-digit",
-                                month: "2-digit",
-                                year: "2-digit",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                hour12: false, // Para formato 24 horas
-                              })
-                              .replace(",", "")}
-                          </span>
-                        </td>
-                        <td data-table="Sucursal">
-                          <span>{transaction.subOfficeName}</span>
-                        </td>
-                        {userRol === "administrador" ||
-                        userRol === "superadmin" ? (
-                          <td data-table="Estado">
+                            {editingTransaction === transaction._id ? (
+                              <button className="btn-new-client">
+                                {" "}
+                                Guardar{" "}
+                              </button>
+                            ) : (
+                              <button className="btn-new-client">
+                                {" "}
+                                Editar{" "}
+                              </button>
+                            )}
+                          </button>
+                          {userRol === "administrador" && (
                             <button
                               className="btn-trash"
                               onClick={() =>
@@ -746,15 +852,13 @@ const Transactions = () => {
                             >
                               Eliminar
                             </button>
-                          </td>
-                        ) : (
-                          ""
-                        )}
+                          )}
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="9" style={{ textAlign: "center" }}>
+                      <td colSpan="13" style={{ textAlign: "center" }}>
                         No hay transacciones disponibles
                       </td>
                     </tr>
