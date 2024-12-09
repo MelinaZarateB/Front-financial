@@ -5,7 +5,8 @@ import TextField from "@mui/material/TextField";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../utils/theme";
 import { useDispatch, useSelector } from "react-redux";
-import { createIncome } from "@/redux/actions/incomesActions";
+import { createIncome, getIncomes } from "@/redux/actions/incomesActions";
+import { deleteMovement } from "@/redux/actions/movementsActions";
 
 const incomesArray = [
   {
@@ -77,6 +78,12 @@ const Income = () => {
   const dispatch = useDispatch();
   const subOffices = useSelector((state) => state.offices.subOffices);
   const createdIncome = useSelector((state) => state.incomes.createdIncome);
+  const incomes = useSelector((state) => state.incomes.incomes);
+  const [userRol, setUserRol] = useState("");
+  const deleteMovements = useSelector(
+    (state) => state.movements.deleteMovement
+  );
+  console.log("ingresos", incomes);
   const [type, setType] = useState("");
   const [subOfficeCurrencies, setSubOfficeCurrencies] = useState([]);
   const [viewForm, setViewForm] = useState(false);
@@ -91,8 +98,8 @@ const Income = () => {
     currency: "",
   });
   console.log(newIncome);
-  console.log(subOffices)
-  console.log(subOfficeCurrencies)
+  console.log(subOffices);
+  console.log(subOfficeCurrencies);
 
   const handleChangeNewIncome = (event) => {
     const { name, value } = event.target;
@@ -137,6 +144,9 @@ const Income = () => {
       setViewForm(false);
     }
   };
+  useEffect(() => {
+    dispatch(getIncomes("ingresos"));
+  }, [deleteMovements]);
 
   useEffect(() => {
     const userInfoString = localStorage.getItem("userInfo");
@@ -165,6 +175,18 @@ const Income = () => {
       });
     }
   }, [createdIncome]);
+
+  const handleDeleteMovement = (idMovement) => {
+    dispatch(deleteMovement(idMovement));
+  };
+  useEffect(() => {
+    // Obtener información del usuario del localStorage
+    const userInfoString = localStorage.getItem("userInfo");
+    if (userInfoString) {
+      const userInfo = JSON.parse(userInfoString);
+      setUserRol(userInfo.role)
+    }
+  }, [dispatch]);
 
   // Calcular el total de los montos
   const total = incomesArray.reduce((acc, income) => acc + income.monto, 0);
@@ -414,24 +436,24 @@ const Income = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {incomesArray && incomesArray.length > 0 ? (
-                    incomesArray.map((income) => (
+                  {incomes && incomes.length > 0 ? (
+                    incomes.map((income) => (
                       <tr key={income._id}>
                         <td data-table="Tipo">
-                          <span>{income.tipo}</span>
+                          <span>{income.type}</span>
                         </td>
                         <td data-table="Usuario">
-                          <span>{income.usuario}</span>
+                          <span>{income.user.username}</span>
                         </td>
                         <td data-table="Descripción">
-                          <span>{income.descripcion}</span>
+                          <span>{income.description}</span>
                         </td>
                         <td data-table="Monto">
-                          <span>$ {income.monto.toFixed(2)}</span>
+                          <span>$ {income.amount.toFixed(2)}</span>
                         </td>
                         <td data-table="Fecha">
                           <span>
-                            {new Date(income.fecha)
+                            {new Date(income.date)
                               .toLocaleString("es-ES", {
                                 day: "2-digit",
                                 month: "2-digit",
@@ -444,12 +466,19 @@ const Income = () => {
                           </span>
                         </td>
                         <td data-table="Sucursal">
-                          <span>{income.sucursal}</span>
+                          <span>{income.sub_office.name}</span>
                         </td>
-
-                        <td>
-                          <button className="btn-trash">Eliminar</button>
-                        </td>
+                        {userRol ===
+                          "administrador" && (
+                            <td>
+                              <button
+                                className="btn-trash"
+                                onClick={() => handleDeleteMovement(income._id)}
+                              >
+                                Eliminar
+                              </button>
+                            </td>
+                          )}
                       </tr>
                     ))
                   ) : (

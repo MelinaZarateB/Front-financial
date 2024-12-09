@@ -5,7 +5,8 @@ import {
   CLEAN_FILTER_USER_BY_EMAIL,
   SEARCH_USER_BY_EMAIL,
   GET_ALL_USERS,
-  CLEAN_MESSAGE
+  CLEAN_MESSAGE,
+  UPDATE_USER
 } from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -19,8 +20,32 @@ export const cleanMessage = () => {
 
 /* Actions para usuarios comunes */
 export const updateUser = (userId, updateField) => {
-  return (dispatch) => {
-    console.log(userId);
+  return async (dispatch) => {
+    try{
+      const { data } = await axios.put(`http://localhost:3000/users/update-user/${userId}`, updateField)
+      console.log(data)
+      if(data){
+        dispatch({
+          type: UPDATE_USER,
+          payload: data
+        })
+        Swal.fire({
+          text: "El usuario ha sido actualizado.",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    }catch(error){
+      const mensajeError =
+      error.response?.data?.message ||
+      "Ocurrio un error al intentar actualizar el usuario.";
+    Swal.fire({
+      title: "Error",
+      text: mensajeError,
+      icon: "error",
+    });
+    }
   };
 };
 
@@ -44,7 +69,6 @@ export const registerUser = (newUser) => {
         type: REGISTER_USER_FAILURE,
         payload: message,
       });
-      console.log(message);
     }
   };
 };
@@ -81,7 +105,15 @@ export const deleteUser = (userId) => {
       }
       //const { data } = await axios.delete(`http://localhost:3000/users/delete-user/${userId}`)
     } catch (error) {
-      console.log(error);
+      const message = error.response && error.response.data.message;
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : "Ocurrio un error al intentar eliminar un usuario.";
+        Swal.fire({
+          title: "Error",
+          text: message,
+          icon: "error",
+        });
     }
   };
 };
@@ -103,18 +135,26 @@ export const getAllUsers = () => {
         });
       }
     } catch (error) {
-      console.log(error);
+      const message = error.response && error.response.data.message;
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : "Ocurrio un error al intentar obtener los usuarios.";
+        Swal.fire({
+          title: "Error",
+          text: message,
+          icon: "error",
+        });
     }
   };
 };
 
 export const searchUserByEmail = (email) => {
-  console.log(email, "action email");
   return async (dispatch) => {
     try {
       const { data } = await axios.get(
         `http://localhost:3000/users/email/${email}`
       );
+      console.log('Se obtuvo usuario por mail', data)
       if (data) {
         dispatch({
           type: SEARCH_USER_BY_EMAIL,
@@ -122,7 +162,15 @@ export const searchUserByEmail = (email) => {
         });
       }
     } catch (error) {
-      console.log(error);
+      const message = error.response && error.response.data.message;
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : "Ocurrio un error inesperado";
+        Swal.fire({
+          title: "Error",
+          text: message,
+          icon: "error",
+        });
     }
   };
 };

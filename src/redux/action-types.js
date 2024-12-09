@@ -20,12 +20,15 @@ export const UPDATE_USER = 'UPDATE_USER';
 export const GET_TRANSACTIONS = 'GET_TRANSACTIONS';
 export const DELETE_TRANSACTION = 'DELETE_TRANSACTION';
 export const CREATE_TRANSACTIONS = 'CREATE_TRANSACTIONS';
+export const GET_TRANSACTIOS_FOR_DAY = 'GET_TRANSACTIOS_FOR_DAY';
 
 /* Types para Egresos - Ingresos(Movimientos) */
 export const CREATE_EXPENSE = 'CREATE_EXPENSE';
 export const CREATE_INCOME = 'CREATE_INCOME';
 export const GET_ALL_MOVEMENTS = 'GET_ALL_MOVEMENTS';
 export const DELETE_MOVEMENT = 'DELETE_MOVEMENT';
+export const GET_EXPENSES = 'GET_EXPENSES';
+export const GET_INCOMES = 'GET_INCOMES';
 
 /* Types para sucursales */
 export const GET_SUBOFFICES = 'GET_SUBOFFICES';

@@ -37,7 +37,7 @@ export const deleteMovement = (movementId) => {
         });
         Swal.fire({
           title: "Eliminado",
-          text: "El movimiento ha sido eliminada.",
+          text: "El movimiento ha sido eliminado.",
           icon: "success",
           timer: 2000,
           showConfirmButton: false,

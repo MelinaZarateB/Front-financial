@@ -15,7 +15,7 @@ const movementsReducer = (state = initialState, action) => {
     case DELETE_MOVEMENT:
       return {
         ...state,
-        deleteMovement: action.payload,
+        deleteMovement: state.deleteMovement ? false : action.payload
       };
 
     default:

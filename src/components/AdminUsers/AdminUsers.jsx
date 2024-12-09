@@ -1,8 +1,6 @@
 import "./AdminUsers.css";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import imgPencil from "./../../assets/pencil.svg";
-import imgTrash from "./../../assets/apartment_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg";
 import {
   cleanFilterUserByEmail,
   searchUserByEmail,
@@ -11,15 +9,20 @@ import {
   deleteUser,
 } from "../../redux/actions/userActions";
 import Swal from "sweetalert2";
+import { useRef, useCallback } from "react";
 
 const AdminUsers = ({ handleCreateUser }) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const users = useSelector((state) => state.user.users);
   const userByEmail = useSelector((state) => state.user.userByEmail);
+  console.log(email)
+  console.log('Estado global de usuario obtenido por mail', userByEmail)
   const [selectType, setSelectType] = useState("");
   const [viewForm, setViewForm] = useState(false);
-  const [type, setType] = useState("");
+  const [editingUser, setEditingUser] = useState(null);
+  const [editedFields, setEditedFields] = useState({});
+  const tableRef = useRef(null);
 
   const [newUser, setNewUser] = useState({
     username: "",
@@ -35,41 +38,20 @@ const AdminUsers = ({ handleCreateUser }) => {
     dispatch(getAllUsers());
   }, [dispatch]);
 
+  const handleClickOutside = useCallback((event) => {
+    if (tableRef.current && !tableRef.current.contains(event.target)) {
+      setEditingUser(null);
+      setEditedFields({});
+    }
+  }, []);
+
   useEffect(() => {
-    document.querySelectorAll("[data-editable]").forEach(function (item) {
-      item.addEventListener("click", function () {
-        const userId = item.dataset.userId; // Identificar el usuario
-        const fieldName = item.dataset.field; // Campo que se está editando
-        const input = document.createElement("input");
-        input.className = item.className;
-        input.dataset.editableInput = true;
-        input.value = item.dataset.editable;
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [handleClickOutside]);
 
-        input.addEventListener("blur", function () {
-          if (input.value) {
-            item.dataset.editable = input.value;
-            // Restaura el texto y la imagen del lápiz
-            item.innerHTML = `${input.value} <img src="${imgPencil}" alt="" />`;
-            // Dispatch para actualizar el valor después del blur
-            dispatch(updateUser(userId, { [fieldName]: input.value }));
-          }
-          input.replaceWith(item);
-        });
-
-        input.addEventListener("keydown", function (e) {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            input.blur(); // Desencadena el blur, lo que actualiza y despacha la acción
-          }
-        });
-
-        item.replaceWith(input);
-        input.focus();
-      });
-    });
-  }, [dispatch, users]); // Asegúrate de que este efecto se ejecute cuando los usuarios cambien
-
-  /* Handlers */
   const handleChange = (event) => {
     setEmail(event.target.value);
   };
@@ -82,39 +64,67 @@ const AdminUsers = ({ handleCreateUser }) => {
     dispatch(cleanFilterUserByEmail());
     setEmail("");
   };
+
   const handleDeleteUser = (userId) => {
     Swal.fire({
       title: "¿Seguro que desea eliminar este usuario?",
       icon: "warning",
-      showCancelButton: true, // Muestra el botón de cancelar
-      confirmButtonText: "Eliminar", // Texto del botón de confirmación
-      cancelButtonText: "Cancelar", // Texto del botón de cancelación
-      reverseButtons: true, // Opcional: intercambia el orden de los botones
+      showCancelButton: true,
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
       customClass: {
-        confirmButton: "my-confirm-button", // Clase personalizada para el botón de confirmación
-        cancelButton: "my-cancel-button", // Clase personalizada para el botón de cancelación
+        confirmButton: "my-confirm-button",
+        cancelButton: "my-cancel-button",
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        // Si el usuario confirma, ejecutamos la acción deleteUser
         dispatch(deleteUser(userId));
       }
     });
   };
+
   const handleChangeType = (event) => {
     setSelectType(event.target.value);
   };
+
   const changeForm = () => {
-    if (viewForm === false) setViewForm(true);
-    else {
-      setViewForm(false);
-    }
+    setViewForm(!viewForm);
   };
+
   const handleChangeNewUser = (event) => {
     setNewUser({
       ...newUser,
       [event.target.name]: event.target.value,
     });
+  };
+
+  const handleEditClick = (user) => {
+    setEditingUser(user._id);
+    setEditedFields({
+      username: user.username,
+      lastname: user.lastname,
+      email: user.email,
+      phone: user.phone,
+    });
+  };
+
+  const handleEditChange = (field, value) => {
+    setEditedFields(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveEdit = () => {
+    const userToUpdate = editingUser === userByEmail._id ? userByEmail : users.find(u => u._id === editingUser);
+    if (!userToUpdate) return;
+
+    const hasChanges = Object.keys(editedFields).some(key => editedFields[key] !== userToUpdate[key]);
+
+    if (hasChanges) {
+      dispatch(updateUser(editingUser, editedFields));
+    }
+
+    setEditingUser(null);
+    setEditedFields({});
   };
 
   return (
@@ -299,7 +309,8 @@ const AdminUsers = ({ handleCreateUser }) => {
             </svg>
           </button>
         </div>
-        <div className="container-table">
+        {/* Users table */}
+        <div className="container-table" ref={tableRef}>
           <div className="tbl-container">
             <table className="tbl">
               <thead>
@@ -307,60 +318,143 @@ const AdminUsers = ({ handleCreateUser }) => {
                   <th>Nombre</th>
                   <th>Apellido</th>
                   <th>Email</th>
+                  <th>Telefono</th>
                   <th>Estado</th>
-                  <th colSpan="1"></th>
+                  <th colSpan="2">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {userByEmail && Object.keys(userByEmail).length > 0 ? (
-                  <tr key={userByEmail._id}>
-                    <td data-table="Nombre">{userByEmail.username}</td>
-                    <td data-table="Apellido">{userByEmail.lastname}</td>
-                    <td data-table="Email">{userByEmail.email}</td>
-                    <td data-table="Estado">
-                      {userByEmail.isActive ? "Activo" : "Inactivo"}
-                    </td>
-                    <td>
-                      <button
-                        className="btn-trash"
-                        onClick={() => handleDeleteUser(userByEmail._id)}
-                      >
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                ) : users && users.length > 0 ? (
+              {userByEmail && Object.keys(userByEmail).length > 0 ? (
+                <tr key={userByEmail._id}>
+                  <td data-table="Nombre">
+                    {editingUser === userByEmail._id ? (
+                      <input
+                        type="text"
+                        className="input-transaction"
+                        value={editedFields.username}
+                        onChange={(e) => handleEditChange('username', e.target.value)}
+                      />
+                    ) : (
+                      userByEmail.username
+                    )}
+                  </td>
+                  <td data-table="Apellido">
+                    {editingUser === userByEmail._id ? (
+                      <input
+                        className="input-transaction"
+                        type="text"
+                        value={editedFields.lastname}
+                        onChange={(e) => handleEditChange('lastname', e.target.value)}
+                      />
+                    ) : (
+                      userByEmail.lastname
+                    )}
+                  </td>
+                  <td data-table="Email">
+                    {editingUser === userByEmail._id ? (
+                      <input
+                        className="input-transaction"
+                        type="email"
+                        value={editedFields.email}
+                        onChange={(e) => handleEditChange('email', e.target.value)}
+                      />
+                    ) : (
+                      userByEmail.email
+                    )}
+                  </td>
+                  <td data-table="Telefono">
+                    {editingUser === userByEmail._id ? (
+                      <input
+                        className="input-transaction"
+                        type="tel"
+                        value={editedFields.phone}
+                        onChange={(e) => handleEditChange('phone', e.target.value)}
+                      />
+                    ) : (
+                      userByEmail.phone ? userByEmail.phone : 'N/A'
+                    )}
+                  </td>
+                  <td data-table="Estado">
+                    {userByEmail.isActive ? "Activo" : "Inactivo"}
+                  </td>
+                  <td>
+                    <button
+                      className="btn-edit btn-new-client"
+                      onClick={() => editingUser === userByEmail._id ? handleSaveEdit() : handleEditClick(userByEmail)}
+                    >
+                      {editingUser === userByEmail._id ? 'Guardar' : 'Editar'}
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      className="btn-trash"
+                      onClick={() => handleDeleteUser(userByEmail._id)}
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ) : users && users.length > 0 ? (
                   users.map((user) => (
                     <tr key={user._id}>
                       <td data-table="Nombre">
-                        <span
-                          data-editable={user.username}
-                          data-user-id={user._id}
-                          data-field="username"
-                        >
-                          {user.username} <img src={imgPencil} alt="" />
-                        </span>
+                        {editingUser === user._id ? (
+                          <input
+                            type="text"
+                            className="input-transaction"
+                            value={editedFields.username}
+                            onChange={(e) => handleEditChange('username', e.target.value)}
+                          />
+                        ) : (
+                          user.username
+                        )}
                       </td>
                       <td data-table="Apellido">
-                        <span
-                          data-editable={user.lastname}
-                          data-user-id={user._id}
-                          data-field="lastname"
-                        >
-                          {user.lastname} <img src={imgPencil} alt="" />
-                        </span>
+                        {editingUser === user._id ? (
+                          <input
+                            className="input-transaction"
+                            type="text"
+                            value={editedFields.lastname}
+                            onChange={(e) => handleEditChange('lastname', e.target.value)}
+                          />
+                        ) : (
+                          user.lastname
+                        )}
                       </td>
                       <td data-table="Email">
-                        <span
-                          data-editable={user.email}
-                          data-user-id={user._id}
-                          data-field="email"
-                        >
-                          {user.email} <img src={imgPencil} alt="" />
-                        </span>
+                        {editingUser === user._id ? (
+                          <input
+                            className="input-transaction"
+                            type="email"
+                            value={editedFields.email}
+                            onChange={(e) => handleEditChange('email', e.target.value)}
+                          />
+                        ) : (
+                          user.email
+                        )}
+                      </td>
+                      <td data-table="Telefono">
+                        {editingUser === user._id ? (
+                          <input
+                            className="input-transaction"
+                            type="tel"
+                            value={editedFields.phone}
+                            onChange={(e) => handleEditChange('phone', e.target.value)}
+                          />
+                        ) : (
+                          user.phone ? user.phone : 'N/A'
+                        )}
                       </td>
                       <td data-table="Estado">
                         {user.isActive ? "Activo" : "Inactivo"}
+                      </td>
+                      <td>
+                        <button
+                          className="btn-edit btn-new-client"
+                          onClick={() => editingUser === user._id ? handleSaveEdit() : handleEditClick(user)}
+                        >
+                          {editingUser === user._id ? 'Guardar' : 'Editar'}
+                        </button>
                       </td>
                       <td>
                         <button
@@ -374,7 +468,7 @@ const AdminUsers = ({ handleCreateUser }) => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" style={{ textAlign: "center" }}>
+                    <td colSpan="7" style={{ textAlign: "center" }}>
                       No hay usuarios disponibles
                     </td>
                   </tr>
@@ -387,4 +481,5 @@ const AdminUsers = ({ handleCreateUser }) => {
     </div>
   );
 };
+
 export default AdminUsers;

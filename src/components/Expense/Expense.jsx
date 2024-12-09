@@ -5,7 +5,8 @@ import TextField from "@mui/material/TextField";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../utils/theme";
 import { useDispatch, useSelector } from "react-redux";
-import { createExpense } from "@/redux/actions/expensesActions";
+import { createExpense, getExpenses } from "@/redux/actions/expensesActions";
+import { deleteMovement } from "@/redux/actions/movementsActions";
 
 const typeExpenses = [
   "Servicios Públicos",
@@ -88,12 +89,18 @@ const expensesArray = [
 ];
 
 const Expense = () => {
+  const dispatch = useDispatch();
   const subOffices = useSelector((state) => state.offices.subOffices);
   const createdExpense = useSelector((state) => state.expenses.createdExpense);
+  const expenses = useSelector((state) => state.expenses.expenses);
+  const deleteMovements = useSelector(
+    (state) => state.movements.deleteMovement
+  );
   const [type, setType] = useState("");
   const [subOfficeCurrencies, setSubOfficeCurrencies] = useState([]);
   const [selectType, setSelectType] = useState("");
   const [viewForm, setViewForm] = useState(false);
+  const [userRol, setUserRol] = useState("");
   const [newExpense, setNewExpense] = useState({
     type: "",
     description: "",
@@ -103,6 +110,9 @@ const Expense = () => {
     category: "egreso",
     user: "",
   });
+  useEffect(() => {
+    dispatch(getExpenses("egresos"));
+  }, [deleteMovements]);
 
   useEffect(() => {
     if (createdExpense) {
@@ -171,15 +181,24 @@ const Expense = () => {
     const userInfoString = localStorage.getItem("userInfo");
     if (userInfoString) {
       const userInfo = JSON.parse(userInfoString);
-      setNewExpense((prevState) => ({
-        ...prevState,
-        user: userInfo._id,
-      }));
+      setUserRol(userInfo.role);
     }
   }, []);
   const handleNewExpense = () => {
     dispatch(createExpense(newExpense));
   };
+
+  const handleDeleteMovement = (idMovement) => {
+    dispatch(deleteMovement(idMovement));
+  };
+  useEffect(() => {
+    // Obtener información del usuario del localStorage
+    const userInfoString = localStorage.getItem("userInfo");
+    if (userInfoString) {
+      const userInfo = JSON.parse(userInfoString);
+     setUserRol(userInfo.role)
+    }
+  }, [dispatch]);
   // Calcular el total de los montos
   const total = expensesArray.reduce((acc, expense) => acc + expense.monto, 0);
 
@@ -493,24 +512,24 @@ const Expense = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {expensesArray && expensesArray.length > 0 ? (
-                    expensesArray.map((expense) => (
-                      <tr key={expense.id}>
+                  {expenses && expenses.length > 0 ? (
+                    expenses.map((expense) => (
+                      <tr key={expense._id}>
                         <td data-table="Tipo">
-                          <span>{expense.tipo}</span>
+                          <span>{expense.type}</span>
                         </td>
                         <td data-table="Usuario">
-                          <span>{expense.usuario}</span>
+                          <span>{expense.user.username}</span>
                         </td>
                         <td data-table="Descripción">
-                          <span>{expense.descripcion}</span>
+                          <span>{expense.description}</span>
                         </td>
                         <td data-table="Monto">
-                          <span> $ -{expense.monto.toFixed(2)}</span>
+                          <span> $ {expense.amount.toFixed(2)}</span>
                         </td>
                         <td data-table="Fecha">
                           <span>
-                            {new Date(expense.fecha)
+                            {new Date(expense.date)
                               .toLocaleString("es-ES", {
                                 day: "2-digit",
                                 month: "2-digit",
@@ -523,12 +542,21 @@ const Expense = () => {
                           </span>
                         </td>
                         <td data-table="Sucursal">
-                          <span>{expense.sucursal}</span>
+                          <span>{expense.sub_office.name}</span>
                         </td>
-
-                        <td>
-                          <button className="btn-trash">Eliminar</button>
-                        </td>
+                        {userRol ===
+                          "administrador" && (
+                            <td>
+                              <button
+                                className="btn-trash"
+                                onClick={() =>
+                                  handleDeleteMovement(expense._id)
+                                }
+                              >
+                                Eliminar
+                              </button>
+                            </td>
+                          )}
                       </tr>
                     ))
                   ) : (

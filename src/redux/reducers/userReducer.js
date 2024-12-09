@@ -5,7 +5,8 @@ import {
   REGISTER_USER_SUCCESS,
   REGISTER_USER_FAILURE,
   DELETE_USER_SUCCESS,
-  CLEAN_MESSAGE
+  CLEAN_MESSAGE,
+  UPDATE_USER,
 } from "../action-types";
 
 let initialState = {
@@ -16,6 +17,18 @@ let initialState = {
 };
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
+    case UPDATE_USER:
+      return {
+        ...state,
+        users: state.users.map((user) =>
+          user._id === action.payload._id
+            ? { ...user, ...action.payload }
+            : user
+        ),
+        userByEmail: state.userByEmail && state.userByEmail._id === action.payload._id
+          ? { ...state.userByEmail, ...action.payload }
+          : state.userByEmail
+      };
     case DELETE_USER_SUCCESS:
       return {
         ...state,

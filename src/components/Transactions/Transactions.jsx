@@ -37,7 +37,7 @@ const Transactions = () => {
   const createTransactionsSuccess = useSelector(
     (state) => state.transactions.createTransactionsSuccess
   );
-  const userRol = useSelector((state) => state.auth.userRole);
+  const [userRol, setUserRol] = useState('');
   const clients = useSelector((state) => state.clients.clients);
 
   // Local state
@@ -89,6 +89,8 @@ const Transactions = () => {
         ...prevState,
         user: userInfo._id,
       }));
+      setUserRol(userInfo.role)
+
     }
   }, [dispatch]);
 
@@ -654,7 +656,7 @@ const Transactions = () => {
           >
             <div>
               <DatePicker
-                label="Filtre desde"
+                label="Filtre al"
                 value={dataForm.dateFrom}
                 renderInput={(params) => <TextField {...params} />}
                 onChange={(newValue) => {
@@ -662,7 +664,7 @@ const Transactions = () => {
                 }}
               />
             </div>
-            <div>
+           {/* <div>
               <DatePicker
                 label="Hasta"
                 value={dataForm.dateTo}
@@ -671,7 +673,7 @@ const Transactions = () => {
                   setDataForm({ ...dataForm, dateTo: newValue });
                 }}
               />
-            </div>
+            </div>*/} 
             <button className="btn-search-users">
               Buscar{" "}
               <svg
@@ -831,6 +833,7 @@ const Transactions = () => {
                                 : handleEditClick(transaction)
                             }
                           >
+                            {/* 
                             {editingTransaction === transaction._id ? (
                               <button className="btn-new-client">
                                 {" "}
@@ -842,6 +845,7 @@ const Transactions = () => {
                                 Editar{" "}
                               </button>
                             )}
+                            */ }
                           </button>
                           {userRol === "administrador" && (
                             <button
