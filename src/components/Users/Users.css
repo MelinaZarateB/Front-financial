@@ -71,6 +71,7 @@
   fill: rgba(255, 255, 255, 0.83);
 }
 .container-table {
+  max-width: 1440px;
   width: 100%;
   box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
@@ -80,6 +81,7 @@
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
+
 }
 .tbl-container {
   padding-right: 1.2rem;

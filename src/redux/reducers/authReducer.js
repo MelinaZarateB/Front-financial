@@ -6,6 +6,7 @@ import {
   SIGN_UP_SUCCESS,
   LOGIN_FAILURE,
   LOGIN_SUCCESS,
+  LOG_OUT
 } from "../action-types";
 
 let initialState = {
@@ -60,6 +61,10 @@ const authReducer = (state = initialState, action) => {
         ...state,
         loginMessage: action.payload,
       };
+      case LOG_OUT:
+        return{
+          ...initialState,
+        }
     default:
       return state;
   }

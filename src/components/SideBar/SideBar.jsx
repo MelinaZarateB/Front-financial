@@ -1,5 +1,8 @@
 import "./SideBar.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logOut } from "@/redux/actions/authActions";
 
 const SideBar = ({ onNavItemChange, selectedNavItem }) => {
   const [subMenus, setSubMenus] = useState({});
@@ -7,6 +10,8 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
   const [sideBarClose, setSideBarClose] = useState(false);
   const [closedSide, setClosedSide] = useState(false);
   const [isActive, setIsActive] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const toggleSubMenu = (menuName) => {
     setSubMenus((prevSubMenus) => ({
@@ -40,6 +45,11 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
   };
   const isActiveLink = () => {
     if (!isActive) setIsActive(true);
+  };
+  const handleExit = (event) => {
+    event.preventDefault(); // Evita el comportamiento predeterminado del enlace
+    navigate("/"); // Cambia "/logout" por la ruta deseada
+    dispatch(logOut());
   };
   return (
     <aside id="sidebar">
@@ -310,7 +320,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
             </span>
           </a>
         </li>
-        <li style={{ marginTop: "15px" }}>
+        <li style={{ marginTop: "15px" }} onClick={handleExit}>
           <a href="" className="exit">
             <svg
               xmlns="http://www.w3.org/2000/svg"

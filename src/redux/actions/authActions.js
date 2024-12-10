@@ -5,7 +5,8 @@ import {
   LOGIN_FAILURE,
   CLEAN_MESSAGE,
   CHANGE_PASSWORD_SUCCESS,
-  CHANGE_PASSWORD_FAILURE
+  CHANGE_PASSWORD_FAILURE,
+  LOG_OUT
 } from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -150,3 +151,9 @@ export const activateAccount = (token) => {
     }
   };
 };
+
+export const logOut = (dispatch) => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('userInfo');
+  dispatch({ type: LOG_OUT });
+}

@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 
 /* Actions para transacciones */
 export const createTransactions = (transaction) => {
+  console.log(transaction)
   return async (dispatch) => {
     try {
       const { data } = await axios.post(
@@ -31,6 +32,7 @@ export const createTransactions = (transaction) => {
       const mensajeError =
         err.response?.data?.message ||
         "Ocurrio un error al intentar registrar la transacción";
+        console.log(mensajeError)
       Swal.fire({
         title: "Error",
         text: mensajeError,
@@ -120,4 +122,8 @@ export const getTransactionsForDay = (subOfficeId, date) => {
 
     }
   }
+}
+
+export const getTransactionsForMonth = () => {
+
 }

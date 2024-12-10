@@ -109,6 +109,114 @@
   background-color: rgba(255, 255, 255, 0.83);
   width: 100%;
 }
+.container-table {
+  max-width: 1440px;
+  width: 100%;
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.83);
+}
+.tbl-expense {
+  width: 100%;
+  border-collapse: collapse;
+  /*table-layout: fixed;*/
+}
+.tbl-container {
+  padding-right: 1.2rem;
+  padding-left: 1.2rem;
+  padding-top: 1.2rem;
+  max-height: 450px;
+  overflow-y: auto;
+}
+th,
+td {
+  padding: 5px;
+  max-width: 100px;
+  vertical-align: middle;
+  font-size: 12px;
+  line-height: 1.428571429;
+  text-align: left;
+  white-space: pre-line;
+  /* white-space: nowrap;  Evita que el contenido se envuelva */
+  /*border: 1px solid #ddd; /* Define el borde que separa filas y columnas */
+}
+
+.tbl-expense tbody tr td {
+  color: #666;
+  padding: 5px;
+  white-space: pre-line;
+  line-height: 1.428571429;
+  max-width: 200px;
+  vertical-align: middle;
+}
+.tbl-expense tbody tr td {
+  border-top: 1px solid #ddd;
+}
+.tbl-expense tr:nth-child(even) {
+  background-color: #f3f3f3;
+}
+.btn-trash {
+  display: inline-block;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  /*background-color: #E4A5AD;*/
+  /*border: 1px solid #a43042;
+  color: #a43042;
+  background-color: rgba(255, 255, 255, 0.83);*/
+  background-color: #EF4444;
+  color: rgba(255, 255, 255, 0.83);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: .75rem;
+  line-height: 1rem;
+}
+.btn-trash:hover {
+ /* background-color: #e4a5ad;
+  color: #a43042;*/
+  background-color: #f05757;
+  color: rgba(255, 255, 255, 0.83);
+
+}
+@media screen and (max-width: 800px) {
+  .tbl thead{
+    display: none;
+  }
+  .tbl tr,
+  .tbl td{
+    display: block;
+    width: 100%;
+  }
+  .tbl tr{
+    margin-bottom: 1rem;
+  }
+  .tbl tbody tr td{
+    position: relative;
+    text-align: right;
+    max-width: 100%;
+  }
+  .tbl td::before{
+    content: attr(data-table);
+    position: absolute;
+    left: 0;
+    width: 50%;
+    text-align: left;
+  }
+  .container-users{
+    padding-left: 3%;
+    padding-right: 3%;
+    padding-top: 3%;
+  }
+  .tbl-container{
+    padding-right: 1rem;
+    padding-left: 1rem;
+    padding-top: 1rem;
+  }
+  .btn-create-user{
+    width: 100%;
+  }
+}
 @media  screen and (max-width:800px) {
   .section-expense{
     padding-left: 2%;

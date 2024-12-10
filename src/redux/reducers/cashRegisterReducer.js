@@ -4,6 +4,7 @@ import {
   VERIFY_CASH_REGISTER,
   VERIFY_CASH_REGISTER_ERROR,
   CLEAR_CASH_REGISTER_ERROR,
+  GET_ALL_MOVEMENTS,
 } from "../action-types";
 
 let initialState = {
@@ -11,10 +12,16 @@ let initialState = {
   closedCashRegister: false,
   verifyCashRegister: [],
   error: "",
+  transactionsAndMovements: [],
 };
 
 const cashRegisterReducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_ALL_MOVEMENTS:
+      return {
+        ...state,
+        transactionsAndMovements: action.payload,
+      };
     case VERIFY_CASH_REGISTER:
       return {
         ...state,
@@ -32,11 +39,11 @@ const cashRegisterReducer = (state = initialState, action) => {
         error: "", // Limpia el error al seleccionar una nueva sucursal
       };
 
-      case CLOSE_CASH_REGISTER: 
-      return{
+    case CLOSE_CASH_REGISTER:
+      return {
         ...state,
-        closedCashRegister: action.payload
-      }
+        closedCashRegister: action.payload,
+      };
 
     case OPEN_CASH_REGISTER:
       return {

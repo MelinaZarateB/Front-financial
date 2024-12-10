@@ -8,6 +8,7 @@ import {
   closeCashRegister,
   verifyCashRegisterOpen,
   clearCashRegisterError,
+  getTransactionsAndMovements,
 } from "@/redux/actions/cashRegisterActions";
 import Swal from "sweetalert2";
 import Spinner from "@/utils/Spinner/Spinner";
@@ -150,6 +151,7 @@ const CashRegisterClose = () => {
   const [pesoRate, setPesoRate] = useState("");
   const [dollarRate, setDollarRate] = useState("");
   const [selectType, setSelectType] = useState("");
+  console.log(selectedSubOffice)
 
   const subOffices = useSelector((state) => state.offices.subOffices);
   const noConfirmOpenCashRegister = useSelector(
@@ -232,6 +234,7 @@ const CashRegisterClose = () => {
       return () => clearTimeout(timer);
     }
   }, [closedCashRegister]);
+
   useEffect(() => {
     if (noConfirmOpenCashRegister !== "") {
       Swal.fire({
@@ -245,6 +248,12 @@ const CashRegisterClose = () => {
       });
     }
   }, [noConfirmOpenCashRegister]);
+
+  useEffect(() => {
+    if (selectedSubOffice) {
+      dispatch(getTransactionsAndMovements(selectedSubOffice));
+    }
+  }, []);
 
   return (
     <section className="container-cash-closing">

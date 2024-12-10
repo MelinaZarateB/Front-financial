@@ -2,25 +2,19 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { CREATE_EXPENSE, GET_EXPENSES } from "../action-types";
 
-export const getExpenses = (egreso) => {
+export const getExpenses = () => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get(
-        "http://localhost:3000/movements/filter", {
-          category: egreso
-        }
-      );
-      if (data) {
-        dispatch({
-          type: GET_EXPENSES,
-          payload: data,
-        });
-      }
-
+      const { data } = await axios.get("http://localhost:3000/movements/filter", {
+        params: { category: "egreso" }, 
+      });
+      console.log('get a egresos', data)
+      
+      dispatch({ type: 'GET_EXPENSES', payload: data });
     } catch (error) {
       const mensajeError =
         error.response?.data?.message ||
-        "Ocurrio un error al intentar obtener los ingresos.";
+        "Ocurrio un error al intentar obtener los egresos.";
       Swal.fire({
         title: "Error",
         text: mensajeError,

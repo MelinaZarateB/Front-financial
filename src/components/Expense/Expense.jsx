@@ -111,7 +111,7 @@ const Expense = () => {
     user: "",
   });
   useEffect(() => {
-    dispatch(getExpenses("egresos"));
+    dispatch(getExpenses());
   }, [deleteMovements]);
 
   useEffect(() => {
@@ -499,7 +499,7 @@ const Expense = () => {
 
           <div className="container-table">
             <div className="tbl-container">
-              <table className="tbl">
+              <table className="tbl-expense">
                 <thead>
                   <tr>
                     <th>Tipo</th>
@@ -567,7 +567,8 @@ const Expense = () => {
                     </tr>
                   )}
 
-                  {/* Fila para el total */}
+                  {/* Fila para el total 
+                  
                   <tr>
                     <td colSpan="3" style={{ textAlign: "right" }}>
                       <span style={{ fontWeight: "500" }}>Total:</span>
@@ -579,6 +580,7 @@ const Expense = () => {
                     </td>
                     <td colSpan="3"></td>
                   </tr>
+                  */}
                 </tbody>
               </table>
             </div>

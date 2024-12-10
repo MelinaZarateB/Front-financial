@@ -17,14 +17,15 @@ import theme from "../../utils/theme";
 import plusIcon from "./../../assets/plus.svg";
 import arrow from "./../../assets/arrow-right.svg";
 import ModalNewClient from "@/visuals/Modals/ModalNewClient/ModalNewClient";
-import { createTransactions } from "../../redux/actions/transactionsActions";
+import { createTransactions, getTransactionsForDay, getTransactionsForMonth } from "../../redux/actions/transactionsActions";
 import {
   getSubOffices,
   getCurrencies,
 } from "@/redux/actions/subOfficesActions";
 import Spinner from "@/utils/Spinner/Spinner";
-import { useRef } from "react";
-import { useCallback } from "react";
+import { useRef, useCallback } from "react";
+import DateFilterDropdown from "@/utils/DateFilterDropdown";
+
 
 const Transactions = () => {
   // Redux hooks
@@ -37,7 +38,9 @@ const Transactions = () => {
   const createTransactionsSuccess = useSelector(
     (state) => state.transactions.createTransactionsSuccess
   );
-  const [userRol, setUserRol] = useState('');
+  const transactionsAndMovements = useSelector((state) => state.transactions.transactionsAndMovements);
+
+  const [userRol, setUserRol] = useState("");
   const clients = useSelector((state) => state.clients.clients);
 
   // Local state
@@ -65,7 +68,6 @@ const Transactions = () => {
     checkDueDate: "",
     bankName: "",
   });
-  console.log(newTransaction);
 
   const [searchClient, setSearchClient] = useState("");
   const [balanceInCustody, setbalanceInCustody] = useState("");
@@ -89,8 +91,7 @@ const Transactions = () => {
         ...prevState,
         user: userInfo._id,
       }));
-      setUserRol(userInfo.role)
-
+      setUserRol(userInfo.role);
     }
   }, [dispatch]);
 
@@ -196,8 +197,6 @@ const Transactions = () => {
   const [editedFields, setEditedFields] = useState({});
   const tableRef = useRef(null);
 
-
-
   const handleClickOutside = useCallback((event) => {
     if (tableRef.current && !tableRef.current.contains(event.target)) {
       setEditingTransaction(null);
@@ -248,6 +247,20 @@ const Transactions = () => {
     });
   };
   const changeForm = () => setViewForm(!viewForm);
+
+  const onFilterChange = (dateFilter) => {
+    const monthRegex = /^\d{4}-\d{2}$/; // Formato YYYY-MM
+    const dayRegex = /^\d{4}-\d{2}-\d{2}$/; // Formato YYYY-MM-DD
+
+    if (monthRegex.test(dateFilter)) {
+      // Es una fecha de mes (YYYY-MM)
+      dispatch(getTransactionsForMonth(dateFilter));
+    } else if (dayRegex.test(dateFilter)) {
+      // Es una fecha de día (YYYY-MM-DD)
+      dispatch(getTransactionsForDay(dateFilter));
+    }
+
+  }
   return (
     <ThemeProvider theme={theme}>
       <section className="container-transactions">
@@ -664,7 +677,10 @@ const Transactions = () => {
                 }}
               />
             </div>
-           {/* <div>
+            <div>
+              <DateFilterDropdown onFilterChange={onFilterChange}></DateFilterDropdown>
+            </div>
+            {/* <div>
               <DatePicker
                 label="Hasta"
                 value={dataForm.dateTo}
@@ -673,7 +689,7 @@ const Transactions = () => {
                   setDataForm({ ...dataForm, dateTo: newValue });
                 }}
               />
-            </div>*/} 
+            </div>*/}
             <button className="btn-search-users">
               Buscar{" "}
               <svg
@@ -716,7 +732,7 @@ const Transactions = () => {
                     <th>Banco emisor</th>
                     <th>Fecha</th>
                     <th>Sucursal</th>
-                    <th>Acciones</th>
+                    {userRol === "administrador" && <th>Acciones</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -824,16 +840,17 @@ const Transactions = () => {
                             .replace(",", "")}
                         </td>
                         <td>{transaction.subOfficeName}</td>
-                        <td>
-                          <button
-                            className="btn-edit edit-button"
-                            onClick={() =>
-                              editingTransaction === transaction._id
-                                ? handleSaveEdit()
-                                : handleEditClick(transaction)
-                            }
-                          >
-                            {/* 
+                        {userRol === "administrador" && (
+                          <td>
+                            <button
+                              className="btn-edit edit-button"
+                              onClick={() =>
+                                editingTransaction === transaction._id
+                                  ? handleSaveEdit()
+                                  : handleEditClick(transaction)
+                              }
+                            >
+                              {/* 
                             {editingTransaction === transaction._id ? (
                               <button className="btn-new-client">
                                 {" "}
@@ -845,9 +862,8 @@ const Transactions = () => {
                                 Editar{" "}
                               </button>
                             )}
-                            */ }
-                          </button>
-                          {userRol === "administrador" && (
+                            */}
+                            </button>
                             <button
                               className="btn-trash"
                               onClick={() =>
@@ -856,8 +872,8 @@ const Transactions = () => {
                             >
                               Eliminar
                             </button>
-                          )}
-                        </td>
+                          </td>
+                        )}
                       </tr>
                     ))
                   ) : (

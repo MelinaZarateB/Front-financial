@@ -6,11 +6,38 @@ import {
   GET_CURRENCIES,
   VERIFY_CASH_REGISTER_ERROR,
   CLEAR_CASH_REGISTER_ERROR,
+  GET_TRANSACTIONS_AND_MOVEMENTS,
 } from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
 
 /* Actions para caja registradora */
+export const getTransactionsAndMovements = (subOfficeId) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:3000/cash-register/${subOfficeId}/transaction-and-movements-for-day`
+      );
+      console.log("transacciones y movimientos", data);
+      if (data) {
+        dispatch({
+          type: GET_TRANSACTIONS_AND_MOVEMENTS,
+          payload: data,
+        });
+      }
+    } catch (error) {
+      const mensajeError =
+        error.response?.data?.message ||
+        "Ocurrio un error al intentar traer las operaciones del día.";
+      Swal.fire({
+        title: "Error",
+        text: mensajeError,
+        icon: "error",
+      });
+    }
+  };
+};
+
 export const clearCashRegisterError = () => ({
   type: CLEAR_CASH_REGISTER_ERROR,
 });
@@ -35,7 +62,6 @@ export const getCurrencies = () => {
   };
 };
 export const updateMultipleStockCurrencies = (subOfficeId, updates) => {
-  console.log("Monedas a actualizar:", subOfficeId, updates);
   return async (dispatch) => {
     try {
       const payload = { updates };
@@ -60,7 +86,6 @@ export const updateMultipleCurrencies = (updates) => {
         `http://localhost:3000/currencies/multiple`,
         payload
       );
-      console.log("Tasas de monedas actualizadas:", data);
     } catch (err) {
       const mensajeError =
         err.response?.data?.message ||
@@ -103,7 +128,6 @@ export const deleteCurrency = (idCurrency) => {
   };
 };
 export const verifyCashRegisterOpen = (idSubOffice) => {
-  console.log("verificadora de caja abierta", idSubOffice);
   return async (dispatch) => {
     try {
       const { data } = await axios.get(
@@ -115,7 +139,6 @@ export const verifyCashRegisterOpen = (idSubOffice) => {
           payload: data,
         });
       }
-      console.log("datos de la caja abierta a verificar", data);
     } catch (err) {
       const mensajeError =
         err.response?.data?.message ||
@@ -136,12 +159,6 @@ export const verifyCashRegisterOpen = (idSubOffice) => {
 };
 
 export const closeCashRegister = (idCashRegister, usdRate, arsRate) => {
-  console.log(
-    "id de caja registradora a cerrar",
-    idCashRegister,
-    usdRate,
-    arsRate
-  );
   return async (dispatch) => {
     try {
       const { data } = await axios.put(
@@ -172,14 +189,12 @@ export const closeCashRegister = (idCashRegister, usdRate, arsRate) => {
 };
 
 export const openCashRegister = (dataOpen) => {
-  console.log("data para abrir caja", dataOpen);
   return async (dispatch) => {
     try {
       const { data } = await axios.post(
         `http://localhost:3000/cash-register/start`,
         dataOpen
       );
-      console.log(data);
       if (data) {
         dispatch({
           type: OPEN_CASH_REGISTER,

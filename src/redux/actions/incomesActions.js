@@ -11,6 +11,7 @@ export const getIncomes = (ingreso) => {
           category: ingreso,
         }
       );
+      console.log(data)
       if (data) {
         dispatch({
           type: GET_INCOMES,
