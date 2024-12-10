@@ -151,7 +151,7 @@ const CashRegisterClose = () => {
   const [pesoRate, setPesoRate] = useState("");
   const [dollarRate, setDollarRate] = useState("");
   const [selectType, setSelectType] = useState("");
-  console.log(selectedSubOffice)
+  console.log(selectedSubOffice);
 
   const subOffices = useSelector((state) => state.offices.subOffices);
   const noConfirmOpenCashRegister = useSelector(
@@ -375,7 +375,7 @@ const CashRegisterClose = () => {
           }}
         >
           <div style={{ display: "flex", justifyContent: "center" }}>
-            <h2 style={{ fontWeight: "600" }}>Operaciones del día</h2>
+            <h2 style={{ fontWeight: "600" }}>Movimientos del día</h2>
           </div>
           <div style={{ display: "flex", gap: "5px" }}>
             <div className="input-group">

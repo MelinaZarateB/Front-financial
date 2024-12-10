@@ -74,9 +74,9 @@ const Transactions = () => {
 
   // Constants
   const typesTransactions = [
-    { value: "buy", label: "Compra" },
-    { value: "sell", label: "Venta" },
-    { value: "check", label: "Cambio de cheque" },
+    { value: "Compra", label: "Compra" },
+    { value: "Venta", label: "Venta" },
+    { value: "Cambio de cheque", label: "Cambio de cheque" },
   ];
 
   // Effects

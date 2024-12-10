@@ -190,9 +190,11 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
                   Cierre
                 </a>
               </li>
+              {/* 
               <li>
                 <a href="">Historico</a>
               </li>
+              */}
             </div>
           </ul>
         </li>

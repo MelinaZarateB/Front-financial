@@ -50,7 +50,6 @@ export const updateUser = (userId, updateField) => {
 };
 
 export const registerUser = (newUser) => {
-  console.log(newUser);
   return async (dispatch) => {
     try {
       const { data } = await axios.post(`http://localhost:3000/users`, newUser);
@@ -60,6 +59,13 @@ export const registerUser = (newUser) => {
           payload: true,
         });
       }
+      Swal.fire({
+        text: "El usuario ha sido creado.",
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
     } catch (error) {
       const message = error.response && error.response.data.message;
       error.response && error.response.data.message
@@ -74,12 +80,9 @@ export const registerUser = (newUser) => {
 };
 
 export const deleteUser = (userId) => {
-  console.log("userId de la action", userId);
   return async (dispatch) => {
     try {
       const token = localStorage.getItem("token");
-      console.log("Token en la action:", token);
-
       if (token) {
         const { data } = await axios.delete(
           `http://localhost:3000/users/delete-user/${userId}`,
@@ -127,7 +130,6 @@ export const getAllUsers = () => {
   return async (dispatch) => {
     try {
       const { data } = await axios.get("http://localhost:3000/users/");
-      console.log("try", data);
       if (data) {
         dispatch({
           type: GET_ALL_USERS,
@@ -154,7 +156,6 @@ export const searchUserByEmail = (email) => {
       const { data } = await axios.get(
         `http://localhost:3000/users/email/${email}`
       );
-      console.log('Se obtuvo usuario por mail', data)
       if (data) {
         dispatch({
           type: SEARCH_USER_BY_EMAIL,

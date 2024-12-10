@@ -33,6 +33,9 @@ export const GET_ALL_MOVEMENTS = 'GET_ALL_MOVEMENTS';
 export const DELETE_MOVEMENT = 'DELETE_MOVEMENT';
 export const GET_EXPENSES = 'GET_EXPENSES';
 export const GET_INCOMES = 'GET_INCOMES';
+export const FILTER_INCOME = 'FILTER_INCOME';
+export const FILTER_EXPENSE = 'FILTER_EXPENSE';
+export const CLEAN_FILTER = 'CLEAN_FILTER';
 
 /* Types para sucursales */
 export const GET_SUBOFFICES = 'GET_SUBOFFICES';

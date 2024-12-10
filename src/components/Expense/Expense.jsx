@@ -5,8 +5,14 @@ import TextField from "@mui/material/TextField";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../utils/theme";
 import { useDispatch, useSelector } from "react-redux";
-import { createExpense, getExpenses } from "@/redux/actions/expensesActions";
+import {
+  createExpense,
+  getExpenses,
+  filterExpense,
+  cleanFilter,
+} from "@/redux/actions/expensesActions";
 import { deleteMovement } from "@/redux/actions/movementsActions";
+import SpinnerSmall from "./../../utils/Spinner/SpinnerSmall";
 
 const typeExpenses = [
   "Servicios Públicos",
@@ -22,85 +28,23 @@ const typeExpenses = [
   "Varios",
 ];
 
-const expensesArray = [
-  {
-    id: 1,
-    tipo: "Pago de haberes",
-    usuario: "Juan",
-    descripcion: "Pago de salarios del mes de septiembre a empleados",
-    monto: 15000.0,
-    fecha: "2024-10-14T14:30:00",
-    sucursal: "Sucursal Central",
-  },
-  {
-    id: 2,
-    tipo: "Compra de insumos",
-    usuario: "María",
-    descripcion: "Compra de materiales de oficina",
-    monto: 3200.5,
-    fecha: "2024-10-14T09:15:00",
-    sucursal: "Sucursal Norte",
-  },
-  {
-    id: 3,
-    tipo: "Pago de servicios",
-    usuario: "Carlos",
-    descripcion: "Pago de factura de electricidad",
-    monto: 850.75,
-    fecha: "2024-10-13T16:45:00",
-    sucursal: "Sucursal Sur",
-  },
-  {
-    id: 4,
-    tipo: "Pago de alquiler",
-    usuario: "Ana",
-    descripcion: "Pago de alquiler de oficina",
-    monto: 5000.0,
-    fecha: "2024-10-12T12:00:00",
-    sucursal: "Sucursal Central",
-  },
-  {
-    id: 5,
-    tipo: "Gastos de viaje",
-    usuario: "Luis",
-    descripcion: "Reembolso de gastos de viaje para conferencia",
-    monto: 2400.25,
-    fecha: "2024-10-11T08:00:00",
-    sucursal: "Sucursal Este",
-  },
-  {
-    id: 6,
-    tipo: "Mantenimiento",
-    usuario: "Sofía",
-    descripcion: "Pago por mantenimiento del sistema informático",
-    monto: 1800.0,
-    fecha: "2024-10-10T10:30:00",
-    sucursal: "Sucursal Oeste",
-  },
-  {
-    id: 7,
-    tipo: "Pago de comisiones",
-    usuario: "Pedro",
-    descripcion: "Pago de comisiones a vendedores por ventas realizadas",
-    monto: 3000.0,
-    fecha: "2024-10-09T11:15:00",
-    sucursal: "Sucursal Central",
-  },
-];
-
 const Expense = () => {
   const dispatch = useDispatch();
   const subOffices = useSelector((state) => state.offices.subOffices);
   const createdExpense = useSelector((state) => state.expenses.createdExpense);
   const expenses = useSelector((state) => state.expenses.expenses);
+  const expensesFiltered = useSelector(
+    (state) => state.expenses.expensesFiltered
+  );
   const deleteMovements = useSelector(
     (state) => state.movements.deleteMovement
   );
-  const [type, setType] = useState("");
+  //const [typeExpense, setTypeExpense] = useState("");
   const [subOfficeCurrencies, setSubOfficeCurrencies] = useState([]);
   const [selectType, setSelectType] = useState("");
   const [viewForm, setViewForm] = useState(false);
   const [userRol, setUserRol] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [newExpense, setNewExpense] = useState({
     type: "",
     description: "",
@@ -110,23 +54,11 @@ const Expense = () => {
     category: "egreso",
     user: "",
   });
-  useEffect(() => {
-    dispatch(getExpenses());
-  }, [deleteMovements]);
+  console.log(newExpense);
 
   useEffect(() => {
-    if (createdExpense) {
-      setNewExpense({
-        type: "",
-        description: "",
-        amount: "",
-        subOffice: "",
-        currency: "",
-        category: "egreso",
-        user: "",
-      });
-    }
-  }, [createdExpense]);
+    dispatch(getExpenses());
+  }, [deleteMovements, createdExpense]);
 
   const [dataForm, setDataForm] = useState({
     dateFrom: new Date(),
@@ -149,6 +81,7 @@ const Expense = () => {
       setSelectType(selectedValue); // Establecer el valor seleccionado
     }
   };
+
   const changeForm = (event) => {
     event.preventDefault();
     if (viewForm === false) setViewForm(true);
@@ -181,26 +114,48 @@ const Expense = () => {
     const userInfoString = localStorage.getItem("userInfo");
     if (userInfoString) {
       const userInfo = JSON.parse(userInfoString);
+      setNewExpense((prevState) => ({
+        ...prevState,
+        user: userInfo._id,
+      }));
       setUserRol(userInfo.role);
     }
   }, []);
-  const handleNewExpense = () => {
-    dispatch(createExpense(newExpense));
+
+  const handleNewExpense = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await dispatch(createExpense(newExpense));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+    setNewExpense({
+      type: "",
+      description: "",
+      amount: "",
+      subOffice: "",
+      currency: "",
+      category: "egreso",
+      user: newExpense.user,
+    });
   };
 
   const handleDeleteMovement = (idMovement) => {
     dispatch(deleteMovement(idMovement));
   };
-  useEffect(() => {
-    // Obtener información del usuario del localStorage
-    const userInfoString = localStorage.getItem("userInfo");
-    if (userInfoString) {
-      const userInfo = JSON.parse(userInfoString);
-     setUserRol(userInfo.role)
-    }
-  }, [dispatch]);
+  const handleFilterType = () => {
+    dispatch(filterExpense(selectType));
+  };
+  const handleCleanFilter = () => {
+    dispatch(cleanFilter());
+    setSelectType('');
+  };
+
   // Calcular el total de los montos
-  const total = expensesArray.reduce((acc, expense) => acc + expense.monto, 0);
+  //const total = expensesArray.reduce((acc, expense) => acc + expense.monto, 0);
 
   return (
     <ThemeProvider theme={theme}>
@@ -333,7 +288,7 @@ const Expense = () => {
                         {subOfficeCurrencies.map((currency) => (
                           <option
                             key={currency._id}
-                            value={`${currency.name} - ${currency.code}`}
+                            value={currency._id}
                           >{`${currency.name} - ${currency.code}`}</option>
                         ))}
                       </select>
@@ -368,8 +323,20 @@ const Expense = () => {
                 className="buttons-container"
                 style={{ display: "flex", gap: "5px", justifyContent: "end" }}
               >
-                <button className="btn-search-users" onClick={handleNewExpense}>
-                  Registrar{" "}
+                <button
+                  className="btn-search-users"
+                  onClick={handleNewExpense}
+                  disabled={
+                    !newExpense.type ||
+                    !newExpense.description ||
+                    !newExpense.subOffice ||
+                    !newExpense.currency
+                  }
+                >
+                  <label htmlFor="submit" className="label">
+                    {" "}
+                    {isSubmitting ? <SpinnerSmall /> : "Registrar"}
+                  </label>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     height="20px"
@@ -406,6 +373,7 @@ const Expense = () => {
                 marginBottom: "3px",
               }}
             >
+              {/*
               <div className="input-box-dashboard">
                 <input
                   type="text"
@@ -418,6 +386,8 @@ const Expense = () => {
                   Buscar egreso por tipo
                 </label>
               </div>
+              */}
+
               <div className="input-box-dashboard">
                 <div
                   className={`select-container ${
@@ -470,7 +440,7 @@ const Expense = () => {
               </div>
               */}
 
-              <button className="btn-search-users">
+              <button className="btn-search-users" onClick={handleFilterType}>
                 Buscar{" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -482,7 +452,7 @@ const Expense = () => {
                   <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
                 </svg>
               </button>
-              <button className="btn-clean">
+              <button className="btn-clean" onClick={handleCleanFilter}>
                 Limpiar{" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -512,75 +482,59 @@ const Expense = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {expenses && expenses.length > 0 ? (
-                    expenses.map((expense) => (
-                      <tr key={expense._id}>
-                        <td data-table="Tipo">
-                          <span>{expense.type}</span>
+                  {(expensesFiltered.length > 0
+                    ? expensesFiltered
+                    : expenses
+                  ).map((expense) => (
+                    <tr key={expense._id}>
+                      <td data-table="Tipo">
+                        <span>{expense.type}</span>
+                      </td>
+                      <td data-table="Usuario">
+                        <span>{expense.user.username}</span>
+                      </td>
+                      <td data-table="Descripción">
+                        <span>{expense.description}</span>
+                      </td>
+                      <td data-table="Monto">
+                        <span> $ {expense.amount.toFixed(2)}</span>
+                      </td>
+                      <td data-table="Fecha">
+                        <span>
+                          {new Date(expense.date)
+                            .toLocaleString("es-ES", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false,
+                            })
+                            .replace(",", "")}
+                        </span>
+                      </td>
+                      <td data-table="Sucursal">
+                        <span>{expense.sub_office.name}</span>
+                      </td>
+                      {userRol === "administrador" && (
+                        <td>
+                          <button
+                            className="btn-trash"
+                            onClick={() => handleDeleteMovement(expense._id)}
+                          >
+                            Eliminar
+                          </button>
                         </td>
-                        <td data-table="Usuario">
-                          <span>{expense.user.username}</span>
-                        </td>
-                        <td data-table="Descripción">
-                          <span>{expense.description}</span>
-                        </td>
-                        <td data-table="Monto">
-                          <span> $ {expense.amount.toFixed(2)}</span>
-                        </td>
-                        <td data-table="Fecha">
-                          <span>
-                            {new Date(expense.date)
-                              .toLocaleString("es-ES", {
-                                day: "2-digit",
-                                month: "2-digit",
-                                year: "2-digit",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                hour12: false,
-                              })
-                              .replace(",", "")}
-                          </span>
-                        </td>
-                        <td data-table="Sucursal">
-                          <span>{expense.sub_office.name}</span>
-                        </td>
-                        {userRol ===
-                          "administrador" && (
-                            <td>
-                              <button
-                                className="btn-trash"
-                                onClick={() =>
-                                  handleDeleteMovement(expense._id)
-                                }
-                              >
-                                Eliminar
-                              </button>
-                            </td>
-                          )}
-                      </tr>
-                    ))
-                  ) : (
+                      )}
+                    </tr>
+                  ))}
+                  {expensesFiltered.length === 0 && expenses.length === 0 && (
                     <tr>
                       <td colSpan="7" style={{ textAlign: "center" }}>
                         No hay egresos disponibles
                       </td>
                     </tr>
                   )}
-
-                  {/* Fila para el total 
-                  
-                  <tr>
-                    <td colSpan="3" style={{ textAlign: "right" }}>
-                      <span style={{ fontWeight: "500" }}>Total:</span>
-                    </td>
-                    <td style={{ textAlign: "left" }}>
-                      <span style={{ fontWeight: "600" }}>
-                        $ {total.toFixed(2)}
-                      </span>
-                    </td>
-                    <td colSpan="3"></td>
-                  </tr>
-                  */}
                 </tbody>
               </table>
             </div>

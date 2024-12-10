@@ -5,89 +5,27 @@ import TextField from "@mui/material/TextField";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../utils/theme";
 import { useDispatch, useSelector } from "react-redux";
-import { createIncome, getIncomes } from "@/redux/actions/incomesActions";
+import { createIncome, getIncomes, filterIncome, cleanFilter } from "@/redux/actions/incomesActions";
 import { deleteMovement } from "@/redux/actions/movementsActions";
+import SpinnerSmall from './../../utils/Spinner/SpinnerSmall';
 
-const incomesArray = [
-  {
-    _id: 1,
-    tipo: "Venta de productos",
-    usuario: "Juan",
-    descripcion: "Ingreso por la venta de productos electrónicos",
-    monto: 25000.0,
-    fecha: "2024-10-14T14:30:00",
-    sucursal: "Sucursal Central",
-  },
-  {
-    id: 2,
-    tipo: "Pago de clientes",
-    usuario: "María",
-    descripcion: "Cobro de facturas pendientes de clientes",
-    monto: 8200.5,
-    fecha: "2024-10-14T09:15:00",
-    sucursal: "Sucursal Norte",
-  },
-  {
-    id: 3,
-    tipo: "Inversión externa",
-    usuario: "Carlos",
-    descripcion: "Ingreso por inversión de un socio capitalista",
-    monto: 15000.0,
-    fecha: "2024-10-13T16:45:00",
-    sucursal: "Sucursal Sur",
-  },
-  {
-    id: 4,
-    tipo: "Renta de propiedad",
-    usuario: "Ana",
-    descripcion: "Ingreso por alquiler de espacio comercial",
-    monto: 6000.0,
-    fecha: "2024-10-12T12:00:00",
-    sucursal: "Sucursal Central",
-  },
-  {
-    id: 5,
-    tipo: "Servicio de consultoría",
-    usuario: "Luis",
-    descripcion: "Pago por servicios de consultoría empresarial",
-    monto: 4500.25,
-    fecha: "2024-10-11T08:00:00",
-    sucursal: "Sucursal Este",
-  },
-  {
-    id: 6,
-    tipo: "Venta de software",
-    usuario: "Sofía",
-    descripcion: "Ingreso por la venta de licencias de software",
-    monto: 5800.0,
-    fecha: "2024-10-10T10:30:00",
-    sucursal: "Sucursal Oeste",
-  },
-  {
-    id: 7,
-    tipo: "Devolución de impuestos",
-    usuario: "Pedro",
-    descripcion: "Ingreso por devolución de impuestos",
-    monto: 4000.0,
-    fecha: "2024-10-09T11:15:00",
-    sucursal: "Sucursal Central",
-  },
-];
 
 const Income = () => {
   const dispatch = useDispatch();
   const subOffices = useSelector((state) => state.offices.subOffices);
   const createdIncome = useSelector((state) => state.incomes.createdIncome);
+  const incomesFiltered = useSelector((state) => state.incomes.incomesFiltered); 
   const incomes = useSelector((state) => state.incomes.incomes);
   const [userRol, setUserRol] = useState("");
+  
+  
   const deleteMovements = useSelector(
     (state) => state.movements.deleteMovement
   );
-  console.log("ingresos", incomes);
-  const [type, setType] = useState("");
   const [subOfficeCurrencies, setSubOfficeCurrencies] = useState([]);
   const [viewForm, setViewForm] = useState(false);
   const [selectType, setSelectType] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [newIncome, setNewIncome] = useState({
     subOffice: "",
     amount: "",
@@ -97,7 +35,6 @@ const Income = () => {
     description: "",
     currency: "",
   });
-  console.log(newIncome);
   console.log(subOffices);
   console.log(subOfficeCurrencies);
 
@@ -145,8 +82,8 @@ const Income = () => {
     }
   };
   useEffect(() => {
-    dispatch(getIncomes("ingresos"));
-  }, [deleteMovements]);
+    dispatch(getIncomes());
+  }, [deleteMovements, createdIncome]);
 
   useEffect(() => {
     const userInfoString = localStorage.getItem("userInfo");
@@ -156,44 +93,44 @@ const Income = () => {
         ...prevState,
         user: userInfo._id,
       }));
+      setUserRol(userInfo.role)
     }
   }, []);
 
   const handleNewIncome = () => {
-    dispatch(createIncome(newIncome));
-  };
-  useEffect(() => {
-    if (createdIncome) {
-      setNewIncome({
-        type: "",
-        description: "",
-        amount: "",
-        subOffice: "",
-        currency: "",
-        category: "ingreso",
-        user: "",
-      });
-    }
-  }, [createdIncome]);
-
-  const handleDeleteMovement = (idMovement) => {
-    dispatch(deleteMovement(idMovement));
-  };
-  useEffect(() => {
-    // Obtener información del usuario del localStorage
     const userInfoString = localStorage.getItem("userInfo");
     if (userInfoString) {
       const userInfo = JSON.parse(userInfoString);
       setUserRol(userInfo.role)
     }
-  }, [dispatch]);
+    dispatch(createIncome(newIncome));
+    setNewIncome({
+      type: "",
+      description: "",
+      amount: "",
+      subOffice: "",
+      currency: "",
+      category: "ingreso",
+      user: newIncome.user
+    });
+  };
 
-  // Calcular el total de los montos
-  const total = incomesArray.reduce((acc, income) => acc + income.monto, 0);
+  const handleFilterType = () => {
+    dispatch(filterIncome(selectType));
+  };
+  const handleCleanFilter = () => {
+    dispatch(cleanFilter());
+    setSelectType('');
+  };
+
+  const handleDeleteMovement = (idMovement) => {
+    dispatch(deleteMovement(idMovement));
+  };
+  
 
   return (
     <ThemeProvider theme={theme}>
-      <section className="container-transactions">
+      <section className="section-expense">
         <div>
           <button
             className="btn-create-user"
@@ -242,6 +179,7 @@ const Income = () => {
                       }}
                       // Asegura que esté sincronizado
                       onChange={handleSelectChange}
+                      value={newIncome.subOffice}
                     >
                       <option value="">Sucursal</option>
                       {subOffices.map((office) => (
@@ -386,15 +324,15 @@ const Income = () => {
                   type="text"
                   className="input-field-dashboard"
                   name="type"
-                  value={type}
-                  onChange={(e) => setType(e.target.value)}
+                  value={selectType}
+                  onChange={(e) => setSelectType(e.target.value)}      
                 />
                 <label className="label-input-dashboard">
                   Buscar ingreso por tipo
                 </label>
               </div>
 
-              <button className="btn-search-users">
+              <button className="btn-search-users" onClick={handleFilterType}>
                 Buscar{" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -406,7 +344,7 @@ const Income = () => {
                   <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
                 </svg>
               </button>
-              <button className="btn-clean">
+              <button className="btn-clean" onClick={handleCleanFilter}>
                 Limpiar{" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -420,7 +358,6 @@ const Income = () => {
               </button>
             </div>
           </div>
-
           <div className="container-table">
             <div className="tbl-container">
               <table className="tbl-expense">
@@ -436,73 +373,58 @@ const Income = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {incomes && incomes.length > 0 ? (
-                    incomes.map((income) => (
-                      <tr key={income._id}>
-                        <td data-table="Tipo">
-                          <span>{income.type}</span>
-                        </td>
-                        <td data-table="Usuario">
-                          <span>{income.user.username}</span>
-                        </td>
-                        <td data-table="Descripción">
-                          <span>{income.description}</span>
-                        </td>
-                        <td data-table="Monto">
-                          <span>$ {income.amount.toFixed(2)}</span>
-                        </td>
-                        <td data-table="Fecha">
-                          <span>
-                            {new Date(income.date)
-                              .toLocaleString("es-ES", {
-                                day: "2-digit",
-                                month: "2-digit",
-                                year: "2-digit",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                hour12: false,
-                              })
-                              .replace(",", "")}
-                          </span>
-                        </td>
-                        <td data-table="Sucursal">
-                          <span>{income.sub_office.name}</span>
-                        </td>
-                        {userRol ===
-                          "administrador" && (
-                            <td>
-                              <button
-                                className="btn-trash"
-                                onClick={() => handleDeleteMovement(income._id)}
-                              >
-                                Eliminar
-                              </button>
-                            </td>
-                          )}
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="7" style={{ textAlign: "center" }}>
-                        No hay egresos disponibles
+                {(incomesFiltered.length > 0 ? incomesFiltered : incomes).length > 0 ? (
+                  (incomesFiltered.length > 0 ? incomesFiltered : incomes).map((income) => (
+                    <tr key={income._id}>
+                      <td data-table="Tipo">
+                        <span>{income.type}</span>
                       </td>
+                      <td data-table="Usuario">
+                        <span>{income.user.username}</span>
+                      </td>
+                      <td data-table="Descripción">
+                        <span>{income.description}</span>
+                      </td>
+                      <td data-table="Monto">
+                        <span>$ {income.amount.toFixed(2)}</span>
+                      </td>
+                      <td data-table="Fecha">
+                        <span>
+                          {new Date(income.date)
+                            .toLocaleString("es-ES", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false,
+                            })
+                            .replace(",", "")}
+                        </span>
+                      </td>
+                      <td data-table="Sucursal">
+                        <span>{income.sub_office.name}</span>
+                      </td>
+                      {userRol === "administrador" && (
+                        <td>
+                          <button
+                            className="btn-trash"
+                            onClick={() => handleDeleteMovement(income._id)}
+                          >
+                            Eliminar
+                          </button>
+                        </td>
+                      )}
                     </tr>
-                  )}
-
-                  {/* Fila para el total 
+                  ))
+                ) : (
                   <tr>
-                    <td colSpan="3" style={{ textAlign: "right" }}>
-                      <span style={{ fontWeight: "500" }}>Total:</span>
+                    <td colSpan="7" style={{ textAlign: "center" }}>
+                      No hay ingresos disponibles
                     </td>
-                    <td style={{ textAlign: "left" }}>
-                      <span style={{ fontWeight: "600" }}>
-                        $ {total.toFixed(2)}
-                      </span>
-                    </td>
-                    <td colSpan="3"></td>
                   </tr>
-                  */}
-                </tbody>
+                )}
+              </tbody>
               </table>
             </div>
           </div>

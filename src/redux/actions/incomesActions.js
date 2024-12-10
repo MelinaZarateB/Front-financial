@@ -1,17 +1,54 @@
 import axios from "axios";
 import Swal from "sweetalert2";
-import { CREATE_INCOME, GET_INCOMES } from "../action-types";
+import {
+  CREATE_INCOME,
+  GET_INCOMES,
+  FILTER_INCOME,
+  CLEAN_FILTER,
+} from "../action-types";
+
+export const cleanFilter = () => {
+  return (dispatch) => {
+    dispatch({
+      type: CLEAN_FILTER,
+      payload: [],
+    });
+  };
+};
+
+export const filterIncome = (typeIncome) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:3000/movements/filter",
+        { category: "ingreso", type: typeIncome }
+      );
+      if (data) {
+        dispatch({
+          type: FILTER_INCOME,
+          payload: data,
+        });
+      }
+    } catch (error) {
+      const mensajeError =
+        error.response?.data?.message ||
+        "Ocurrio un error al intentar filtrar los egresos.";
+      Swal.fire({
+        title: "Error",
+        text: mensajeError,
+        icon: "error",
+      });
+    }
+  };
+};
 
 export const getIncomes = (ingreso) => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get(
+      const { data } = await axios.post(
         "http://localhost:3000/movements/filter",
-        {
-          category: ingreso,
-        }
+        { category: "ingreso" }
       );
-      console.log(data)
       if (data) {
         dispatch({
           type: GET_INCOMES,
@@ -32,7 +69,6 @@ export const getIncomes = (ingreso) => {
 };
 
 export const createIncome = (newIncome) => {
-  console.log(newIncome);
   return async (dispatch) => {
     try {
       const { data } = await axios.post(

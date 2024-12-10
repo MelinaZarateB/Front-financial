@@ -7,28 +7,30 @@ import {
   getAllUsers,
   updateUser,
   deleteUser,
+  registerUser,
 } from "../../redux/actions/userActions";
 import Swal from "sweetalert2";
 import { useRef, useCallback } from "react";
+import SpinnerSmall from "./../../utils/Spinner/SpinnerSmall";
 
 const AdminUsers = ({ handleCreateUser }) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const users = useSelector((state) => state.user.users);
   const userByEmail = useSelector((state) => state.user.userByEmail);
-  console.log(email)
-  console.log('Estado global de usuario obtenido por mail', userByEmail)
+  //const subOffices = useSelector((state) => state.offices.subOffices);
   const [selectType, setSelectType] = useState("");
   const [viewForm, setViewForm] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [editedFields, setEditedFields] = useState({});
   const tableRef = useRef(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [newUser, setNewUser] = useState({
     username: "",
     lastname: "",
-    password: "",
     email: "",
+    password: "",
     phone: "",
     isActive: true,
     role: "user",
@@ -68,7 +70,6 @@ const AdminUsers = ({ handleCreateUser }) => {
   const handleDeleteUser = (userId) => {
     Swal.fire({
       title: "¿Seguro que desea eliminar este usuario?",
-      icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Eliminar",
       cancelButtonText: "Cancelar",
@@ -110,14 +111,19 @@ const AdminUsers = ({ handleCreateUser }) => {
   };
 
   const handleEditChange = (field, value) => {
-    setEditedFields(prev => ({ ...prev, [field]: value }));
+    setEditedFields((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSaveEdit = () => {
-    const userToUpdate = editingUser === userByEmail._id ? userByEmail : users.find(u => u._id === editingUser);
+    const userToUpdate =
+      editingUser === userByEmail._id
+        ? userByEmail
+        : users.find((u) => u._id === editingUser);
     if (!userToUpdate) return;
 
-    const hasChanges = Object.keys(editedFields).some(key => editedFields[key] !== userToUpdate[key]);
+    const hasChanges = Object.keys(editedFields).some(
+      (key) => editedFields[key] !== userToUpdate[key]
+    );
 
     if (hasChanges) {
       dispatch(updateUser(editingUser, editedFields));
@@ -125,6 +131,18 @@ const AdminUsers = ({ handleCreateUser }) => {
 
     setEditingUser(null);
     setEditedFields({});
+  };
+
+  const handleSendInputs = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await dispatch(registerUser(newUser));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -145,7 +163,10 @@ const AdminUsers = ({ handleCreateUser }) => {
             viewBox="0 -960 960 960"
             width="24px"
             fill="#06571f"
-            style={{transform: viewForm ? 'rotate(-90deg)' : '', transition: 'all 0.2s ease-in-out'}}
+            style={{
+              transform: viewForm ? "rotate(-90deg)" : "",
+              transition: "all 0.2s ease-in-out",
+            }}
           >
             <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
           </svg>
@@ -179,7 +200,7 @@ const AdminUsers = ({ handleCreateUser }) => {
                     type="text"
                     className="input-field-dashboard"
                     name="lastname"
-                    value={newUser.email}
+                    value={newUser.lastname}
                     onChange={handleChangeNewUser}
                   />
                   <label
@@ -194,7 +215,7 @@ const AdminUsers = ({ handleCreateUser }) => {
                     type="text"
                     className="input-field-dashboard"
                     name="email"
-                    value={newUser.lastname}
+                    value={newUser.email}
                     onChange={handleChangeNewUser}
                   />
                   <label
@@ -204,6 +225,37 @@ const AdminUsers = ({ handleCreateUser }) => {
                     Email
                   </label>
                 </div>
+                <div className="input-box-dashboard">
+                  <input
+                    type="text"
+                    className="input-field-dashboard"
+                    name="password"
+                    value={newUser.password}
+                    onChange={handleChangeNewUser}
+                  />
+                  <label
+                    className="label-input-dashboard"
+                    style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                  >
+                    Contraseña
+                  </label>
+                </div>
+                <div className="input-box-dashboard">
+                  <input
+                    type="text"
+                    className="input-field-dashboard"
+                    name="phone"
+                    value={newUser.phone}
+                    onChange={handleChangeNewUser}
+                  />
+                  <label
+                    className="label-input-dashboard"
+                    style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                  >
+                    Teléfono
+                  </label>
+                </div>
+                {/*
               <div className="input-box-dashboard">
                 <div
                   className={`select-container ${
@@ -217,8 +269,14 @@ const AdminUsers = ({ handleCreateUser }) => {
                       color: selectType ? "#000" : "#555",
                       cursor: "pointer",
                     }}
+                    onChange={handleChangeNewUser}
                   >
-                    <option value="all">Asignar sucursal</option>
+                     <option value="">Sucursal</option>
+                        {subOffices.map((office) => (
+                          <option key={office._id} value={office.name}>
+                            {office.name}
+                          </option>
+                        ))}
                   </select>
                   <div
                     className="floating-label"
@@ -228,15 +286,30 @@ const AdminUsers = ({ handleCreateUser }) => {
                   </div>
                 </div>
               </div>
+                
+                */}
               </div>
             </div>
-
             <div
               className="buttons-container"
               style={{ display: "flex", gap: "5px", justifyContent: "end" }}
             >
-              <button className="btn-search-users">
-                Registrar{" "}
+              <button
+                className="btn-search-users"
+                onClick={handleSendInputs}
+                disabled={
+                  !newUser.username ||
+                  !newUser.lastname ||
+                  !newUser.email ||
+                  !newUser.password ||
+                  !newUser.phone
+                }
+              >
+                <label htmlFor="submit" className="label">
+                  {" "}
+                  {isSubmitting ? <SpinnerSmall /> : "Registrar"}
+                </label>
+
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="20px"
@@ -324,77 +397,91 @@ const AdminUsers = ({ handleCreateUser }) => {
                 </tr>
               </thead>
               <tbody>
-              {userByEmail && Object.keys(userByEmail).length > 0 ? (
-                <tr key={userByEmail._id}>
-                  <td data-table="Nombre">
-                    {editingUser === userByEmail._id ? (
-                      <input
-                        type="text"
-                        className="input-transaction"
-                        value={editedFields.username}
-                        onChange={(e) => handleEditChange('username', e.target.value)}
-                      />
-                    ) : (
-                      userByEmail.username
-                    )}
-                  </td>
-                  <td data-table="Apellido">
-                    {editingUser === userByEmail._id ? (
-                      <input
-                        className="input-transaction"
-                        type="text"
-                        value={editedFields.lastname}
-                        onChange={(e) => handleEditChange('lastname', e.target.value)}
-                      />
-                    ) : (
-                      userByEmail.lastname
-                    )}
-                  </td>
-                  <td data-table="Email">
-                    {editingUser === userByEmail._id ? (
-                      <input
-                        className="input-transaction"
-                        type="email"
-                        value={editedFields.email}
-                        onChange={(e) => handleEditChange('email', e.target.value)}
-                      />
-                    ) : (
-                      userByEmail.email
-                    )}
-                  </td>
-                  <td data-table="Telefono">
-                    {editingUser === userByEmail._id ? (
-                      <input
-                        className="input-transaction"
-                        type="tel"
-                        value={editedFields.phone}
-                        onChange={(e) => handleEditChange('phone', e.target.value)}
-                      />
-                    ) : (
-                      userByEmail.phone ? userByEmail.phone : 'N/A'
-                    )}
-                  </td>
-                  <td data-table="Estado">
-                    {userByEmail.isActive ? "Activo" : "Inactivo"}
-                  </td>
-                  <td>
-                    <button
-                      className="btn-edit btn-new-client"
-                      onClick={() => editingUser === userByEmail._id ? handleSaveEdit() : handleEditClick(userByEmail)}
-                    >
-                      {editingUser === userByEmail._id ? 'Guardar' : 'Editar'}
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      className="btn-trash"
-                      onClick={() => handleDeleteUser(userByEmail._id)}
-                    >
-                      Eliminar
-                    </button>
-                  </td>
-                </tr>
-              ) : users && users.length > 0 ? (
+                {userByEmail && Object.keys(userByEmail).length > 0 ? (
+                  <tr key={userByEmail._id}>
+                    <td data-table="Nombre">
+                      {editingUser === userByEmail._id ? (
+                        <input
+                          type="text"
+                          className="input-transaction"
+                          value={editedFields.username}
+                          onChange={(e) =>
+                            handleEditChange("username", e.target.value)
+                          }
+                        />
+                      ) : (
+                        userByEmail.username
+                      )}
+                    </td>
+                    <td data-table="Apellido">
+                      {editingUser === userByEmail._id ? (
+                        <input
+                          className="input-transaction"
+                          type="text"
+                          value={editedFields.lastname}
+                          onChange={(e) =>
+                            handleEditChange("lastname", e.target.value)
+                          }
+                        />
+                      ) : (
+                        userByEmail.lastname
+                      )}
+                    </td>
+                    <td data-table="Email">
+                      {editingUser === userByEmail._id ? (
+                        <input
+                          className="input-transaction"
+                          type="email"
+                          value={editedFields.email}
+                          onChange={(e) =>
+                            handleEditChange("email", e.target.value)
+                          }
+                        />
+                      ) : (
+                        userByEmail.email
+                      )}
+                    </td>
+                    <td data-table="Telefono">
+                      {editingUser === userByEmail._id ? (
+                        <input
+                          className="input-transaction"
+                          type="tel"
+                          value={editedFields.phone}
+                          onChange={(e) =>
+                            handleEditChange("phone", e.target.value)
+                          }
+                        />
+                      ) : userByEmail.phone ? (
+                        userByEmail.phone
+                      ) : (
+                        "N/A"
+                      )}
+                    </td>
+                    <td data-table="Estado">
+                      {userByEmail.isActive ? "Activo" : "Inactivo"}
+                    </td>
+                    <td>
+                      <button
+                        className="btn-edit btn-new-client"
+                        onClick={() =>
+                          editingUser === userByEmail._id
+                            ? handleSaveEdit()
+                            : handleEditClick(userByEmail)
+                        }
+                      >
+                        {editingUser === userByEmail._id ? "Guardar" : "Editar"}
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        className="btn-trash"
+                        onClick={() => handleDeleteUser(userByEmail._id)}
+                      >
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                ) : users && users.length > 0 ? (
                   users.map((user) => (
                     <tr key={user._id}>
                       <td data-table="Nombre">
@@ -403,7 +490,9 @@ const AdminUsers = ({ handleCreateUser }) => {
                             type="text"
                             className="input-transaction"
                             value={editedFields.username}
-                            onChange={(e) => handleEditChange('username', e.target.value)}
+                            onChange={(e) =>
+                              handleEditChange("username", e.target.value)
+                            }
                           />
                         ) : (
                           user.username
@@ -415,7 +504,9 @@ const AdminUsers = ({ handleCreateUser }) => {
                             className="input-transaction"
                             type="text"
                             value={editedFields.lastname}
-                            onChange={(e) => handleEditChange('lastname', e.target.value)}
+                            onChange={(e) =>
+                              handleEditChange("lastname", e.target.value)
+                            }
                           />
                         ) : (
                           user.lastname
@@ -427,7 +518,9 @@ const AdminUsers = ({ handleCreateUser }) => {
                             className="input-transaction"
                             type="email"
                             value={editedFields.email}
-                            onChange={(e) => handleEditChange('email', e.target.value)}
+                            onChange={(e) =>
+                              handleEditChange("email", e.target.value)
+                            }
                           />
                         ) : (
                           user.email
@@ -439,10 +532,14 @@ const AdminUsers = ({ handleCreateUser }) => {
                             className="input-transaction"
                             type="tel"
                             value={editedFields.phone}
-                            onChange={(e) => handleEditChange('phone', e.target.value)}
+                            onChange={(e) =>
+                              handleEditChange("phone", e.target.value)
+                            }
                           />
+                        ) : user.phone ? (
+                          user.phone
                         ) : (
-                          user.phone ? user.phone : 'N/A'
+                          "N/A"
                         )}
                       </td>
                       <td data-table="Estado">
@@ -451,9 +548,13 @@ const AdminUsers = ({ handleCreateUser }) => {
                       <td>
                         <button
                           className="btn-edit btn-new-client"
-                          onClick={() => editingUser === user._id ? handleSaveEdit() : handleEditClick(user)}
+                          onClick={() =>
+                            editingUser === user._id
+                              ? handleSaveEdit()
+                              : handleEditClick(user)
+                          }
                         >
-                          {editingUser === user._id ? 'Guardar' : 'Editar'}
+                          {editingUser === user._id ? "Guardar" : "Editar"}
                         </button>
                       </td>
                       <td>
