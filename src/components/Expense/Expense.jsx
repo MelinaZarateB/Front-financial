@@ -54,7 +54,6 @@ const Expense = () => {
     category: "egreso",
     user: "",
   });
-  console.log(newExpense);
 
   useEffect(() => {
     dispatch(getExpenses());

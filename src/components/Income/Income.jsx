@@ -17,8 +17,6 @@ const Income = () => {
   const incomesFiltered = useSelector((state) => state.incomes.incomesFiltered); 
   const incomes = useSelector((state) => state.incomes.incomes);
   const [userRol, setUserRol] = useState("");
-  
-  
   const deleteMovements = useSelector(
     (state) => state.movements.deleteMovement
   );
@@ -35,8 +33,6 @@ const Income = () => {
     description: "",
     currency: "",
   });
-  console.log(subOffices);
-  console.log(subOfficeCurrencies);
 
   const handleChangeNewIncome = (event) => {
     const { name, value } = event.target;

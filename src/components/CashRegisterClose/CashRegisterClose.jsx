@@ -13,134 +13,6 @@ import {
 import Swal from "sweetalert2";
 import Spinner from "@/utils/Spinner/Spinner";
 
-const movimientos1 = [
-  {
-    _id: 1,
-    type: "venta",
-    targetAmount: 1500,
-    createdAt: "2024-10-01T10:30:00",
-    userName: "Juan Pérez",
-    sourceCurrencyCode: "USD",
-    targetCurrencyCode: "ARS",
-    exchangeRate: 350.5,
-    commission: 50,
-    subOfficeName: "Sucursal Centro",
-  },
-  {
-    _id: 2,
-    type: "compra",
-    targetAmount: -1200,
-    createdAt: "2024-10-02T12:45:00",
-    userName: "María García",
-    sourceCurrencyCode: "ARS",
-    targetCurrencyCode: "USD",
-    exchangeRate: 348.7,
-    commission: 35,
-    subOfficeName: "Sucursal Norte",
-  },
-  {
-    _id: 3,
-    type: "cambio de cheque",
-    targetAmount: 500,
-    createdAt: "2024-10-03T09:15:00",
-    userName: "Carlos Sánchez",
-    sourceCurrencyCode: "USD",
-    targetCurrencyCode: "ARS",
-    exchangeRate: 351.2,
-    commission: 20,
-    subOfficeName: "Sucursal Oeste",
-  },
-  {
-    _id: 4,
-    type: "ingreso",
-    description: "Pago de cliente por servicios prestados",
-    targetAmount: 2000,
-    createdAt: "2024-10-04T16:20:00",
-    userName: "Juan Pérez",
-    subOfficeName: "Sucursal Centro",
-  },
-  {
-    _id: 5,
-    type: "egreso",
-    description: "Pago de alquiler de oficina",
-    targetAmount: -800,
-    createdAt: "2024-10-05T14:50:00",
-    userName: "María García",
-    subOfficeName: "Sucursal Norte",
-  },
-  {
-    _id: 6,
-    type: "egreso",
-    description: "Pago de facturas de servicios",
-    targetAmount: -300,
-    createdAt: "2024-10-06T11:30:00",
-    userName: "Carlos Sánchez",
-    subOfficeName: "Sucursal Oeste",
-  },
-  {
-    _id: 7,
-    type: "ingreso",
-    description: "Depósito de intereses de inversión",
-    targetAmount: 400,
-    createdAt: "2024-10-07T13:15:00",
-    userName: "Juan Pérez",
-    subOfficeName: "Sucursal Centro",
-  },
-  {
-    _id: 8,
-    type: "compra",
-    targetAmount: -1000,
-    createdAt: "2024-10-08T09:00:00",
-    userName: "María García",
-    sourceCurrencyCode: "USD",
-    targetCurrencyCode: "ARS",
-    exchangeRate: 349.9,
-    commission: 40,
-    subOfficeName: "Sucursal Norte",
-  },
-  {
-    _id: 9,
-    type: "venta",
-    targetAmount: 2500,
-    createdAt: "2024-10-09T15:30:00",
-    userName: "Carlos Sánchez",
-    sourceCurrencyCode: "ARS",
-    targetCurrencyCode: "USD",
-    exchangeRate: 352.1,
-    commission: 75,
-    subOfficeName: "Sucursal Oeste",
-  },
-  {
-    _id: 10,
-    type: "ingreso",
-    description: "Pago por consultoría",
-    targetAmount: 1800,
-    createdAt: "2024-10-10T17:10:00",
-    userName: "Juan Pérez",
-    subOfficeName: "Sucursal Centro",
-  },
-  {
-    _id: 11,
-    type: "egreso",
-    description: "Pago a proveedores",
-    targetAmount: -600,
-    createdAt: "2024-10-11T08:40:00",
-    userName: "María García",
-    subOfficeName: "Sucursal Norte",
-  },
-  {
-    _id: 12,
-    type: "cambio de cheque",
-    targetAmount: 700,
-    createdAt: "2024-10-12T10:50:00",
-    userName: "Carlos Sánchez",
-    sourceCurrencyCode: "USD",
-    targetCurrencyCode: "ARS",
-    exchangeRate: 350.0,
-    commission: 30,
-    subOfficeName: "Sucursal Oeste",
-  },
-];
 const fieldFilter = ["Moneda/Cuenta", "Usuario"];
 
 const CashRegisterClose = () => {
@@ -151,19 +23,23 @@ const CashRegisterClose = () => {
   const [pesoRate, setPesoRate] = useState("");
   const [dollarRate, setDollarRate] = useState("");
   const [selectType, setSelectType] = useState("");
+ // const [userRol, setUserRol] = useState("");
   console.log(selectedSubOffice);
 
   const subOffices = useSelector((state) => state.offices.subOffices);
+  const transactionsAndMovements = useSelector(
+    (state) => state.cashRegister.transactionsAndMovements
+  );
   const noConfirmOpenCashRegister = useSelector(
     (state) => state.cashRegister.error
   );
   const verificatedCashRegisterOpen = useSelector(
     (state) => state.cashRegister.verifyCashRegister
   );
-  const movimientos = useSelector((state) => state.cashRegister.movements);
   const closedCashRegister = useSelector(
     (state) => state.cashRegister.closedCashRegister
   );
+  console.log(transactionsAndMovements);
 
   const handleCloseRegister = () => {
     const now = new Date();
@@ -249,11 +125,52 @@ const CashRegisterClose = () => {
     }
   }, [noConfirmOpenCashRegister]);
 
+  /*useEffect(() => {
+    const userInfoString = localStorage.getItem("userInfo");
+    if (userInfoString) {
+      const userInfo = JSON.parse(userInfoString);
+
+      setUserRol(userInfo.role);
+    }
+  }, []);*/
+
   useEffect(() => {
     if (selectedSubOffice) {
       dispatch(getTransactionsAndMovements(selectedSubOffice));
     }
-  }, []);
+  }, [selectedSubOffice]);
+
+  const getTypeIcon = (category) => {
+    switch (category) {
+      case "ingreso":
+        return (
+          <img
+            src={imgIncome}
+            alt="Ingreso"
+            title="Ingreso"
+            style={{ margin: "0 auto" }}
+          />
+        );
+      case "egreso":
+        return (
+          <img
+            src={imgExpense}
+            alt="Egreso"
+            title="Egreso"
+            style={{ margin: "0 auto" }}
+          />
+        );
+      default:
+        return (
+          <img
+            src={imgArrows}
+            alt={"transacción"}
+            title={"transacción"}
+            style={{ margin: "0 auto" }}
+          />
+        );
+    }
+  };
 
   return (
     <section className="container-cash-closing">
@@ -418,80 +335,68 @@ const CashRegisterClose = () => {
             <table className="tbl-cash">
               <thead>
                 <tr>
+                  <th>Categoria</th>
                   <th>Tipo</th>
                   <th>Usuario</th>
-                  <th>Monto</th>
+                  <th>Monto de origen</th>
                   <th>Paga</th>
-                  <th>Compra</th>
                   <th>T/C</th>
+                  <th>Monto de egreso</th>
+                  <th>Compra</th>
+                  <th>Numero de cheque</th>
+                  <th>Fecha de cheque</th>
+                  <th>Banco emisor</th>
                   <th>Descripcion</th>
                   <th>Hora</th>
                   <th>Sucursal</th>
-                  {!closeRegister && <th></th>}
+                  {/*
+                  {userRol === "administrador" && <th>Acciones</th>}
+                  */}
                 </tr>
               </thead>
               <tbody>
-                {movimientos1 && movimientos1.length > 0 ? (
-                  movimientos1.map((movimiento) => (
+                {transactionsAndMovements &&
+                transactionsAndMovements.length > 0 ? (
+                  transactionsAndMovements.map((movimiento) => (
                     <tr key={movimiento._id}>
-                      <td data-table="Tipo">
-                        {["compra", "venta", "cambio de cheque"].includes(
-                          movimiento.type
-                        ) ? (
-                          <img
-                            src={imgArrows}
-                            alt=""
-                            title={movimiento.type}
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              margin: "0 auto",
-                            }}
-                          />
-                        ) : movimiento.type === "ingreso" ? (
-                          <img
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              margin: "0 auto",
-                            }}
-                            src={imgIncome}
-                            alt="Ingreso"
-                            title="Ingreso"
-                          />
-                        ) : movimiento.type === "egreso" ? (
-                          <img
-                            src={imgExpense}
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              margin: "0 auto",
-                            }}
-                            alt="Egreso"
-                            title="Egreso"
-                          />
-                        ) : (
-                          ""
-                        )}
+                      <td data-table="Categoria">
+                        <span style={{ display: "flex", alignItems: "center" }}>
+                          {movimiento.category || "transacción"}{" "}
+                          {getTypeIcon(movimiento.category)}
+                        </span>
                       </td>
+
+                      <td data-table="Tipo">{movimiento.type || "N/A"}</td>
                       <td data-table="Usuario">
-                        <span>{movimiento.userName}</span>
+                        <span>{movimiento.user.username}</span>
                       </td>
                       <td data-table="Monto">
-                        <span>$ {movimiento.targetAmount}</span>
+                        <span> {movimiento.targetAmount || "N/A"}</span>
                       </td>
                       <td data-table="Paga">
-                        <span>{movimiento.sourceCurrencyCode}</span>
-                      </td>
-                      <td data-table="Compra">
-                        <span>{movimiento.targetCurrencyCode}</span>
+                        <span>{movimiento.sourceCurrencyCode || "N/A"}</span>
                       </td>
                       <td data-table="T/C">
-                        <span>{movimiento.exchangeRate}</span>
+                        <span>{movimiento.exchangeRate || "N/A"}</span>
+                      </td>
+                      <td data-table="Monto de egreso">
+                        {movimiento.targetAmount || "N/A"}
+                      </td>
+                      <td data-table="Compra">
+                        <span>{movimiento.targetCurrencyCode || "N/A"}</span>
+                      </td>
+                      <td data-table="Numero de cheque">
+                        {movimiento.checkNumber || "N/A"}
+                      </td>
+                      <td data-table="Fecha de cheque">
+                        {movimiento.checkDueDate || "N/A"}
+                      </td>
+                      <td data-table="Banco emisor">
+                        {movimiento.bankName || "N/A"}
                       </td>
                       <td data-table="Descripcion">
                         <span style={{ whiteSpace: "wrap" }}>
-                          {movimiento.description}
+                          {movimiento.description || "N/A"}
                         </span>
                       </td>
                       <td data-table="Hora">
@@ -507,19 +412,24 @@ const CashRegisterClose = () => {
                         </span>
                       </td>
                       <td data-table="Sucursal">
-                        <span>{movimiento.subOfficeName}</span>
+                        <span>
+                          {movimiento.subOfficeName ||
+                            movimiento.sub_office.name}
+                        </span>
                       </td>
-                      {!closeRegister && (
+                      {/*
+                      {userRol === 'administrador' && (
                         <td>
                           <button className="btn-trash">Eliminar</button>
                         </td>
                       )}
+                      */}
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="9" style={{ textAlign: "center" }}>
-                      No hay operaciones del día
+                    <td colSpan="15" style={{ textAlign: "center" }}>
+                      No hay movimientos del día
                     </td>
                   </tr>
                 )}

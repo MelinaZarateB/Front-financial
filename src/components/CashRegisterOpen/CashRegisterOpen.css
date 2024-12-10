@@ -30,7 +30,7 @@
  /* border-radius: 4px; */
   max-width: 200px;
   vertical-align: middle;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.428571429;
 }
 
@@ -70,6 +70,14 @@ td {
 
 .tbl-cash tbody tr td {
   color: #666;
+  /*padding: 0.4rem;*/
+}
+.tbl-cash tbody tr {
+  transition: background 0.2s ease; 
+}
+
+.tbl-cash tbody tr:hover{
+  background-color: #EFF6FF;
   /*padding: 0.4rem;*/
 }
 .tbl-cash tbody tr td {

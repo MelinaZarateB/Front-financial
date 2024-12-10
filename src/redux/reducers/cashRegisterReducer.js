@@ -5,6 +5,7 @@ import {
   VERIFY_CASH_REGISTER_ERROR,
   CLEAR_CASH_REGISTER_ERROR,
   GET_ALL_MOVEMENTS,
+  GET_TRANSACTIONS_AND_MOVEMENTS
 } from "../action-types";
 
 let initialState = {
@@ -17,7 +18,7 @@ let initialState = {
 
 const cashRegisterReducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_ALL_MOVEMENTS:
+    case GET_TRANSACTIONS_AND_MOVEMENTS:
       return {
         ...state,
         transactionsAndMovements: action.payload,

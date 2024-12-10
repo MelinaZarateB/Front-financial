@@ -152,6 +152,14 @@ td {
 .tbl-expense tbody tr td {
   border-top: 1px solid #ddd;
 }
+.tbl-expense tbody tr {
+  transition: background 0.2s ease; 
+}
+
+.tbl-expense tbody tr:hover{
+  background-color: #EFF6FF;
+  /*padding: 0.4rem;*/
+}
 .tbl-expense tr:nth-child(even) {
   background-color: #f3f3f3;
 }

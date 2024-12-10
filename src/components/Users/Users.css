@@ -83,6 +83,7 @@
   table-layout: fixed;
 
 }
+
 .tbl-container {
   padding-right: 1.2rem;
   padding-left: 1.2rem;
@@ -113,6 +114,13 @@ td {
 }
 .tbl tbody tr td {
   border-top: 1px solid #ddd;
+}
+.tbl tr:nth-child(even) {
+  background-color: #f3f3f3;
+}
+.tbl tbody tr:hover{
+  background-color: #EFF6FF;
+  /*padding: 0.4rem;*/
 }
 .tbl tr:nth-child(even) {
   background-color: #f3f3f3;

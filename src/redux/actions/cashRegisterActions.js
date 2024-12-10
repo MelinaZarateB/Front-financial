@@ -13,6 +13,7 @@ import Swal from "sweetalert2";
 
 /* Actions para caja registradora */
 export const getTransactionsAndMovements = (subOfficeId) => {
+  console.log('id de oficina para buscar movimientos y transacciones', subOfficeId)
   return async (dispatch) => {
     try {
       const { data } = await axios.get(

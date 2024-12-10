@@ -531,7 +531,7 @@ const Transactions = () => {
               {hasGuardedBalance && (
                 <div className="space-y-4 border-t pt-4">
                   <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
+                 // style={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <div className="container-input-btn">
                       <div className="input-box-dashboard">
@@ -560,6 +560,7 @@ const Transactions = () => {
                       </div>
                     </div>
 
+                    {/*
                     <div>
                       <span
                         style={{
@@ -572,6 +573,7 @@ const Transactions = () => {
                         Ver clientes <img src={arrow} alt="" />
                       </span>
                     </div>
+                    */}
                   </div>
                   <div className="container-client-first-section">
                     {clients?.map((client) => (

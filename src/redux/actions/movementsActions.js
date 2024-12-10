@@ -1,6 +1,43 @@
-import { GET_ALL_MOVEMENTS, DELETE_MOVEMENT } from "../action-types";
+import { GET_ALL_MOVEMENTS, DELETE_MOVEMENT, FILTER_MOVEMENT, CLEAN_FILTER  } from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
+
+
+export const cleanFilter = () => {
+  return (dispatch) => {
+    dispatch({
+      type: CLEAN_FILTER,
+      payload: [],
+    });
+  };
+};
+
+export const filterMovement = (typeMovement) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:3000/movements/filter",
+        { type: typeMovement }
+      );
+      if (data) {
+        dispatch({
+          type: FILTER_MOVEMENT,
+          payload: data,
+        });
+      }
+    } catch (error) {
+      const mensajeError =
+        error.response?.data?.message ||
+        "Ocurrio un error al intentar filtrar los movimientos.";
+      Swal.fire({
+        title: "Error",
+        text: mensajeError,
+        icon: "error",
+      });
+    }
+  };
+};
+
 
 export const getAllMovements = () => {
   return async (dispatch) => {
