@@ -1,11 +1,10 @@
 import "./Dashboard.css";
 import SideBar from "../../components/SideBar/SideBar";
 import React, { useState, Suspense } from "react";
-import Clients from "../../components/Clients/Clients";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { X } from "lucide-react";
 import Spinner from "@/utils/Spinner/Spinner";
 
@@ -17,6 +16,7 @@ const Expense = React.lazy(() => import("../../components/Expense/Expense"));
 const Movements = React.lazy(() => import("../../components/Movements/Movements"));
 const Offices = React.lazy(() => import("../../components/Offices/Offices"));
 const Users = React.lazy(() => import("../../components/Users/Users"));
+const Clients = React.lazy(() => import("../../components/Clients/Clients"));
 
 
 const Dashboard = () => {

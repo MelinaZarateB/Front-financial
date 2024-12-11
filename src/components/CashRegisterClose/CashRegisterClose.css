@@ -136,6 +136,10 @@
 
 /* Input Styles */
 .input-box-dashboard {
+  width: 100%;
+  max-width: 300px;
+}
+.input-box-dashboard {
   position: relative;
 }
 
