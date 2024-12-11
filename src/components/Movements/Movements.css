@@ -1,51 +1,209 @@
+/* General Container Styles */
 .container-movements {
   width: 100%;
-  /*height: 100vh;*/
-  padding-left: 2rem;
-  padding-top: 2rem;
-  padding-right: 2rem;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
+
 .container-second-section-movements {
   display: flex;
   flex-direction: column;
   height: 100vh;
 }
+
+.container-table {
+  max-width: 1440px;
+  width: 100%;
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.83);
+}
+
+.tbl-container {
+  padding: 1.2rem;
+  max-height: 450px;
+  overflow-y: auto;
+}
+
+/* Table Styles */
+.tbl-cash {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 4px;
+}
+
+.tbl-cash th,
+.tbl-cash td {
+  border: 1px solid #ccc;
+  padding: 5px;
+  text-align: left;
+  max-width: 200px;
+  vertical-align: middle;
+  font-size: 12px;
+  line-height: 1.428571429;
+}
+
+.tbl-cash tbody tr td {
+  color: #666;
+  border-top: 1px solid #ddd;
+}
+
+.tbl-cash tbody tr {
+  transition: background 0.2s ease; 
+}
+
+.tbl-cash tbody tr:hover {
+  background-color: #EFF6FF;
+}
+
+.tbl-cash tr:nth-child(even) {
+  background-color: #f3f3f3;
+}
+
+/* Input Styles */
+.input-box-dashboard {
+  width: 100%;
+  max-width: 300px;
+  position: relative;
+}
+
+.input-field-dashboard {
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 4px;
+  font-size: 14px;
+  height: 35px;
+  outline: none;
+  padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+  width: 100%;
+}
+
+.input-field-dashboard:hover {
+  border-color: rgb(118, 118, 118);
+}
+
+.input-field-dashboard:focus {
+  border: 2px solid #2196f3;
+}
+
+.label-input-dashboard {
+  color: rgba(0, 0, 0, 0.6);
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  left: 0.5rem;
+  letter-spacing: 0.00938em;
+  line-height: 1.4375em;
+  overflow: hidden;
+  padding: 0;
+  pointer-events: none;
+  position: absolute;
+  text-overflow: ellipsis;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: 0.3s;
+  white-space: nowrap;
+}
+
+.input-box-dashboard .input-field-dashboard:focus ~ .label-input-dashboard,
+.input-box-dashboard .input-field-dashboard:not(:placeholder-shown):not([value=""]) ~ .label-input-dashboard {
+  background-color: #f4f9f4;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  top: 0;
+}
+
+.input-box-dashboard .input-field-dashboard:focus ~ .label-input-dashboard {
+  color: #1976d2;
+}
+
+.input-box-dashboard .input-field-dashboard:not(:focus):not(:placeholder-shown):not([value=""]) ~ .label-input-dashboard {
+  color: #555;
+}
+
+/* Button Styles */
+.btn-search-users,
+.btn-clean {
+  border: 1px solid #063a17;
+  background-color: #06571f;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.83);
+  transition: all 0.2s ease;
+  text-shadow: rgba(9, 11, 11, 0.6) 0px 1px 1px;
+  box-shadow: rgba(6, 87, 31, 0.5) 0px 1px 0px inset,
+              rgba(4, 58, 21, 0.4) 0px -1px 0px 1px inset,
+              rgba(9, 11, 11, 0.1) 0px 2px 4px 0px;
+  white-space: nowrap;
+}
+
+.btn-search-users svg,
+.btn-clean svg {
+  fill: rgba(255, 255, 255, 0.83);
+}
+
+.btn-search-users:hover,
+.btn-clean:hover {
+  background-color: rgb(13, 98, 37);
+  color: rgba(255, 255, 255, 0.83);
+}
+
+.btn-search-users:hover svg,
+.btn-clean:hover svg {
+  fill: rgba(255, 255, 255, 0.83);
+}
+
+.btn-trash {
+  display: inline-block;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  background-color: #EF4444;
+  color: rgba(255, 255, 255, 0.83);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: .75rem;
+  line-height: 1rem;
+}
+
+.btn-trash:hover {
+  background-color: #f05757;
+  color: rgba(255, 255, 255, 0.83);
+}
+
+/* Media Queries */
 @media screen and (max-width: 800px) {
   .container-movements {
-    padding-left: 2%;
-    padding-right: 2%;
-    padding-top: 2%;
+    padding: 2%;
   }
-}
-@media screen and (max-width: 800px) {
-  /* Ocultar encabezado de la tabla */
+
+  /* Table Adjustments for Smaller Screens */
   .tbl-cash thead {
     display: none;
   }
 
-  /* Hacer que cada fila y celda sean bloques */
   .tbl-cash tr,
   .tbl-cash td {
     display: block;
     width: 100%;
   }
 
-  /* Separar filas con margen */
   .tbl-cash tr {
     margin-bottom: 1rem;
   }
 
-  /* Ajustar celdas de la tabla para que ocupen el ancho completo */
   .tbl-cash tbody tr td {
     position: relative;
     text-align: right;
     max-width: 100%;
   }
 
-  /* Mostrar el atributo de la columna antes del contenido */
   .tbl-cash td::before {
     content: attr(data-table);
     position: absolute;
@@ -55,21 +213,17 @@
     font-weight: bold;
   }
 
-  /* Ajustes de espaciado para el contenedor */
   .container-movements {
     padding-left: 3%;
     padding-right: 3%;
     padding-top: 3%;
   }
 
-  /* Ajustes de relleno para el contenedor de la tabla */
   .tbl-container {
-    padding-right: 1rem;
-    padding-left: 1rem;
-    padding-top: 1rem;
+    padding: 1rem;
   }
 
-  /* Botones a pantalla completa */
+  /* Full-width Buttons on Small Screens */
   .btn-search-users,
   .btn-clean {
     width: 100%;

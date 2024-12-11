@@ -1,24 +1,23 @@
 import "./Dashboard.css";
 import SideBar from "../../components/SideBar/SideBar";
-import NavBar from "../../components/NavBar/NavBar";
-import { useState } from "react";
-import Transactions from "../../components/Transactions/Transactions";
-import Income from "../../components/Income/Income";
-import Expense from "../../components/Expense/Expense";
-import Balance from "../../components/Balance/Balance";
-import Movements from "../../components/Movements/Movements";
+import React, { useState, Suspense } from "react";
 import Clients from "../../components/Clients/Clients";
-import Offices from "../../components/Offices/Offices";
-import Users from "../../components/Users/Users";
-import CashRegisterOpen from "../../components/CashRegisterOpen/CashRegisterOpen";
-import CashRegisterClose from "../../components/CashRegisterClose/CashRegisterClose";
-import { useEffect } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { X } from "lucide-react";
-import LinkClients from "@/utils/LinkClients";
+import Spinner from "@/utils/Spinner/Spinner";
+
+const Transactions = React.lazy(() => import("../../components/Transactions/Transactions"));
+const CashRegisterOpen = React.lazy(() => import("../../components/CashRegisterOpen/CashRegisterOpen"));
+const CashRegisterClose = React.lazy(() => import("../../components/CashRegisterClose/CashRegisterClose"));
+const Income = React.lazy(() => import("../../components/Income/Income"));
+const Expense = React.lazy(() => import("../../components/Expense/Expense"));
+const Movements = React.lazy(() => import("../../components/Movements/Movements"));
+const Offices = React.lazy(() => import("../../components/Offices/Offices"));
+const Users = React.lazy(() => import("../../components/Users/Users"));
+
 
 const Dashboard = () => {
   const [selectedNavItem, setSelectedNavItem] = useState("transactions");
@@ -44,7 +43,7 @@ const Dashboard = () => {
     close: CashRegisterClose,
     incomes: Income,
     expenses: Expense,
-    balance: Balance,
+   // balance: Balance,
     movements: Movements,
     clients: Clients,
     offices: Offices,
@@ -130,6 +129,7 @@ const Dashboard = () => {
         </div>
 
         <main>
+        <Suspense fallback={<div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}><Spinner /></div>}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             {pestañasAbiertas.map((nombreComponente) => {
               const ComponenteActual = componentes[nombreComponente];
@@ -140,11 +140,12 @@ const Dashboard = () => {
                     display: pestañaActiva === nombreComponente ? 'block' : 'none'
                   }}
                 >
-                  <ComponenteActual linkClients={LinkClients}/>
+                  <ComponenteActual />
                 </div>
               );
             })}
           </LocalizationProvider>
+          </Suspense>
         </main>
       </div>
     </section>

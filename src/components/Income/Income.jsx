@@ -273,7 +273,6 @@ const Income = () => {
               </div>
 
               <div
-                className="buttons-container"
                 style={{ display: "flex", gap: "5px", justifyContent: "end" }}
               >
                 <button className="btn-search-users" onClick={handleNewIncome}>

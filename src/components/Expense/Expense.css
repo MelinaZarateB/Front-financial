@@ -1,12 +1,49 @@
+/* Layout and Container Styles */
 .section-expense {
-  padding-left: 2rem;
-  padding-right: 2rem;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
+
+.form-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.83);
+  width: 100%;
+}
+
+.form-container.open {
+  max-height: 450px;
+  width: 100%;
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.form-dashboard {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.83);
+  padding: 20px;
+}
+
+.form-columns {
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.inputs-column {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  align-items: center;
+  gap: 1rem;
+}
+
+.form-column {
+  width: 100%;
+}
+
 .rotate-svg {
   transform: rotate(-90deg); 
   transition: transform 0.3s ease;
@@ -38,7 +75,91 @@
   outline: none;
 
 }
-/* Estilo base de la floating-label (cuando no tiene valor o está sin focus) */
+/* Input and Textarea Styles */
+.input-box-dashboard {
+  width: 100%;
+  max-width: 300px;
+}
+
+.input-field-dashboard {
+  width: 100%;
+  height: 35px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+  outline: none;
+}
+
+.textarea-box-dashboard {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  max-width: 300px;
+}
+
+.textarea-field-dashboard {
+  width: 100%;
+  height: 65px;
+  min-height: 35px;
+  max-height: 150px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  padding: 1rem 0.75rem;
+  outline: none;
+  resize: vertical;
+}
+
+.textarea-field-dashboard:hover {
+  border-color: rgb(118, 118, 118);
+}
+
+.textarea-field-dashboard:focus {
+  border: 2px solid #2196f3;
+}
+
+/* Label Styles */
+.label-textarea-dashboard {
+  position: absolute;
+  top: 1rem;
+  left: 0.5rem;
+  transform: translateY(0);
+  pointer-events: none;
+  transition: 0.3s;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 400;
+  padding: 0;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.textarea-box-dashboard .textarea-field-dashboard:focus ~ .label-textarea-dashboard,
+.textarea-box-dashboard .textarea-field-dashboard:not(:placeholder-shown) ~ .label-textarea-dashboard {
+  top: -0.5rem;
+  background-color: rgba(255, 255, 255);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.textarea-box-dashboard .textarea-field-dashboard:focus ~ .label-textarea-dashboard {
+  color: #1976d2;
+}
+
+.textarea-box-dashboard .textarea-field-dashboard:not(:focus):not(:placeholder-shown) ~ .label-textarea-dashboard {
+  color: #555;
+}
+
+/* Select Styles */
+.select-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+}
+
 .floating-label {
   position: absolute;
   display: none;
@@ -49,31 +170,27 @@
   transition: 0.3s;
 }
 
-/* Mostrar el label flotante cuando hay un valor seleccionado */
 .select-container.has-value .floating-label {
-  display: flex;
-  top: -10px;
-  left: 0.5rem;
-  font-size: 14px;
   background-color: #f4f9f4;
+  color: #1976d2;
+  display: flex;
+  font-size: 14px;
+  left: 0.5rem;
   padding: 0 5px;
-  color: #1976d2; /* Azul cuando el select tiene valor */
+  top: -10px;
 }
-/* Cambiar color del label cuando se pierde el focus */
+
 .select-container select:focus + .floating-label {
-  color: #1976d2; /* Azul cuando está en focus */
+  color: #1976d2;
 }
 
 .select-container select:not(:focus) + .floating-label {
-  color: #555; /* Vuelve a gris cuando se pierde el focus */
+  color: #555;
 }
-.select-container {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-}
+
+/* Button Styles */
 .btn-create-user {
-  background-color: inherit;
+  background-color: rgba(255, 255, 255, 0.83);
   border: none;
   box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
@@ -89,11 +206,65 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-weight: 500;
-  background-color: rgba(255, 255, 255, 0.83);
 }
-.btn-create-user svg{
+
+.btn-create-user svg {
   transform: rotate(90deg);
+}
+
+.btn-search-users,
+.btn-clean {
+  border: 1px solid #063a17;
+  background-color: #06571f;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.83);
+  transition: all 0.2s ease;
+  text-shadow: rgba(9, 11, 11, 0.6) 0px 1px 1px;
+  box-shadow: 
+    rgba(6, 87, 31, 0.5) 0px 1px 0px inset,
+    rgba(4, 58, 21, 0.4) 0px -1px 0px 1px inset,
+    rgba(9, 11, 11, 0.1) 0px 2px 4px 0px;
+  white-space: nowrap;
+}
+
+.btn-search-users svg,
+.btn-clean svg {
+  fill: rgba(255, 255, 255, 0.83);
+}
+
+.btn-search-users:hover,
+.btn-clean:hover {
+  background-color: rgb(13, 98, 37);
+  color: rgba(255, 255, 255, 0.83);
+}
+
+.btn-search-users:hover svg,
+.btn-clean:hover svg {
+  fill: rgba(255, 255, 255, 0.83);
+}
+
+.btn-trash {
+  display: inline-block;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  background-color: #EF4444;
+  color: rgba(255, 255, 255, 0.83);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: .75rem;
+  line-height: 1rem;
+}
+
+.btn-trash:hover {
+  background-color: #f05757;
+  color: rgba(255, 255, 255, 0.83);
 }
 .form-container.open {
   max-height: 450px; /* Ajusta este valor según la altura del contenido */
@@ -109,6 +280,7 @@
   background-color: rgba(255, 255, 255, 0.83);
   width: 100%;
 }
+/* Table Styles */
 .container-table {
   max-width: 1440px;
   width: 100%;
@@ -116,113 +288,96 @@
   border-radius: 4px;
   background-color: rgba(255, 255, 255, 0.83);
 }
-.tbl-expense {
-  width: 100%;
-  border-collapse: collapse;
-  /*table-layout: fixed;*/
-}
+
 .tbl-container {
-  padding-right: 1.2rem;
-  padding-left: 1.2rem;
-  padding-top: 1.2rem;
+  padding: 1.2rem 1.2rem 0;
   max-height: 450px;
   overflow-y: auto;
 }
-th,
-td {
+
+.tbl-expense {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tbl-expense th,
+.tbl-expense td {
   padding: 5px;
-  max-width: 100px;
+  max-width: 200px;
   vertical-align: middle;
   font-size: 12px;
   line-height: 1.428571429;
   text-align: left;
   white-space: pre-line;
-  /* white-space: nowrap;  Evita que el contenido se envuelva */
-  /*border: 1px solid #ddd; /* Define el borde que separa filas y columnas */
 }
 
 .tbl-expense tbody tr td {
   color: #666;
-  padding: 5px;
-  white-space: pre-line;
-  line-height: 1.428571429;
-  max-width: 200px;
-  vertical-align: middle;
-}
-.tbl-expense tbody tr td {
   border-top: 1px solid #ddd;
 }
+
 .tbl-expense tbody tr {
-  transition: background 0.2s ease; 
+  transition: background 0.2s ease;
 }
 
-.tbl-expense tbody tr:hover{
+.tbl-expense tbody tr:hover {
   background-color: #EFF6FF;
-  /*padding: 0.4rem;*/
 }
+
 .tbl-expense tr:nth-child(even) {
   background-color: #f3f3f3;
 }
-.btn-trash {
-  display: inline-block;
-  border: none;
-  padding: 5px;
-  cursor: pointer;
-  /*background-color: #E4A5AD;*/
-  /*border: 1px solid #a43042;
-  color: #a43042;
-  background-color: rgba(255, 255, 255, 0.83);*/
-  background-color: #EF4444;
-  color: rgba(255, 255, 255, 0.83);
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  font-weight: 500;
-  font-size: .75rem;
-  line-height: 1rem;
-}
-.btn-trash:hover {
- /* background-color: #e4a5ad;
-  color: #a43042;*/
-  background-color: #f05757;
-  color: rgba(255, 255, 255, 0.83);
 
-}
+/* Responsive Styles */
 @media screen and (max-width: 800px) {
-  .tbl thead{
+  .tbl thead {
     display: none;
   }
+
   .tbl tr,
-  .tbl td{
+  .tbl td {
     display: block;
     width: 100%;
   }
-  .tbl tr{
+
+  .tbl tr {
     margin-bottom: 1rem;
   }
-  .tbl tbody tr td{
+
+  .tbl tbody tr td {
     position: relative;
     text-align: right;
     max-width: 100%;
   }
-  .tbl td::before{
+
+  .tbl td::before {
     content: attr(data-table);
     position: absolute;
     left: 0;
     width: 50%;
     text-align: left;
   }
-  .container-users{
-    padding-left: 3%;
-    padding-right: 3%;
-    padding-top: 3%;
+
+  .container-users {
+    padding: 3%;
   }
-  .tbl-container{
-    padding-right: 1rem;
-    padding-left: 1rem;
-    padding-top: 1rem;
+
+  .tbl-container {
+    padding: 1rem;
   }
-  .btn-create-user{
+
+  .btn-create-user {
     width: 100%;
+  }
+
+  .section-expense {
+    padding: 2%;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-columns {
+    grid-template-columns: 1fr;
   }
 }
 @media  screen and (max-width:800px) {

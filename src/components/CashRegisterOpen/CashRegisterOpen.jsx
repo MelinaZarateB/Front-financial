@@ -41,9 +41,6 @@ const CashRegisterOpen = () => {
     dispatch(getCurrencies());
   }, [dispatch]);
 
-
- 
-
   const actualizarStock = (currencyId, nuevoStock) => {
     const actualizado = monedasLocales.map((currency) =>
       currency._id === currencyId
@@ -196,7 +193,7 @@ const CashRegisterOpen = () => {
       }
       setTimeout(() => {
         setIsLoading(false);
-      }, 2000);
+      }, 1000);
     }
   }, [selectedSubOffice, subOffices]);
 
@@ -335,7 +332,7 @@ const CashRegisterOpen = () => {
         </div>
       )}
 
-      <div className="total" style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
         <h3>Total en USD:</h3>
         <span
           style={{
