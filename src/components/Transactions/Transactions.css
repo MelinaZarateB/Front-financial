@@ -142,6 +142,25 @@
 .btn-clean:hover svg {
   fill: rgba(255, 255, 255, 0.83);
 }
+.btn-trash {
+  display: inline-block;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  background-color: #EF4444;
+  color: rgba(255, 255, 255, 0.83);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: .75rem;
+  line-height: 1rem;
+}
+
+.btn-trash:hover {
+  background-color: #f05757;
+  color: rgba(255, 255, 255, 0.83);
+}
+
 
 /* Form Styles */
 .form-dashboard {
