@@ -129,7 +129,7 @@ const Dashboard = () => {
         </div>
 
         <main>
-        <Suspense fallback={<div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}><Spinner /></div>}>
+        <Suspense fallback={<div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', width:'100%', height: '100vh'}}><Spinner /></div>}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             {pestañasAbiertas.map((nombreComponente) => {
               const ComponenteActual = componentes[nombreComponente];
