@@ -2,6 +2,7 @@ import {
   GET_TRANSACTIONS,
   CREATE_TRANSACTIONS,
   DELETE_TRANSACTION,
+  GET_TRANSACTIONS_RANGE_DATE
 } from "../action-types";
 
 let initialState = {

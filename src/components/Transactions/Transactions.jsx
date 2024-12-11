@@ -5,9 +5,7 @@ import {
   getTransactions,
   deleteTransaction,
 } from "../../redux/actions/transactionsActions";
-import { Link } from "react-router-dom";
 import { getClients } from "@/redux/actions/clientsActions";
-import imgPencil from "./../../assets/pencil.svg";
 import Swal from "sweetalert2";
 import { DatePicker } from "@mui/x-date-pickers";
 import TextField from "@mui/material/TextField";
@@ -17,15 +15,19 @@ import theme from "../../utils/theme";
 import plusIcon from "./../../assets/plus.svg";
 import arrow from "./../../assets/arrow-right.svg";
 import ModalNewClient from "@/visuals/Modals/ModalNewClient/ModalNewClient";
-import { createTransactions, getTransactionsForDay, getTransactionsForMonth } from "../../redux/actions/transactionsActions";
+import {
+  createTransactions,
+  getTransactionsForDay,
+  getTransactionsForMonth,
+  getTransactionsRangeDate,
+} from "../../redux/actions/transactionsActions";
 import {
   getSubOffices,
   getCurrencies,
 } from "@/redux/actions/subOfficesActions";
-import Spinner from "@/utils/Spinner/Spinner";
+import SpinnerSmall from "./../../utils/Spinner/SpinnerSmall";
 import { useRef, useCallback } from "react";
 import DateFilterDropdown from "@/utils/DateFilterDropdown";
-
 
 const Transactions = () => {
   // Redux hooks
@@ -38,17 +40,16 @@ const Transactions = () => {
   const createTransactionsSuccess = useSelector(
     (state) => state.transactions.createTransactionsSuccess
   );
-  const transactionsAndMovements = useSelector((state) => state.transactions.transactionsAndMovements);
-
   const [userRol, setUserRol] = useState("");
   const clients = useSelector((state) => state.clients.clients);
-
   // Local state
   const [viewForm, setViewForm] = useState(false);
   const [hasGuardedBalance, setHasGuardedBalance] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [subOfficeCurrencies, setSubOfficeCurrencies] = useState([]);
   const [clientSelected, setClientSelected] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectSubOffice, setSelectSubOffice] = useState('');
   const [dataForm, setDataForm] = useState({
     dateFrom: new Date(),
     dateTo: new Date(),
@@ -68,21 +69,17 @@ const Transactions = () => {
     checkDueDate: "",
     bankName: "",
   });
-
   const [searchClient, setSearchClient] = useState("");
   const [balanceInCustody, setbalanceInCustody] = useState("");
-
   // Constants
   const typesTransactions = [
     { value: "Compra", label: "Compra" },
     { value: "Venta", label: "Venta" },
     { value: "Cambio de cheque", label: "Cambio de cheque" },
   ];
-
   // Effects
   useEffect(() => {
     dispatch(getSubOffices());
-
     // Obtener información del usuario del localStorage
     const userInfoString = localStorage.getItem("userInfo");
     if (userInfoString) {
@@ -94,29 +91,9 @@ const Transactions = () => {
       setUserRol(userInfo.role);
     }
   }, [dispatch]);
-
   useEffect(() => {
     dispatch(getTransactions());
-
-    if (createTransactionsSuccess) {
-      setNewTransaction((prevState) => ({
-        ...prevState,
-        type: "",
-        amount: "",
-        sourceCurrency: "",
-        sourceCurrencyCode: "",
-        targetCurrency: "",
-        targetCurrencyCode: "",
-        exchangeRate: "",
-        subOffice: "",
-        subOfficeName: "",
-        checkNumber: "",
-        checkDueDate: "",
-        bankName: "",
-      }));
-    }
   }, [createTransactionsSuccess, deleteTransactionsSuccess]);
-
   useEffect(() => {
     if (hasGuardedBalance) {
       dispatch(getClients());
@@ -124,7 +101,6 @@ const Transactions = () => {
       setClientSelected({});
     }
   }, [hasGuardedBalance, dispatch]);
-
   // Event handlers
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
@@ -186,31 +162,49 @@ const Transactions = () => {
       setNewTransaction({ ...newTransaction, [name]: value });
     }
   };
-
-  const handleNewTransaction = () => {
-    dispatch(createTransactions(newTransaction));
+  const handleNewTransaction = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await dispatch(createTransactions(newTransaction));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+    setNewTransaction((prevState) => ({
+      ...prevState,
+      type: "",
+      amount: "",
+      sourceCurrency: "",
+      sourceCurrencyCode: "",
+      targetCurrency: "",
+      targetCurrencyCode: "",
+      exchangeRate: "",
+      subOffice: "",
+      subOfficeName: "",
+      checkNumber: "",
+      checkDueDate: "",
+      bankName: "",
+    }));
   };
-
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [editedFields, setEditedFields] = useState({});
   const tableRef = useRef(null);
-
   const handleClickOutside = useCallback((event) => {
     if (tableRef.current && !tableRef.current.contains(event.target)) {
       setEditingTransaction(null);
       setEditedFields({});
     }
   }, []);
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [handleClickOutside]);
-
   const handleEditClick = (transaction) => {
     setEditingTransaction(transaction._id);
     setEditedFields({
@@ -222,17 +216,14 @@ const Transactions = () => {
       bankName: transaction.bankName || "",
     });
   };
-
   const handleEditChange = (field, value) => {
     setEditedFields((prev) => ({ ...prev, [field]: value }));
   };
-
   const handleSaveEdit = () => {
     dispatch(updateTransaction(editingTransaction, editedFields));
     setEditingTransaction(null);
     setEditedFields({});
   };
-
   const handleDeleteTransaction = (transactionId) => {
     Swal.fire({
       title: "¿Seguro que desea eliminar esta transacción?",
@@ -247,11 +238,9 @@ const Transactions = () => {
     });
   };
   const changeForm = () => setViewForm(!viewForm);
-
   const onFilterChange = (dateFilter) => {
     const monthRegex = /^\d{4}-\d{2}$/; // Formato YYYY-MM
     const dayRegex = /^\d{4}-\d{2}-\d{2}$/; // Formato YYYY-MM-DD
-
     if (monthRegex.test(dateFilter)) {
       // Es una fecha de mes (YYYY-MM)
       dispatch(getTransactionsForMonth(dateFilter));
@@ -259,8 +248,7 @@ const Transactions = () => {
       // Es una fecha de día (YYYY-MM-DD)
       dispatch(getTransactionsForDay(dateFilter));
     }
-
-  }
+  };
   return (
     <ThemeProvider theme={theme}>
       <section className="container-transactions">
@@ -304,7 +292,7 @@ const Transactions = () => {
                       }`}
                     >
                       <select
-                        name="subOfficeName" // Este name debe coincidir con la propiedad en newTransaction
+                        name="subOfficeName"
                         className="input-field-dashboard select"
                         style={{
                           color: newTransaction.subOfficeName ? "#000" : "#555",
@@ -531,7 +519,7 @@ const Transactions = () => {
               {hasGuardedBalance && (
                 <div className="space-y-4 border-t pt-4">
                   <div
-                 // style={{ display: "flex", justifyContent: "space-between" }}
+                  // style={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <div className="container-input-btn">
                       <div className="input-box-dashboard">
@@ -633,7 +621,10 @@ const Transactions = () => {
                   className="btn-search-users"
                   onClick={handleNewTransaction}
                 >
-                  Registrar{" "}
+                  <label htmlFor="submit" className="label">
+                    {" "}
+                    {isSubmitting ? <SpinnerSmall /> : "Registrar"}
+                  </label>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     height="20px"
@@ -670,8 +661,41 @@ const Transactions = () => {
             }}
           >
             <div>
+              <div className="input-box-dashboard">
+                <div
+                  className={`select-container ${
+                    selectSubOffice ? "has-value" : ""
+                  }`}
+                >
+                  <select
+                    name="selectSubOffice"
+                    className="input-field-dashboard select"
+                    style={{
+                      color: selectSubOffice ? "#000" : "#555",
+                      cursor: "pointer",
+                    }}
+                    value={selectSubOffice} // Asegura que esté sincronizado
+                    onChange={(e) => setSelectSubOffice(e.target.value)}   
+                  >
+                    <option value="">Sucursal</option>
+                    {subOffices.map((office) => (
+                      <option key={office._id} value={office.name}>
+                        {office.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div
+                    className="floating-label"
+                    style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                  >
+                    Sucursal
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
               <DatePicker
-                label="Filtre al"
+                label="Filtre desde"
                 value={dataForm.dateFrom}
                 renderInput={(params) => <TextField {...params} />}
                 onChange={(newValue) => {
@@ -679,10 +703,15 @@ const Transactions = () => {
                 }}
               />
             </div>
+            {/*
             <div>
-              <DateFilterDropdown onFilterChange={onFilterChange}></DateFilterDropdown>
+              <DateFilterDropdown
+                onFilterChange={onFilterChange}
+              ></DateFilterDropdown>
             </div>
-            {/* <div>
+            */}
+
+            <div>
               <DatePicker
                 label="Hasta"
                 value={dataForm.dateTo}
@@ -691,7 +720,7 @@ const Transactions = () => {
                   setDataForm({ ...dataForm, dateTo: newValue });
                 }}
               />
-            </div>*/}
+            </div>
             <button className="btn-search-users">
               Buscar{" "}
               <svg

@@ -30,9 +30,9 @@ const Offices = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [newOffice, setNewOffice] = useState({
     name: "",
+    code: "",
     address: "",
-    sub_offices: [],
-    globalStock: "",
+    phone: ""
   });
   const [visibleCurrencies, setVisibleCurrencies] = useState({});
 
@@ -40,7 +40,7 @@ const Offices = () => {
     setViewForm(!viewForm);
   };
 
-  const handleChangeNewUser = (event) => {
+  const handleChangeNewOffice = (event) => {
     setNewOffice({
       ...newOffice,
       [event.target.name]: event.target.value,
@@ -122,7 +122,7 @@ const Offices = () => {
                     className="input-field-dashboard"
                     name="name"
                     value={newOffice.name}
-                    onChange={handleChangeNewUser}
+                    onChange={handleChangeNewOffice}
                   />
                   <label
                     className="label-input-dashboard"
@@ -135,9 +135,24 @@ const Offices = () => {
                   <input
                     type="text"
                     className="input-field-dashboard"
+                    name="code"
+                    value={newOffice.code}
+                    onChange={handleChangeNewOffice}
+                  />
+                  <label
+                    className="label-input-dashboard"
+                    style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                  >
+                    Codigo
+                  </label>
+                </div>
+                <div className="input-box-dashboard">
+                  <input
+                    type="text"
+                    className="input-field-dashboard"
                     name="address"
                     value={newOffice.address}
-                    onChange={handleChangeNewUser}
+                    onChange={handleChangeNewOffice}
                   />
                   <label
                     className="label-input-dashboard"
@@ -150,15 +165,15 @@ const Offices = () => {
                   <input
                     type="text"
                     className="input-field-dashboard"
-                    name="globalStock"
-                    value={newOffice.globalStock}
-                    onChange={handleChangeNewUser}
+                    name="phone"
+                    value={newOffice.phone}
+                    onChange={handleChangeNewOffice}
                   />
                   <label
                     className="label-input-dashboard"
                     style={{ backgroundColor: "rgba(255, 255, 255)" }}
                   >
-                    Stock Global
+                    Telefono
                   </label>
                 </div>
               </div>
@@ -212,10 +227,8 @@ const Offices = () => {
                 <h5 style={{ fontWeight: "600" }}>{office.name}</h5>
                 <p>Dirección: {office.address}</p>
               </div>
-
               <section className="section-users-currency">
-                {/* Seccion usuarios */}
-                <div>
+                {/*     <div>
                   <div className="section-title-svg">
                     <img src={usersIcon} alt="" />
                     <h4>Usuarios </h4>
@@ -271,7 +284,8 @@ const Offices = () => {
                   >
                     Ver usuarios de la sucursal <img src={arrowDown} alt="" />
                   </span>
-                </div>
+                </div>*/}
+            
 
                 {/* Seccion monedas */}
                 <div>

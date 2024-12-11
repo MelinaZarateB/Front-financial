@@ -1,126 +1,232 @@
+/* Container Styles */
 .container-transactions {
   width: 100%;
-  /*height: 100vh;*/
-  padding-left: 2rem;
-  padding-top: 2rem;
-  padding-right: 2rem;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
+
 .container-second-section-transactions {
   display: flex;
   flex-direction: column;
   height: 100vh;
 }
 
+/* Button Styles */
 .btn-create-user {
-  background-color: inherit;
+  background-color: rgba(255, 255, 255, 0.83);
   border: none;
-  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
   color: #003710;
   cursor: pointer;
-  transition: 0.3s;
-  font-weight: 500;
-  font-size: 17px;
-  height: 60px;
-  width: 100%;
-  text-align: left;
-  padding: 10px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  font-size: 17px;
   font-weight: 500;
-  background-color: rgba(255, 255, 255, 0.83);
+  height: 60px;
+  padding: 10px 20px;
+  text-align: left;
+  transition: 0.3s;
+  width: 100%;
 }
-.btn-create-user svg{
+
+.btn-create-user svg {
   transform: rotate(90deg);
 }
 
-@media  screen and (max-width:800px) {
-  .container-transactions{
-    padding-left: 2%;
-    padding-right: 2%;
-    padding-top: 2%;
-  }
+.btn-new-client {
+  background-color: #191919;
+  border-radius: 4px;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  white-space: nowrap;
 }
-.container-input-btn{
+
+.btn-new-client span {
+  font-size: 14px;
+}
+
+/* Form Styles */
+.form-dashboard {
+  background-color: rgba(255, 255, 255, 0.83);
+  padding: 20px;
+  width: 100%;
+}
+
+.form-columns {
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.inputs-column {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  align-items: center;
+  gap: 1rem;
+}
+
+.input-box-dashboard {
+  position: relative;
+}
+
+.input-field-dashboard {
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 4px;
+  font-size: 14px;
+  height: 35px;
+  outline: none;
+  padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+  width: 100%;
+}
+
+.input-field-dashboard:hover {
+  border-color: rgb(118, 118, 118);
+}
+
+.input-field-dashboard:focus {
+  border: 2px solid #2196f3;
+}
+
+.label-input-dashboard {
+  color: rgba(0, 0, 0, 0.6);
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  left: 0.5rem;
+  letter-spacing: 0.00938em;
+  line-height: 1.4375em;
+  overflow: hidden;
+  padding: 0;
+  pointer-events: none;
+  position: absolute;
+  text-overflow: ellipsis;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: 0.3s;
+  white-space: nowrap;
+}
+
+.input-box-dashboard .input-field-dashboard:focus ~ .label-input-dashboard,
+.input-box-dashboard .input-field-dashboard:not(:placeholder-shown):not([value=""]) ~ .label-input-dashboard {
+  background-color: #f4f9f4;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  top: 0;
+}
+
+.input-box-dashboard .input-field-dashboard:focus ~ .label-input-dashboard {
+  color: #1976d2;
+}
+
+.input-box-dashboard .input-field-dashboard:not(:focus):not(:placeholder-shown):not([value=""]) ~ .label-input-dashboard {
+  color: #555;
+}
+
+/* Select Styles */
+.select-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+}
+
+.select-container.has-value .floating-label {
+  background-color: #f4f9f4;
+  color: #1976d2;
+  display: flex;
+  font-size: 14px;
+  left: 0.5rem;
+  padding: 0 5px;
+  top: -10px;
+}
+
+.select-container select:focus + .floating-label {
+  color: #1976d2;
+}
+
+.select-container select:not(:focus) + .floating-label {
+  color: #555;
+}
+
+/* Container Styles */
+.container-input-btn {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
-.btn-new-client{
-  display: flex;
-  align-items: center;
-  background-color: #191919;
-  white-space: nowrap;
-  /*width: 120px;*/
-  color: white;
-  padding: 4px;
-  border-radius: 4px;
-}
-.btn-new-client span{
-  font-size: 14px;
-}
+
 .form-container {
+  background-color: rgba(255, 255, 255, 0.83);
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease;
-  background-color: rgba(255, 255, 255, 0.83);
   width: 100%;
 }
 
 .form-container.open {
-  max-height: 450px; /* Ajusta este valor según la altura del contenido */
-  width: 100%;
-  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
-}
-.container-client-saldo{
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
+  max-height: 450px;
   width: 100%;
-  height: 35px;
-  font-size: 14px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.23);
-  /* border: 1px solid rgb(133, 133, 133); */
-  padding: 0.375rem;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
 }
-.container-client-saldo:hover{
+
+.container-client-saldo {
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  height: 35px;
+  padding: 0.375rem;
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+}
+
+.container-client-saldo:hover {
   background-color: #EFF6FF;
   border: 1px solid #1F97F3;
 }
-.container-client-first-section{
+
+.container-client-first-section {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
+
+/* Table Styles */
 .transaction-table {
-  width: 100%;
   table-layout: fixed;
+  width: 100%;
 }
 
 .transaction-table th,
 .transaction-table td {
-  padding: 8px;
   overflow: hidden;
+  padding: 8px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.input-transaction{
-  width: 100%;
-  box-sizing: border-box;
-  padding: 4px;
-  border-bottom: 1px solid #666;
-  cursor: pointer;
+.input-transaction {
   background-color: transparent;
+  border-bottom: 1px solid #666;
+  box-sizing: border-box;
+  cursor: pointer;
+  padding: 4px;
+  width: 100%;
 }
 
 .transaction-table .edit-button {
   white-space: nowrap;
 }
 
+/* Media Query */
+@media screen and (max-width: 800px) {
+  .container-transactions {
+    padding: 2%;
+  }
+}

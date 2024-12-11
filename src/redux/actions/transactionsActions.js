@@ -2,14 +2,35 @@ import {
   GET_TRANSACTIONS,
   CREATE_TRANSACTIONS,
   DELETE_TRANSACTION,
-  GET_TRANSACTIOS_FOR_DAY
+  GET_TRANSACTIOS_FOR_DAY,
+  GET_TRANSACTIONS_RANGE_DATE,
 } from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
 
 /* Actions para transacciones */
+
+export const getTransactionsRangeDate = (subOfficeId, dateFrom, dateTo) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:3000/transactions/${subOfficeId}/dateRange/${dateFrom}/${dateTo}`
+      );
+      console.log(data);
+    } catch (error) {
+      const mensajeError =
+        error.response?.data?.message ||
+        "Ocurrio un error al intentar obtener las transacciones";
+      Swal.fire({
+        title: "Error",
+        text: mensajeError,
+        icon: "error",
+      });
+    }
+  };
+};
+
 export const createTransactions = (transaction) => {
-  console.log(transaction)
   return async (dispatch) => {
     try {
       const { data } = await axios.post(
@@ -32,7 +53,7 @@ export const createTransactions = (transaction) => {
       const mensajeError =
         err.response?.data?.message ||
         "Ocurrio un error al intentar registrar la transacción";
-        console.log(mensajeError)
+      console.log(mensajeError);
       Swal.fire({
         title: "Error",
         text: mensajeError,
@@ -93,24 +114,31 @@ export const getTransactions = () => {
         });
       }
     } catch (error) {
-      console.log(error);
+      const mensajeError =
+        error.response?.data?.message ||
+        "Ocurrio un error al intentar obtener las transacciones";
+      Swal.fire({
+        title: "Error",
+        text: mensajeError,
+        icon: "error",
+      });
     }
   };
 };
 
 export const getTransactionsForDay = (subOfficeId, date) => {
   return async (dispatch) => {
-    try{
-      const { data } = await axios.get(`http://localhost:3000/transactions/${subOfficeId}/forDay/${date}`)
-      console.log(data)
-      if(data) {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:3000/transactions/${subOfficeId}/forDay/${date}`
+      );
+      if (data) {
         dispatch({
           type: GET_TRANSACTIOS_FOR_DAY,
-          payload: data
-        })
+          payload: data,
+        });
       }
-    
-    }catch(error){
+    } catch (error) {
       const mensajeError =
         error.response?.data?.message ||
         "Ocurrio un error al intentar filtrar las transacciones";
@@ -119,11 +147,8 @@ export const getTransactionsForDay = (subOfficeId, date) => {
         text: mensajeError,
         icon: "error",
       });
-
     }
-  }
-}
+  };
+};
 
-export const getTransactionsForMonth = () => {
-
-}
+export const getTransactionsForMonth = () => {};

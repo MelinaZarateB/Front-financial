@@ -1,7 +1,7 @@
 const regexName = /^[^\d]+$/;
 const regexPassword =
   /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>_+\-]).{8,}$/;
-const regexEmail = /^[^@\s]+@[^@\s]+\.[cC][oO][mM]$/;
+  const regexEmail = /^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$/;
 const validationsLogin = (inputs) => {
   const errors = {};
 
