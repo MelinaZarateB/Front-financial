@@ -1,38 +1,6 @@
 import "./ClientTransactions.css";
 
-const transacciones = [
-  {
-    tipo: "Pago",
-    monto: 1500.0,
-    descripcion: "Pago total de deuda correspondiente al mes de octubre.",
-    usuario: "Pedro Martínez",
-    createdAt: "2024-11-05T14:00:00",
-  },
-  {
-    tipo: "Deuda",
-    monto: 750.0,
-    descripcion:
-      "Deuda pendiente por servicios no pagados en el mes de septiembre.",
-    usuario: "Laura Gómez",
-    createdAt: "2024-11-06T09:30:00",
-  },
-  {
-    tipo: "Retiro de saldo en guarda",
-    monto: 1200.0,
-    descripcion: "Retiro parcial de saldo en guarda por cambio de cheque.",
-    usuario: "Juan Pérez",
-    createdAt: "2024-11-06T11:15:00",
-  },
-  {
-    tipo: "Saldo en guarda",
-    monto: 5000.0,
-    descripcion: "Ingreso de saldo en guarda por depósito de cheque.",
-    usuario: "Carla Ruiz",
-    createdAt: "2024-11-07T09:00:00",
-  },
-];
-
-const ClientTransactions = () => {
+const ClientTransactions = ({ transactions, id }) => {
   return (
     <section>
       <div className="container-table">
@@ -48,27 +16,36 @@ const ClientTransactions = () => {
               </tr>
             </thead>
             <tbody>
-              {transacciones.map((transaccion, index) => (
-                <tr key={index}>
-                  <td>{transaccion.tipo}</td>
-                  <td>{transaccion.monto.toFixed(2)}</td>
-                  <td>{transaccion.descripcion}</td>
-                  <td>{transaccion.usuario}</td>
-                  <td>
-                    {" "}
-                    {new Date(transaccion.createdAt)
-                      .toLocaleString("es-ES", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: false, // Para formato 24 horas
-                      })
-                      .replace(",", "")}
+              {transactions && transactions.length > 0 ? (
+                transactions.map((transaction) => (
+                  <tr key={transaction.id || id}>
+                    <td>{transaction.type || "N/A"}</td>
+                    <td>{transaction.amount?.toFixed(2) || "N/A"}</td>
+                    <td>{transaction.description || "N/A"}</td>
+                    <td>{transaction.user || "N/A"}</td>
+                    <td>
+                      {transaction.createdAt
+                        ? new Date(transaction.createdAt)
+                            .toLocaleString("es-ES", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false, // Para formato 24 horas
+                            })
+                            .replace(",", "")
+                        : "N/A"}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: "center" }}>
+                    No hay transacciones disponibles para este cliente
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

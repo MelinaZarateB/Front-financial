@@ -3,7 +3,9 @@ import { useState } from "react";
 import ClientTransactions from "../ClientsTransaction/ClientTransactions";
 import ClientObservations from "../ClientObservations/ClientObservations";
 
-const ClientDetail = ({ onGoBack }) => {
+const ClientDetail = ({ onGoBack, selectedClient}) => {
+  const { id, name, lastname, transactions, observations } = selectedClient;
+  console.log('id del cliente', id)
   const [activeTab, setActiveTab] = useState("transacciones"); // El valor inicial es 'transacciones'
 
   return (
@@ -22,7 +24,7 @@ const ClientDetail = ({ onGoBack }) => {
           </svg>
         </button>
       </div>
-      <h2>Historial del Cliente: Juan Perez</h2>
+      <h2>Historial del Cliente: <strong>{name} {lastname}</strong></h2>
       <div style={{display: 'flex', flexDirection: 'column'}}>
       <div className="tablist">
         <button
@@ -44,8 +46,8 @@ const ClientDetail = ({ onGoBack }) => {
       {/* Renderizado condicional de los componentes según la pestaña activa */}
       </div>
       <div className="tab-content">
-        {activeTab === "transacciones" && <ClientTransactions />}
-        {activeTab === "observaciones" && <ClientObservations />}
+        {activeTab === "transacciones" && <ClientTransactions transactions={transactions} id={id}/>}
+        {activeTab === "observaciones" && <ClientObservations observations={observations} id={id}/>}
       </div>
       </div>
 

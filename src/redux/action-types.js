@@ -59,3 +59,4 @@ export const GET_TRANSACTIONS_AND_MOVEMENTS = 'GET_TRANSACTIONS_AND_MOVEMENTS';
 
 /* Types para clients */
 export const GET_CLIENTS = 'GET_CLIENTS';
+export const CREATE_CLIENTS = 'CREATE_CLIENTS';

@@ -1,27 +1,6 @@
 import "./ClientObservations.css";
 
-const observaciones = [
-  {
-    observacion:
-      "Pago de deuda realizado correctamente. Se ha saldado el total pendiente.",
-    usuario: "Ana Rodríguez",
-    createdAt: "2024-11-05T14:30:00",
-  },
-  {
-    observacion:
-      "Aún queda un saldo pendiente por pagar.",
-    usuario: "Luis Fernández",
-    createdAt: "2024-11-06T08:00:00",
-  },
-  {
-    observacion:
-      "El saldo en guarda por cambio de cheque fue registrado, pero aún no se ha procesado completamente.",
-    usuario: "Carlos López",
-    createdAt: "2024-11-06T10:45:00",
-  },
-];
-
-const ClientObservations = () => {
+const ClientObservations = ({observations, id}) => {
   return (
     <section>
       <div className="container-table">
@@ -63,23 +42,35 @@ const ClientObservations = () => {
                 </tr>
               </thead>
               <tbody>
-                {observaciones.map((observacion, index) => (
-                  <tr key={index}>
-                    <td>{observacion.observacion}</td>
-                    <td>{observacion.usuario}</td>
-                    <td> {new Date(observacion.createdAt)
-                              .toLocaleString("es-ES", {
-                                day: "2-digit",
-                                month: "2-digit",
-                                year: "2-digit",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                hour12: false, // Para formato 24 horas
-                              })
-                              .replace(",", "")}</td>
+              {observations && observations.length > 0 ? (
+                observations.map((observation) => (
+                  <tr key={observation.id || id}>
+                    <td>{observation.description || "N/A"}</td>
+                    <td>{observation.user || "N/A"}</td>
+                    <td>
+                      {observation.createdAt
+                        ? new Date(observation.createdAt)
+                            .toLocaleString("es-ES", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false, // Para formato 24 horas
+                            })
+                            .replace(",", "")
+                        : "N/A"}
+                    </td>
                   </tr>
-                ))}
-              </tbody>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: "center" }}>
+                    No hay observaciones disponibles para este cliente
+                  </td>
+                </tr>
+              )}
+            </tbody>
             </table>
           </div>
         </div>
@@ -89,4 +80,3 @@ const ClientObservations = () => {
 };
 
 export default ClientObservations;
-

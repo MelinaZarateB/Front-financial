@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 import { useRef, useCallback } from "react";
 import SpinnerSmall from "./../../utils/Spinner/SpinnerSmall";
 
-const AdminUsers = ({ handleCreateUser }) => {
+const AdminUsers = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const users = useSelector((state) => state.user.users);
@@ -214,6 +214,21 @@ const AdminUsers = ({ handleCreateUser }) => {
                   <input
                     type="text"
                     className="input-field-dashboard"
+                    name="phone"
+                    value={newUser.phone}
+                    onChange={handleChangeNewUser}
+                  />
+                  <label
+                    className="label-input-dashboard"
+                    style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                  >
+                    Teléfono
+                  </label>
+                </div>
+                <div className="input-box-dashboard">
+                  <input
+                    type="text"
+                    className="input-field-dashboard"
                     name="email"
                     value={newUser.email}
                     onChange={handleChangeNewUser}
@@ -238,21 +253,6 @@ const AdminUsers = ({ handleCreateUser }) => {
                     style={{ backgroundColor: "rgba(255, 255, 255)" }}
                   >
                     Contraseña
-                  </label>
-                </div>
-                <div className="input-box-dashboard">
-                  <input
-                    type="text"
-                    className="input-field-dashboard"
-                    name="phone"
-                    value={newUser.phone}
-                    onChange={handleChangeNewUser}
-                  />
-                  <label
-                    className="label-input-dashboard"
-                    style={{ backgroundColor: "rgba(255, 255, 255)" }}
-                  >
-                    Teléfono
                   </label>
                 </div>
                 {/*
