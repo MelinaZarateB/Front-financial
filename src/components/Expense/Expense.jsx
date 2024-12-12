@@ -15,17 +15,17 @@ import { deleteMovement } from "@/redux/actions/movementsActions";
 import SpinnerSmall from "./../../utils/Spinner/SpinnerSmall";
 
 const typeExpenses = [
-  "Servicios Públicos",
-  "Alquileres",
-  "Sueldos y Salarios",
-  "Mantenimiento",
-  "Materiales e Insumos",
-  "Publicidad y Marketing",
-  "Transporte",
-  "Impuestos y Tasas",
-  "Gastos Administrativos",
-  "Seguros",
-  "Varios",
+  "servicios públicos",
+  "alquileres",
+  "sueldos y salarios",
+  "mantenimiento",
+  "materiales e insumos",
+  "publicidad y marketing",
+  "transporte",
+  "impuestos y tasas",
+  "gastos administrativos",
+  "seguros",
+  "varios",
 ];
 
 const Expense = () => {

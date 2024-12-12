@@ -3,7 +3,7 @@ import {
   DELETE_CURRENCY,
   UPDATE_CURRENCY_SUBOFFICES,
   DELETE_CURRENCY_SUBOFFICES,
-  GET_SUBOFFICES
+  GET_SUBOFFICES,
 } from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -26,9 +26,16 @@ export const createCurrencies = (currency) => {
           showConfirmButton: false,
         });
       }
-      console.log(data);
     } catch (err) {
-      console.log(err);
+      const mensajeError =
+        err.response?.data?.message ||
+        "No se pudo crear la monedas. Por favor, intente nuevamente.";
+
+      Swal.fire({
+        title: "Error",
+        text: mensajeError,
+        icon: "error",
+      });
     }
   };
 };
@@ -43,9 +50,13 @@ export const getCurrencies = () => {
         });
       }
     } catch (err) {
+      const mensajeError =
+        err.response?.data?.message ||
+        "No se pudo obtener las monedas. Por favor, intente nuevamente.";
+
       Swal.fire({
         title: "Error",
-        text: "No se pudo obtener las monedas. Por favor, intente nuevamente.",
+        text: mensajeError,
         icon: "error",
       });
     }
@@ -72,9 +83,13 @@ export const deleteCurrency = (idCurrency) => {
         });
       }
     } catch (err) {
+      const mensajeError =
+        err.response?.data?.message ||
+        "No se pudo eliminar la moneda. Por favor, intente nuevamente.";
+
       Swal.fire({
         title: "Error",
-        text: "No se pudo eliminar la moneda. Por favor, intente nuevamente.",
+        text: mensajeError,
         icon: "error",
       });
     }
@@ -102,9 +117,13 @@ export const updateStockCurrency = (currencyId, subOfficeId) => {
         });
       }
     } catch (err) {
+      const mensajeError =
+        err.response?.data?.message ||
+        "No se pudo agregar la moneda. Por favor, intente nuevamente.";
+
       Swal.fire({
         title: "Error",
-        text: "No se pudo agregar la moneda. Por favor, intente nuevamente.",
+        text: mensajeError,
         icon: "error",
       });
     }
@@ -123,12 +142,18 @@ export const getSubOffices = () => {
         });
       }
     } catch (err) {
-      console.log(err);
+      const mensajeError =
+        err.response?.data?.message ||
+        "Ocurrio un error al intentar obtenes las sub sucursales.";
+      Swal.fire({
+        title: "Error",
+        text: mensajeError,
+        icon: "error",
+      });
     }
   };
 };
 export const deleteCurrencySubOffice = (currencyId, subOfficeId) => {
-  console.log(currencyId, subOfficeId);
   return async (dispatch) => {
     try {
       const { data } = await axios.delete(
@@ -149,10 +174,13 @@ export const deleteCurrencySubOffice = (currencyId, subOfficeId) => {
         });
       }
     } catch (err) {
-      console.log(err)
+      const mensajeError =
+        err.response?.data?.message ||
+        "No se pudo eliminar la moneda. Por favor, intente nuevamente.";
+
       Swal.fire({
         title: "Error",
-        text: "No se pudo eliminar la moneda. Por favor, intente nuevamente.",
+        text: mensajeError,
         icon: "error",
       });
     }

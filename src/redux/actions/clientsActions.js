@@ -8,10 +8,9 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 export const updateClients = (id, clientUpdate) => {
-    console.log(id, clientUpdate, 'cliente a editar')
   return async (dispatch) => {
     try {
-      const { data } = axios.put(
+      const { data } = await axios.put(
         `http://localhost:3000/clients/${id}`,
         clientUpdate
       );
@@ -19,12 +18,6 @@ export const updateClients = (id, clientUpdate) => {
         type: UPDATE_CLIENTS,
         payload: data
       })
-      Swal.fire({
-        text: "El cliente ha sido editado.",
-        icon: "success",
-        timer: 2000,
-        showConfirmButton: false,
-      });
       console.log('cliente editado', clientUpdate)
       if(data){
         Swal.fire({
@@ -34,7 +27,6 @@ export const updateClients = (id, clientUpdate) => {
             showConfirmButton: false,
           });
       }
-
     } catch (error) {
       const mensajeError =
         error.response?.data?.message ||

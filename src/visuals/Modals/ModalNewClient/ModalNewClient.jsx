@@ -1,4 +1,5 @@
 import { useState } from "react";
+import './ModalNewClient.css';
 
 const ModalNewClient = ({ isOpen, onClose, onSubmit }) => {
   const [amount, setAmount] = useState("");
