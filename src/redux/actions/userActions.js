@@ -23,7 +23,6 @@ export const updateUser = (userId, updateField) => {
   return async (dispatch) => {
     try{
       const { data } = await axios.put(`http://localhost:3000/users/update-user/${userId}`, updateField)
-      console.log(data)
       if(data){
         dispatch({
           type: UPDATE_USER,

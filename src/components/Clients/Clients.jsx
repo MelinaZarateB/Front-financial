@@ -10,9 +10,12 @@ import {
   getClients,
   createClients,
   deleteClients,
+  updateClients,
 } from "@/redux/actions/clientsActions";
 import SpinnerSmall from "./../../utils/Spinner/SpinnerSmall";
 import imgPencil from "./../../assets/pencil.svg";
+import { useRef } from "react";
+import { useCallback } from "react";
 
 const Clients = () => {
   const dispatch = useDispatch();
@@ -25,8 +28,12 @@ const Clients = () => {
   const [viewForm, setViewForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userRol, setUserRol] = useState("");
+  const [editingClient, setEditingClient] = useState(null);
+  const [editedFields, setEditedFields] = useState({});
+  const [originalClientData, setOriginalClientData] = useState(null);
+  const tableRef = useRef(null);
   const clients = useSelector((state) => state.clients.clients);
-  const deleteClient = useSelector((state) => state.clients.deleteClient)
+  const deleteClient = useSelector((state) => state.clients.deleteClient);
 
   const [newClient, setNewClient] = useState({
     name: "",
@@ -124,6 +131,52 @@ const Clients = () => {
     }
   }, [dispatch]);
 
+  const handleClickOutside = useCallback((event) => {
+    if (tableRef.current && !tableRef.current.contains(event.target)) {
+      setEditingClient(null);
+      setEditedFields({});
+    }
+  }, []);
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [handleClickOutside]);
+
+
+  const handleEditChange = (field, value) => {
+    setEditedFields((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleEditClick = (client) => {
+    setEditingClient(client._id);
+    const clientData = {
+      name: client.name,
+      lastname: client.lastname,
+      phone: client.phone || "",
+      email: client.email || "",
+    };
+    setEditedFields(clientData);
+    setOriginalClientData(clientData);
+  };
+  
+  const handleSaveEdit = () => {
+    if (editingClient && originalClientData) {
+      const hasChanges = Object.keys(editedFields).some(
+        (key) => editedFields[key] !== originalClientData[key]
+      );
+      
+      if (hasChanges) {
+        dispatch(updateClients(editingClient, editedFields));
+      }
+      
+      setEditingClient(null);
+      setEditedFields({});
+      setOriginalClientData(null);
+    }
+  };
+  
   return (
     <section className="container-clients">
       {showClientDetail ? (
@@ -318,7 +371,7 @@ const Clients = () => {
                 </svg>
               </button>
             </div>
-            <div className="container-table">
+            <div className="container-table" ref={tableRef}>
               <div className="tbl-container">
                 <table className="tbl">
                   <thead>
@@ -338,16 +391,60 @@ const Clients = () => {
                       clients.map((client) => (
                         <tr key={client._id}>
                           <td data-table="Nombre">
-                            <span>{client.name}</span>
+                            {editingClient === client._id ? (
+                              <input
+                                type="text"
+                                className="input-transaction"
+                                value={editedFields.name}
+                                onChange={(e) =>
+                                  handleEditChange("name", e.target.value)
+                                }
+                              />
+                            ) : (
+                              client.name
+                            )}
                           </td>
                           <td data-table="Apellido">
-                            <span>{client.lastname}</span>
+                            {editingClient === client._id ? (
+                              <input
+                                type="text"
+                                className="input-transaction"
+                                value={editedFields.lastname}
+                                onChange={(e) =>
+                                  handleEditChange("lastname", e.target.value)
+                                }
+                              />
+                            ) : (
+                              client.lastname
+                            )}
                           </td>
                           <td data-table="Telefono">
-                            <span>{client.phone}</span>
+                            {editingClient === client._id ? (
+                              <input
+                                type="text"
+                                className="input-transaction"
+                                value={editedFields.phone}
+                                onChange={(e) =>
+                                  handleEditChange("phone", e.target.value)
+                                }
+                              />
+                            ) : (
+                              client.phone || "N/A"
+                            )}
                           </td>
                           <td data-table="Email">
-                            <span>{client.mail || "N/A"}</span>
+                            {editingClient === client._id ? (
+                              <input
+                                type="text"
+                                className="input-transaction"
+                                value={editedFields.email}
+                                onChange={(e) =>
+                                  handleEditChange("email", e.target.value)
+                                }
+                              />
+                            ) : (
+                              client.email || "N/A"
+                            )}
                           </td>
                           <td data-table="Saldo en guarda">
                             <span>{client.money.toFixed(2)}</span>
@@ -507,18 +604,36 @@ const Clients = () => {
                                 </svg>
                               </button>
 
-                              <button className="btn-edit btn-new-client">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  height="13px"
-                                  viewBox="0 -960 960 960"
-                                  width="13px"
-                                  fill="white"
-                                >
-                                  <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
-                                </svg>
+                              <button
+                                className="btn-edit btn-new-client"
+                                onClick={() =>
+                                  editingClient === client._id
+                                    ? handleSaveEdit()
+                                    : handleEditClick(client)
+                                }
+                              >
+                                {editingClient === client._id ? (
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="14px"
+                                    viewBox="0 -960 960 960"
+                                    width="14px"
+                                    fill="white"
+                                  >
+                                    <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
+                                  </svg>
+                                ) : (
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="13px"
+                                    viewBox="0 -960 960 960"
+                                    width="13px"
+                                    fill="white"
+                                  >
+                                    <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
+                                  </svg>
+                                )}
                               </button>
-
                               {userRol === "administrador" && (
                                 <button
                                   className="btn-trash"
