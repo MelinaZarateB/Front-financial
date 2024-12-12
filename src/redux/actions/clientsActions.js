@@ -7,6 +7,29 @@ import {
 import axios from "axios";
 import Swal from "sweetalert2";
 
+export const updateMoneyClients = ({ id, money }) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.put(`http://localhost:3000/clients/${id}`, {
+        money: money,
+      });
+      dispatch({
+        type: UPDATE_CLIENTS,
+        payload: data,
+      });
+    } catch (error) {
+      const mensajeError =
+        error.response?.data?.message ||
+        "Ocurrio un error al intentar actualizar el cliente.";
+      Swal.fire({
+        title: "Error",
+        text: mensajeError,
+        icon: "error",
+      });
+    }
+  };
+};
+
 export const updateClients = (id, clientUpdate) => {
   return async (dispatch) => {
     try {
@@ -16,16 +39,15 @@ export const updateClients = (id, clientUpdate) => {
       );
       dispatch({
         type: UPDATE_CLIENTS,
-        payload: data
-      })
-      console.log('cliente editado', clientUpdate)
-      if(data){
+        payload: data,
+      });
+      if (data) {
         Swal.fire({
-            text: "El cliente ha sido actualizado.",
-            icon: "success",
-            timer: 2000,
-            showConfirmButton: false,
-          });
+          text: "El cliente ha sido actualizado.",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
       }
     } catch (error) {
       const mensajeError =

@@ -21,6 +21,7 @@ import {
   getTransactionsForMonth,
   getTransactionsRangeDate,
 } from "../../redux/actions/transactionsActions";
+import { updateMoneyClients } from "@/redux/actions/clientsActions";
 import {
   getSubOffices,
   getCurrencies,
@@ -49,7 +50,7 @@ const Transactions = () => {
   const [subOfficeCurrencies, setSubOfficeCurrencies] = useState([]);
   const [clientSelected, setClientSelected] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectSubOffice, setSelectSubOffice] = useState('');
+  const [selectSubOffice, setSelectSubOffice] = useState("");
   const [dataForm, setDataForm] = useState({
     dateFrom: new Date(),
     dateTo: new Date(),
@@ -71,6 +72,16 @@ const Transactions = () => {
   });
   const [searchClient, setSearchClient] = useState("");
   const [balanceInCustody, setbalanceInCustody] = useState("");
+
+  const handleBalanceInCustody = () => {
+    console.log(balanceInCustody)
+    if (balanceInCustody) {
+      dispatch(updateMoneyClients(balanceInCustody));
+    }
+    setbalanceInCustody("");
+    setClientSelected({});
+    
+  };
   // Constants
   const typesTransactions = [
     { value: "Compra", label: "Compra" },
@@ -220,7 +231,7 @@ const Transactions = () => {
     setEditedFields((prev) => ({ ...prev, [field]: value }));
   };
   const handleSaveEdit = () => {
-    dispatch(updateTransaction(editingTransaction, editedFields));
+    //dispatch(updateTransaction(editingTransaction, editedFields));
     setEditingTransaction(null);
     setEditedFields({});
   };
@@ -589,7 +600,13 @@ const Transactions = () => {
                         <input
                           type="text"
                           className="input-field-dashboard"
-                          value={balanceInCustody}
+                          value={balanceInCustody.money || ""}
+                          onChange={(e) =>
+                            setbalanceInCustody({
+                              id: clientSelected._id, // ID del cliente seleccionado
+                              money: e.target.value, // Valor del input
+                            })
+                          }
                         />
                         <label
                           className="label-input-dashboard"
@@ -619,7 +636,10 @@ const Transactions = () => {
               >
                 <button
                   className="btn-search-users"
-                  onClick={handleNewTransaction}
+                  onClick={() => {
+                    handleNewTransaction();
+                    handleBalanceInCustody();
+                  }}
                 >
                   <label htmlFor="submit" className="label">
                     {" "}
@@ -675,7 +695,7 @@ const Transactions = () => {
                       cursor: "pointer",
                     }}
                     value={selectSubOffice} // Asegura que esté sincronizado
-                    onChange={(e) => setSelectSubOffice(e.target.value)}   
+                    onChange={(e) => setSelectSubOffice(e.target.value)}
                   >
                     <option value="">Sucursal</option>
                     {subOffices.map((office) => (
