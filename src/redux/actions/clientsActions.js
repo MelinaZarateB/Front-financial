@@ -1,6 +1,35 @@
-import { GET_CLIENTS, CREATE_CLIENTS } from "../action-types";
+import { GET_CLIENTS, CREATE_CLIENTS, DELETE_CLIENTS } from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
+
+export const deleteClients = (id) => {
+  return async (dispatch) => {
+    try {
+      const { data } = axios.delete(`http://localhost:3000/clients/${id}`);
+      if(data){
+        dispatch({
+            type: DELETE_CLIENTS,
+            payload: true
+        })
+        Swal.fire({
+            text: "El cliente ha sido eliminado.",
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+      }
+    } catch (error) {
+      const mensajeError =
+        error.response?.data?.message ||
+        "Ocurrio un error al intentar borrar el cliente.";
+      Swal.fire({
+        title: "Error",
+        text: mensajeError,
+        icon: "error",
+      });
+    }
+  };
+};
 
 export const createClients = (newClient) => {
   return async (dispatch) => {
@@ -24,7 +53,7 @@ export const createClients = (newClient) => {
     } catch (error) {
       const mensajeError =
         error.response?.data?.message ||
-        "Ocurrio un error al intentar crear al cliente.";
+        "Ocurrio un error al intentar crear el cliente.";
       Swal.fire({
         title: "Error",
         text: mensajeError,
