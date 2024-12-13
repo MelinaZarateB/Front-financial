@@ -14,8 +14,8 @@ import {
 } from "@/redux/actions/clientsActions";
 import SpinnerSmall from "./../../utils/Spinner/SpinnerSmall";
 import imgPencil from "./../../assets/pencil.svg";
-import { useRef } from "react";
-import { useCallback } from "react";
+import { useRef, useCallback } from "react";
+import Swal from "sweetalert2";
 
 const Clients = () => {
   const dispatch = useDispatch();
@@ -97,7 +97,21 @@ const Clients = () => {
     });
   };
   const handleDeleteClient = (id) => {
-    dispatch(deleteClients(id));
+    Swal.fire({
+      title: "¿Seguro que desea eliminar este cliente?",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+      customClass: {
+        confirmButton: "my-confirm-button",
+        cancelButton: "my-cancel-button",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteClients(id));
+      }
+    });
   };
 
   const handleSendInputs = async (e) => {
@@ -144,7 +158,6 @@ const Clients = () => {
     };
   }, [handleClickOutside]);
 
-
   const handleEditChange = (field, value) => {
     setEditedFields((prev) => ({ ...prev, [field]: value }));
   };
@@ -160,23 +173,23 @@ const Clients = () => {
     setEditedFields(clientData);
     setOriginalClientData(clientData);
   };
-  
+
   const handleSaveEdit = () => {
     if (editingClient && originalClientData) {
       const hasChanges = Object.keys(editedFields).some(
         (key) => editedFields[key] !== originalClientData[key]
       );
-      
+
       if (hasChanges) {
         dispatch(updateClients(editingClient, editedFields));
       }
-      
+
       setEditingClient(null);
       setEditedFields({});
       setOriginalClientData(null);
     }
   };
-  
+
   return (
     <section className="container-clients">
       {showClientDetail ? (
@@ -639,7 +652,15 @@ const Clients = () => {
                                   className="btn-trash"
                                   onClick={() => handleDeleteClient(client._id)}
                                 >
-                                  Eliminar
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="13px"
+                                    viewBox="0 -960 960 960"
+                                    width="13px"
+                                    fill="white"
+                                  >
+                                    <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+                                  </svg>
                                 </button>
                               )}
                             </div>

@@ -37,13 +37,8 @@
   top: 50%;
   left: 0.5rem;
   transform: translateY(-50%);
-  /*padding: 0 5px;*/
   pointer-events: none;
   transition: 0.3s;
- /* color: #555;
-  border-top-left-radius: 0.75rem;
-  border-top-right-radius: 0.75rem;
-  border-top: 1px solid transparent;*/
   font-size: 14px;
   color: rgba(0, 0, 0, 0.6);
   font-weight: 400;

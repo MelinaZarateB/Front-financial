@@ -7,13 +7,13 @@ import {
   deleteCurrency,
   openCashRegister,
   updateMultipleStockCurrencies,
-  updateMultipleCurrencies
+  updateMultipleCurrencies,
 } from "@/redux/actions/cashRegisterActions";
 import { getSubOffices } from "../../redux/actions/subOfficesActions";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "@/utils/Spinner/Spinner";
 import Swal from "sweetalert2";
-import imgPencil from './../../assets/pencil.svg';
+import imgPencil from "./../../assets/pencil.svg";
 
 const CashRegisterOpen = () => {
   // Estados locales del componente
@@ -26,7 +26,7 @@ const CashRegisterOpen = () => {
   const [totalDolarizado, setTotalDolarizado] = useState(0);
   const [editingId, setEditingId] = useState(null);
   const [editingField, setEditingField] = useState(null);
-  const [editValue, setEditValue] = useState('');
+  const [editValue, setEditValue] = useState("");
   const [updates, setUpdates] = useState([]);
   const [stockUpdates, setStockUpdates] = useState([]);
   const [exchangeRate, setExchangeRate] = useState(1); // Nuevo estado para la tasa de cambio en dólares
@@ -35,7 +35,9 @@ const CashRegisterOpen = () => {
   const dispatch = useDispatch();
   const currencies = useSelector((state) => state.offices.currencies);
   const subOffices = useSelector((state) => state.offices.subOffices);
-  const confirmOpenCashRegister = useSelector((state) => state.cashRegister.openCashRegister);
+  const confirmOpenCashRegister = useSelector(
+    (state) => state.cashRegister.openCashRegister
+  );
 
   useEffect(() => {
     dispatch(getCurrencies());
@@ -65,7 +67,21 @@ const CashRegisterOpen = () => {
   };
 
   const handleDeleteCurrency = (idCurrency) => {
-    dispatch(deleteCurrency(idCurrency));
+    Swal.fire({
+      title: "¿Seguro que desea eliminar esta moneda?",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+      customClass: {
+        confirmButton: "my-confirm-button",
+        cancelButton: "my-cancel-button",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteCurrency(idCurrency));
+      }
+    });
   };
 
   const handleOpenModal = () => setModalOpen(true);
@@ -90,11 +106,13 @@ const CashRegisterOpen = () => {
             opening_balance: totalDolarizado,
           })
         );
-        if(updates){
+        if (updates) {
           dispatch(updateMultipleCurrencies(updates));
         }
-        if(stockUpdates){
-          dispatch(updateMultipleStockCurrencies(selectedSubOffice, stockUpdates));
+        if (stockUpdates) {
+          dispatch(
+            updateMultipleStockCurrencies(selectedSubOffice, stockUpdates)
+          );
         }
         handleCloseRegister();
       }
@@ -103,27 +121,40 @@ const CashRegisterOpen = () => {
 
   const handleCloseRegister = () => {
     const now = new Date();
-    setClosingTime(now.toLocaleString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    }));
+    setClosingTime(
+      now.toLocaleString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+    );
   };
 
   const handleEditStart = (currency, field) => {
     setEditingId(currency.currency._id);
     setEditingField(field);
-    setEditValue(field === 'exchangeRate' ? currency.exchangeRate.toString() : currency.stock.toString());
+    setEditValue(
+      field === "exchangeRate"
+        ? currency.exchangeRate.toString()
+        : currency.stock.toString()
+    );
   };
 
   const handleEditEnd = (currency) => {
     setEditingId(null);
     setEditingField(null);
-    if (editValue !== (editingField === 'exchangeRate' ? currency.exchangeRate.toString() : currency.stock.toString())) {
+    if (
+      editValue !==
+      (editingField === "exchangeRate"
+        ? currency.exchangeRate.toString()
+        : currency.stock.toString())
+    ) {
       const newValue = parseFloat(editValue);
-      if (editingField === 'exchangeRate') {
-        setUpdates(prevUpdates => {
-          const existingUpdateIndex = prevUpdates.findIndex(update => update.currencyId === currency.currency._id);
+      if (editingField === "exchangeRate") {
+        setUpdates((prevUpdates) => {
+          const existingUpdateIndex = prevUpdates.findIndex(
+            (update) => update.currencyId === currency.currency._id
+          );
           if (existingUpdateIndex !== -1) {
             const newUpdates = [...prevUpdates];
             newUpdates[existingUpdateIndex] = {
@@ -132,30 +163,38 @@ const CashRegisterOpen = () => {
             };
             return newUpdates;
           } else {
-            return [...prevUpdates, {
-              currencyId: currency.currency._id, 
-              exchangeRate: newValue,
-            }];
+            return [
+              ...prevUpdates,
+              {
+                currencyId: currency.currency._id,
+                exchangeRate: newValue,
+              },
+            ];
           }
         });
         actualizarTasaAplicada(currency._id, editValue);
-      } else if (editingField === 'stock') {
-        setStockUpdates(prevUpdates => {
-          const existingUpdateIndex = prevUpdates.findIndex(update => update.currencyId === currency.currency._id);
+      } else if (editingField === "stock") {
+        setStockUpdates((prevUpdates) => {
+          const existingUpdateIndex = prevUpdates.findIndex(
+            (update) => update.currencyId === currency.currency._id
+          );
           if (existingUpdateIndex !== -1) {
             const newUpdates = [...prevUpdates];
             newUpdates[existingUpdateIndex] = {
               ...newUpdates[existingUpdateIndex],
               amount: newValue,
-              operation: 'set'
+              operation: "set",
             };
             return newUpdates;
           } else {
-            return [...prevUpdates, {
-              currencyId: currency.currency._id, 
-              amount: newValue,
-              operation: 'set'
-            }];
+            return [
+              ...prevUpdates,
+              {
+                currencyId: currency.currency._id,
+                amount: newValue,
+                operation: "set",
+              },
+            ];
           }
         });
         actualizarStock(currency._id, editValue);
@@ -164,7 +203,7 @@ const CashRegisterOpen = () => {
   };
 
   const handleKeyDown = (e, currency) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       handleEditEnd(currency);
     }
@@ -173,7 +212,7 @@ const CashRegisterOpen = () => {
   // Nuevo manejador para actualizar la tasa de cambio en dólares
   const calcularTotalDolarizado = useCallback(() => {
     const totalPesos = monedasLocales.reduce((acc, currency) => {
-      return acc + (currency.stock * currency.exchangeRate);
+      return acc + currency.stock * currency.exchangeRate;
     }, 0);
     const total = exchangeRate > 0 ? totalPesos / exchangeRate : 0;
     setTotalDolarizado(total);
@@ -182,7 +221,9 @@ const CashRegisterOpen = () => {
   useEffect(() => {
     if (selectedSubOffice) {
       setIsLoading(true);
-      const office = subOffices.find((office) => office._id === selectedSubOffice);
+      const office = subOffices.find(
+        (office) => office._id === selectedSubOffice
+      );
       if (office) {
         const updatedCurrencies = office.currencies.map((c) => ({
           ...c,
@@ -241,7 +282,9 @@ const CashRegisterOpen = () => {
             onChange={handleExchangeRateChange}
             className="input-field-dashboard"
           />
-          <label className="label-input-dashboard">Tasa de cambio en dólares</label>
+          <label className="label-input-dashboard">
+            Tasa de cambio en dólares
+          </label>
         </div>
       </div>
 
@@ -278,7 +321,8 @@ const CashRegisterOpen = () => {
                       <td>{currency.currency?.name || "No disponible"}</td>
                       <td>{currency.currency?.code || "No disponible"}</td>
                       <td>
-                        {editingId === currency.currency._id && editingField === 'stock' ? (
+                        {editingId === currency.currency._id &&
+                        editingField === "stock" ? (
                           <input
                             value={editValue}
                             onChange={(e) => setEditValue(e.target.value)}
@@ -292,16 +336,29 @@ const CashRegisterOpen = () => {
                           />
                         ) : (
                           <span
-                            onClick={() => handleEditStart(currency, 'stock')}
-                            style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}
+                            onClick={() => handleEditStart(currency, "stock")}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              cursor: "pointer",
+                            }}
                           >
                             {currency.stock}
-                            <img src={imgPencil} alt="Edit" style={{marginLeft: '5px', width: '16px', height: '16px'}} />
+                            <img
+                              src={imgPencil}
+                              alt="Edit"
+                              style={{
+                                marginLeft: "5px",
+                                width: "16px",
+                                height: "16px",
+                              }}
+                            />
                           </span>
                         )}
                       </td>
                       <td>
-                        {editingId === currency.currency._id && editingField === 'exchangeRate' ? (
+                        {editingId === currency.currency._id &&
+                        editingField === "exchangeRate" ? (
                           <input
                             value={editValue}
                             onChange={(e) => setEditValue(e.target.value)}
@@ -315,11 +372,25 @@ const CashRegisterOpen = () => {
                           />
                         ) : (
                           <span
-                            onClick={() => handleEditStart(currency, 'exchangeRate')}
-                            style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}
+                            onClick={() =>
+                              handleEditStart(currency, "exchangeRate")
+                            }
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              cursor: "pointer",
+                            }}
                           >
                             {currency.exchangeRate}
-                            <img src={imgPencil} alt="Edit" style={{marginLeft: '5px', width: '16px', height: '16px'}} />
+                            <img
+                              src={imgPencil}
+                              alt="Edit"
+                              style={{
+                                marginLeft: "5px",
+                                width: "16px",
+                                height: "16px",
+                              }}
+                            />
                           </span>
                         )}
                       </td>
@@ -395,7 +466,15 @@ const CashRegisterOpen = () => {
                       className="btn-trash"
                       onClick={() => handleDeleteCurrency(currency._id)}
                     >
-                      Eliminar
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="13px"
+                        viewBox="0 -960 960 960"
+                        width="13px"
+                        fill="white"
+                      >
+                        <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+                      </svg>
                     </button>
                   </td>
                 </tr>

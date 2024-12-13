@@ -1,6 +1,21 @@
 import "./ClientObservations.css";
+import { useSelector, useDispatch } from "react-redux";
+import { updateClients } from "@/redux/actions/clientsActions";
+import { useState } from "react";
 
-const ClientObservations = ({observations, id}) => {
+const ClientObservations = ({ observations, id }) => {
+  const dispatch = useDispatch();
+  const clients = useSelector((state) => state.clients.clients);
+
+  const [newObservations, setNewObservations] = useState("");
+
+  const handleNewObservations = () => {
+    if (newObservations) {
+      dispatch(updateClients(id, { observations: newObservations }));
+      setNewObservations("");
+    }
+  };
+
   return (
     <section>
       <div className="container-table">
@@ -14,12 +29,16 @@ const ClientObservations = ({observations, id}) => {
                 className="textarea-field-dashboard"
                 name="description"
                 placeholder=" "
+                onChange={(event) => setNewObservations(event.target.value)}
               ></textarea>
               <label className="label-textarea-dashboard">
                 Nueva observación
               </label>
             </div>
-            <button className="btn-search-users">
+            <button
+              className="btn-search-users"
+              onClick={handleNewObservations}
+            >
               Agregar observación{" "}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -37,40 +56,47 @@ const ClientObservations = ({observations, id}) => {
               <thead>
                 <tr>
                   <th>Observación</th>
+                  {/*
                   <th>Usuario</th>
                   <th>Fecha</th>
+                  */}
                 </tr>
               </thead>
               <tbody>
-              {observations && observations.length > 0 ? (
-                observations.map((observation) => (
-                  <tr key={observation.id || id}>
-                    <td>{observation.description || "N/A"}</td>
-                    <td>{observation.user || "N/A"}</td>
-                    <td>
-                      {observation.createdAt
-                        ? new Date(observation.createdAt)
-                            .toLocaleString("es-ES", {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "2-digit",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              hour12: false, // Para formato 24 horas
-                            })
-                            .replace(",", "")
-                        : "N/A"}
+                {observations && observations.length > 0 ? (
+                  observations.map((observation) => (
+                    <tr key={observation.id || id}>
+                      <td>{observation}</td>
+
+                      {/*
+                      <td>{observation.description || "N/A"}</td>
+                      <td>{observation.user || "N/A"}</td>
+                      <td>
+                        {observation.createdAt
+                          ? new Date(observation.createdAt)
+                              .toLocaleString("es-ES", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "2-digit",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: false, // Para formato 24 horas
+                              })
+                              .replace(",", "")
+                          : "N/A"}
+                      </td>
+                      
+                      */}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: "center" }}>
+                      No hay observaciones disponibles para este cliente
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5" style={{ textAlign: "center" }}>
-                    No hay observaciones disponibles para este cliente
-                  </td>
-                </tr>
-              )}
-            </tbody>
+                )}
+              </tbody>
             </table>
           </div>
         </div>
