@@ -339,6 +339,7 @@ const Clients = () => {
             </div>
           </div>
           <div>
+            {/*
             <div
               style={{
                 display: "flex",
@@ -384,6 +385,8 @@ const Clients = () => {
                 </svg>
               </button>
             </div>
+            
+            */}
             <div className="container-table" ref={tableRef}>
               <div className="tbl-container">
                 <table className="tbl">

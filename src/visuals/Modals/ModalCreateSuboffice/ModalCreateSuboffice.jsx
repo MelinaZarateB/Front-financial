@@ -1,15 +1,32 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createSubOffices } from "@/redux/actions/subOfficesActions";
 
 const ModalCreateSuboffice = ({ isOpen, onClose, onSubmit }) => {
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
-  const [currency, setCurrency] = useState(""); // Estado para la moneda seleccionada
+  const dispatch = useDispatch();
+  const [formData, setFormData] = useState({
+    name: "",
+    code: "",
+    address: "",
+    phone: ""
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
 
   const handleSubmit = () => {
-    onSubmit(amount, description, currency);
-    setAmount("");
-    setDescription("");
-    setCurrency(""); // Restablecer la moneda a USD al enviar
+    dispatch(createSubOffices(formData));
+    setFormData({
+      name: "",
+      code: "",
+      address: "",
+      phone: ""
+    });
   };
 
   if (!isOpen) return null;
@@ -17,14 +34,14 @@ const ModalCreateSuboffice = ({ isOpen, onClose, onSubmit }) => {
   return (
     <div className="modal">
       <div className="modal-content">
-        <h2 className="h2-modal">Registrar suboficina
-        </h2>
+        <h2 className="h2-modal">Registrar suboficina</h2>
         <div className="input-box-dashboard">
           <input
             className="input-field-dashboard"
             type="text"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
           />
           <label
             className="label-input-dashboard"
@@ -37,8 +54,24 @@ const ModalCreateSuboffice = ({ isOpen, onClose, onSubmit }) => {
           <input
             className="input-field-dashboard"
             type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            name="code"
+            value={formData.code}
+            onChange={handleInputChange}
+          />
+          <label
+            className="label-input-dashboard"
+            style={{ backgroundColor: "rgba(255, 255, 255)" }}
+          >
+            Codigo
+          </label>
+        </div>
+        <div className="input-box-dashboard">
+          <input
+            className="input-field-dashboard"
+            type="text"
+            name="address"
+            value={formData.address}
+            onChange={handleInputChange}
           />
           <label
             className="label-input-dashboard"
@@ -51,16 +84,18 @@ const ModalCreateSuboffice = ({ isOpen, onClose, onSubmit }) => {
           <input
             className="input-field-dashboard"
             type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            name="phone"
+            value={formData.phone}
+            onChange={handleInputChange}
           />
           <label
             className="label-input-dashboard"
             style={{ backgroundColor: "rgba(255, 255, 255)" }}
           >
-            Efectivo inicial
+            Telefono
           </label>
         </div>
+       
         <div
           className="buttons-container"
           style={{ display: "flex", gap: "5px", justifyContent: "end" }}
@@ -94,4 +129,5 @@ const ModalCreateSuboffice = ({ isOpen, onClose, onSubmit }) => {
     </div>
   );
 };
+
 export default ModalCreateSuboffice;

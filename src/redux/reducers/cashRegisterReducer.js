@@ -5,7 +5,9 @@ import {
   VERIFY_CASH_REGISTER_ERROR,
   CLEAR_CASH_REGISTER_ERROR,
   GET_ALL_MOVEMENTS,
-  GET_TRANSACTIONS_AND_MOVEMENTS
+  GET_TRANSACTIONS_AND_MOVEMENTS,
+  CLEAN_FILTER,
+  FILTER_MOVEMENTS_FOR_DAY
 } from "../action-types";
 
 let initialState = {
@@ -18,6 +20,17 @@ let initialState = {
 
 const cashRegisterReducer = (state = initialState, action) => {
   switch (action.type) {
+    case FILTER_MOVEMENTS_FOR_DAY:
+      return{
+        ...state,
+        transactionsAndMovements: action.payload
+      }
+    case CLEAN_FILTER:
+      return{
+        ...state,
+        transactionsAndMovements: [],
+        verifyCashRegister: []
+      }
     case GET_TRANSACTIONS_AND_MOVEMENTS:
       return {
         ...state,

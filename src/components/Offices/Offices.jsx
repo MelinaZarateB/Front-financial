@@ -5,7 +5,6 @@ import officeIcon from "./../../assets/office.svg";
 import usersIcon from "./../../assets/usersOffices.svg";
 import currencyIcon from "./../../assets/currency.svg";
 import arrowDown from "./../../assets/arrow-down.svg";
-import ModalCreateUser from "@/visuals/Modals/ModalCreateUser/ModalCreateUser";
 import ModalCreateCurrency from "@/visuals/Modals/ModalCreateCurrency/ModalCreateCurrency";
 import ModalCreateSuboffice from "@/visuals/Modals/ModalCreateSuboffice/ModalCreateSuboffice";
 import {
@@ -446,13 +445,13 @@ const Offices = () => {
           ))}
         </div>
         <div style={{ marginTop: "1rem" }}>
-          <button className="btn-search-users">
+          <button className="btn-search-users" onClick={handleOpenModal}>
             {" "}
             <span>Registrar subsucursal</span> <img src={plusIcon} alt="" />
           </button>
         </div>
       </div>
-      <ModalCreateCurrency isOpen={isModalOpen} onClose={handleCloseModal} />
+      <ModalCreateSuboffice isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
   );
 };

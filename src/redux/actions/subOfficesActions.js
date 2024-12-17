@@ -4,13 +4,48 @@ import {
   UPDATE_CURRENCY_SUBOFFICES,
   DELETE_CURRENCY_SUBOFFICES,
   GET_SUBOFFICES,
+  CREATE_SUBOFFICES
 } from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
 
 /* Actions para currencies */
+export const createSubOffices = (newSubOffice) => {
+  return async (dispatch) => {
+    try{
+      const { data } = await axios.post('http://localhost:3000/sub_offices', newSubOffice)
+      console.log('subofficina creada', data)
+      if(data) {
+        dispatch({
+          type: CREATE_SUBOFFICES,
+          payload: data
+        })
+        Swal.fire({
+          title: "Exito",
+          text: "Se ha creado exitosamente la subofficina",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    }catch(error){
+      const mensajeError =
+      error.response?.data?.message ||
+      "No se pudo crear la subofficina. Por favor, intente nuevamente.";
+
+    Swal.fire({
+      title: "Error",
+      text: mensajeError,
+      icon: "error",
+    });
+
+    }
+  }
+
+}
+
+
 export const createCurrencies = (currency) => {
-  console.log("moneda a crear:", currency);
   return async (dispatch) => {
     try {
       const { data } = await axios.post(

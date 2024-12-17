@@ -7,19 +7,53 @@ import {
   VERIFY_CASH_REGISTER_ERROR,
   CLEAR_CASH_REGISTER_ERROR,
   GET_TRANSACTIONS_AND_MOVEMENTS,
+  CLEAN_FILTER,
+  FILTER_MOVEMENTS_FOR_DAY,
 } from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
 
 /* Actions para caja registradora */
-export const getTransactionsAndMovements = (subOfficeId) => {
-  console.log('id de oficina para buscar movimientos y transacciones', subOfficeId)
+
+export const clearTransactionsAndMovements = () => {
+  return (dispatch) => {
+    dispatch({
+      type: CLEAN_FILTER,
+      payload: [],
+    });
+  };
+};
+export const filterTransactiosAndMovements = (subOfficeId, filterData) => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get(
+      const { data } = await axios.post(
+        `http://localhost:3000/cash-register/${subOfficeId}/transaction-and-movements-for-day`,
+        filterData
+      );
+      if (data) {
+        dispatch({
+          type: FILTER_MOVEMENTS_FOR_DAY,
+          payload: data,
+        });
+      }
+    } catch (error) {
+      const mensajeError =
+        error.response?.data?.message ||
+        "Ocurrio un error al intentar filtrar las operaciones del día.";
+      Swal.fire({
+        title: "Error",
+        text: mensajeError,
+        icon: "error",
+      });
+    }
+  };
+};
+export const getTransactionsAndMovements = (subOfficeId) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.post(
         `http://localhost:3000/cash-register/${subOfficeId}/transaction-and-movements-for-day`
       );
-      console.log("transacciones y movimientos", data);
       if (data) {
         dispatch({
           type: GET_TRANSACTIONS_AND_MOVEMENTS,

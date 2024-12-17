@@ -4,6 +4,7 @@ import {
   GET_CURRENCIES,
   DELETE_CURRENCY,
   UPDATE_CURRENCY_SUBOFFICES,
+  CREATE_SUBOFFICES,
 } from "../action-types";
 
 let initialState = {
@@ -14,6 +15,20 @@ let initialState = {
 
 const subOfficesReducer = (state = initialState, action) => {
   switch (action.type) {
+    case CREATE_SUBOFFICES:
+      return {
+        ...state,
+        subOffices: state.subOffices.some(
+          (suboffice) => suboffice._id === action.payload._id
+        )
+          ? state.subOffices.map((suboffice) =>
+              suboffice._id === action.payload._id
+                ? { ...suboffice, ...action.payload }
+                : suboffice
+            )
+          : [...state.subOffices, action.payload], // Agrega la nueva suboficina si no existe
+      };
+
     case UPDATE_CURRENCY_SUBOFFICES:
       return {
         ...state,

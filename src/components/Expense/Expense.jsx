@@ -160,6 +160,7 @@ const Expense = () => {
       }
     });
   };
+  
   const handleFilterType = () => {
     dispatch(filterExpense(selectType));
   };
@@ -490,6 +491,7 @@ const Expense = () => {
                     <th>Usuario</th>
                     <th>Descripción</th>
                     <th>Monto</th>
+                    <th>Moneda</th>
                     <th>Fecha</th>
                     <th>Sucursal</th>
                     <th colSpan="1"></th>
@@ -513,6 +515,7 @@ const Expense = () => {
                       <td data-table="Monto">
                         <span> $ {expense.amount.toFixed(2)}</span>
                       </td>
+                      <td data-table='Moneda'>{expense.currency.name}</td>
                       <td data-table="Fecha">
                         <span>
                           {new Date(expense.date)
