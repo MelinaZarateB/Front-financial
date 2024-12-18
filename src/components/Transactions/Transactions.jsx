@@ -29,6 +29,7 @@ import {
 import SpinnerSmall from "./../../utils/Spinner/SpinnerSmall";
 import { useRef, useCallback } from "react";
 import DateFilterDropdown from "@/utils/DateFilterDropdown";
+import Spinner from "@/utils/Spinner/Spinner";
 
 const Transactions = () => {
   // Redux hooks
@@ -51,10 +52,8 @@ const Transactions = () => {
   const [clientSelected, setClientSelected] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectSubOffice, setSelectSubOffice] = useState("");
-  const [dataForm, setDataForm] = useState({
-    dateFrom: new Date(),
-    dateTo: new Date(),
-  });
+  const [isLoadingTransactions, setIsLoadingTransactions] = useState(false);
+
   const [newTransaction, setNewTransaction] = useState({
     user: "",
     type: "",
@@ -74,13 +73,12 @@ const Transactions = () => {
   const [balanceInCustody, setbalanceInCustody] = useState("");
 
   const handleBalanceInCustody = () => {
-    console.log(balanceInCustody)
+    console.log(balanceInCustody);
     if (balanceInCustody) {
       dispatch(updateMoneyClients(balanceInCustody));
     }
     setbalanceInCustody("");
     setClientSelected({});
-
   };
   // Constants
   const typesTransactions = [
@@ -264,6 +262,51 @@ const Transactions = () => {
       dispatch(getTransactionsForDay(dateFilter));
     }
   };
+  const [dataForm, setDataForm] = useState({
+    dateFrom: new Date().toISOString().split("T")[0],
+    dateTo: new Date().toISOString().split("T")[0],
+  });
+  const handleDateChange = (e) => {
+    const { name, value } = e.target;
+    setDataForm((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleDispatchData = () => {
+    if (selectSubOffice && dataForm.dateFrom && dataForm.dateTo) {
+      setIsLoadingTransactions(true);
+      dispatch(getTransactionsRangeDate(selectSubOffice, dataForm))
+        .then(() => {
+          setIsLoadingTransactions(false);
+        })
+        .catch((error) => {
+          setIsLoadingTransactions(false);
+        });
+    }
+  };
+  const handleClearTransactions = () => {
+    setIsLoadingTransactions(true);
+    dispatch(getTransactions())
+      .then(() => {
+        setIsLoadingTransactions(false);
+        setSelectSubOffice("");
+        setDataForm({
+          dateFrom: new Date().toISOString().split("T")[0],
+          dateTo: new Date().toISOString().split("T")[0],
+        });
+      })
+      .catch((error) => {
+        setIsLoadingTransactions(false);
+        setSelectSubOffice("");
+        setDataForm({
+          dateFrom: new Date().toISOString().split("T")[0],
+          dateTo: new Date().toISOString().split("T")[0],
+        });
+      });
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <section className="container-transactions">
@@ -460,7 +503,7 @@ const Transactions = () => {
                       Tasa de cambio
                     </label>
                   </div>
-                  {newTransaction.type === "check" && (
+                  {newTransaction.type === "Cambio de cheque" && (
                     <>
                       <div className="input-box-dashboard">
                         <input
@@ -701,9 +744,9 @@ const Transactions = () => {
                     value={selectSubOffice} // Asegura que esté sincronizado
                     onChange={(e) => setSelectSubOffice(e.target.value)}
                   >
-                    <option value="">Sucursal</option>
+                    <option value="">Seleccione sucursal</option>
                     {subOffices.map((office) => (
-                      <option key={office._id} value={office.name}>
+                      <option key={office._id} value={office._id}>
                         {office.name}
                       </option>
                     ))}
@@ -717,15 +760,38 @@ const Transactions = () => {
                 </div>
               </div>
             </div>
-            <div>
-              <DatePicker
-                label="Filtre desde"
-                value={dataForm.dateFrom}
-                renderInput={(params) => <TextField {...params} />}
-                onChange={(newValue) => {
-                  setDataForm({ ...dataForm, dateFrom: newValue });
-                }}
-              />
+
+            <div style={{ display: "flex", gap: "16px" }}>
+              <div className="input-box-dashboard">
+                <input
+                  type="date"
+                  className="input-field-dashboard"
+                  name="dateFrom"
+                  value={dataForm.dateFrom}
+                  onChange={handleDateChange}
+                />
+                <label
+                  className="label-input-dashboard"
+                  style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                >
+                  Filtre desde
+                </label>
+              </div>
+              <div className="input-box-dashboard">
+                <input
+                  type="date"
+                  className="input-field-dashboard"
+                  name="dateTo"
+                  value={dataForm.dateTo}
+                  onChange={handleDateChange}
+                />
+                <label
+                  className="label-input-dashboard"
+                  style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                >
+                  Hasta
+                </label>
+              </div>
             </div>
             {/*
             <div>
@@ -735,17 +801,7 @@ const Transactions = () => {
             </div>
             */}
 
-            <div>
-              <DatePicker
-                label="Hasta"
-                value={dataForm.dateTo}
-                renderInput={(params) => <TextField {...params} />}
-                onChange={(newValue) => {
-                  setDataForm({ ...dataForm, dateTo: newValue });
-                }}
-              />
-            </div>
-            <button className="btn-search-users">
+            <button className="btn-search-users" onClick={handleDispatchData}>
               Buscar{" "}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -757,7 +813,7 @@ const Transactions = () => {
                 <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
               </svg>
             </button>
-            <button className="btn-clean">
+            <button className="btn-clean" onClick={handleClearTransactions}>
               Limpiar{" "}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -790,122 +846,148 @@ const Transactions = () => {
                     {userRol === "administrador" && <th>Acciones</th>}
                   </tr>
                 </thead>
-                <tbody>
-                  {transactions && transactions.length > 0 ? (
-                    transactions.map((transaction) => (
-                      <tr key={transaction._id}>
-                        <td>{transaction.type}</td>
-                        <td>{transaction.userName}</td>
-                        <td>
-                          {editingTransaction === transaction._id ? (
-                            <input
-                              type="text"
-                              className="input-transaction"
-                              value={editedFields.sourceAmount}
-                              onChange={(e) =>
-                                handleEditChange("sourceAmount", e.target.value)
-                              }
-                            />
-                          ) : (
-                            transaction.sourceAmount
-                          )}
-                        </td>
-                        <td>{transaction.sourceCurrencyCode}</td>
-                        <td>
-                          {editingTransaction === transaction._id ? (
-                            <input
-                              type="text"
-                              className="input-transaction"
-                              value={editedFields.exchangeRate}
-                              onChange={(e) =>
-                                handleEditChange("exchangeRate", e.target.value)
-                              }
-                            />
-                          ) : (
-                            transaction.exchangeRate
-                          )}
-                        </td>
-                        <td>
-                          {editingTransaction === transaction._id ? (
-                            <input
-                              type="text"
-                              className="input-transaction"
-                              value={editedFields.targetAmount}
-                              onChange={(e) =>
-                                handleEditChange("targetAmount", e.target.value)
-                              }
-                            />
-                          ) : (
-                            transaction.targetAmount
-                          )}
-                        </td>
-                        <td>{transaction.targetCurrencyCode}</td>
-                        <td>
-                          {editingTransaction === transaction._id ? (
-                            <input
-                              type="text"
-                              className="input-transaction"
-                              value={editedFields.checkNumber}
-                              onChange={(e) =>
-                                handleEditChange("checkNumber", e.target.value)
-                              }
-                            />
-                          ) : (
-                            transaction.checkNumber || "N/A"
-                          )}
-                        </td>
-                        <td>
-                          {editingTransaction === transaction._id ? (
-                            <input
-                              type="date"
-                              className="input-transaction"
-                              value={editedFields.checkDueDate}
-                              onChange={(e) =>
-                                handleEditChange("checkDueDate", e.target.value)
-                              }
-                            />
-                          ) : (
-                            transaction.checkDueDate || "N/A"
-                          )}
-                        </td>
-                        <td>
-                          {editingTransaction === transaction._id ? (
-                            <input
-                              type="text"
-                              className="input-transaction"
-                              value={editedFields.bankName}
-                              onChange={(e) =>
-                                handleEditChange("bankName", e.target.value)
-                              }
-                            />
-                          ) : (
-                            transaction.bankName || "N/A"
-                          )}
-                        </td>
-                        <td>
-                          {new Date(transaction.createdAt)
-                            .toLocaleString("es-ES", {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "2-digit",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              hour12: false,
-                            })
-                            .replace(",", "")}
-                        </td>
-                        <td>{transaction.subOfficeName}</td>
-                        {userRol === "administrador" && (
+                {isLoadingTransactions ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      padding: "20px",
+                    }}
+                  >
+                    <Spinner />
+                  </div>
+                ) : (
+                  <tbody>
+                    {transactions && transactions.length > 0 ? (
+                      transactions.map((transaction) => (
+                        <tr key={transaction._id}>
+                          <td>{transaction.type}</td>
+                          <td>{transaction.userName}</td>
                           <td>
-                            <button
-                              className="btn-edit edit-button"
-                              onClick={() =>
-                                editingTransaction === transaction._id
-                                  ? handleSaveEdit()
-                                  : handleEditClick(transaction)
-                              }
-                            >
-                              {/* 
+                            {editingTransaction === transaction._id ? (
+                              <input
+                                type="text"
+                                className="input-transaction"
+                                value={editedFields.sourceAmount}
+                                onChange={(e) =>
+                                  handleEditChange(
+                                    "sourceAmount",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            ) : (
+                              transaction.sourceAmount
+                            )}
+                          </td>
+                          <td>{transaction.sourceCurrencyCode}</td>
+                          <td>
+                            {editingTransaction === transaction._id ? (
+                              <input
+                                type="text"
+                                className="input-transaction"
+                                value={editedFields.exchangeRate}
+                                onChange={(e) =>
+                                  handleEditChange(
+                                    "exchangeRate",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            ) : (
+                              transaction.exchangeRate
+                            )}
+                          </td>
+                          <td>
+                            {editingTransaction === transaction._id ? (
+                              <input
+                                type="text"
+                                className="input-transaction"
+                                value={editedFields.targetAmount}
+                                onChange={(e) =>
+                                  handleEditChange(
+                                    "targetAmount",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            ) : (
+                              transaction.targetAmount
+                            )}
+                          </td>
+                          <td>{transaction.targetCurrencyCode}</td>
+                          <td>
+                            {editingTransaction === transaction._id ? (
+                              <input
+                                type="text"
+                                className="input-transaction"
+                                value={editedFields.checkNumber}
+                                onChange={(e) =>
+                                  handleEditChange(
+                                    "checkNumber",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            ) : (
+                              transaction.checkNumber || "N/A"
+                            )}
+                          </td>
+                          <td>
+                            {editingTransaction === transaction._id ? (
+                              <input
+                                type="date"
+                                className="input-transaction"
+                                value={editedFields.checkDueDate}
+                                onChange={(e) =>
+                                  handleEditChange(
+                                    "checkDueDate",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            ) : (
+                              transaction.checkDueDate || "N/A"
+                            )}
+                          </td>
+                          <td>
+                            {editingTransaction === transaction._id ? (
+                              <input
+                                type="text"
+                                className="input-transaction"
+                                value={editedFields.bankName}
+                                onChange={(e) =>
+                                  handleEditChange("bankName", e.target.value)
+                                }
+                              />
+                            ) : (
+                              transaction.bankName || "N/A"
+                            )}
+                          </td>
+                          <td>
+                            {new Date(transaction.createdAt)
+                              .toLocaleString("es-ES", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "2-digit",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: false,
+                              })
+                              .replace(",", "")}
+                          </td>
+                          <td>{transaction.subOfficeName}</td>
+                          {userRol === "administrador" && (
+                            <td>
+                              <button
+                                className="btn-edit edit-button"
+                                onClick={() =>
+                                  editingTransaction === transaction._id
+                                    ? handleSaveEdit()
+                                    : handleEditClick(transaction)
+                                }
+                              >
+                                {/* 
                             {editingTransaction === transaction._id ? (
                               <button className="btn-new-client">
                                 {" "}
@@ -918,27 +1000,36 @@ const Transactions = () => {
                               </button>
                             )}
                             */}
-                            </button>
-                            <button
-                              className="btn-trash"
-                              onClick={() =>
-                                handleDeleteTransaction(transaction._id)
-                              }
-                            >
-                             <svg xmlns="http://www.w3.org/2000/svg" height="13px" viewBox="0 -960 960 960" width="13px" fill="white"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
-                            </button>
-                          </td>
-                        )}
+                              </button>
+                              <button
+                                className="btn-trash"
+                                onClick={() =>
+                                  handleDeleteTransaction(transaction._id)
+                                }
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  height="13px"
+                                  viewBox="0 -960 960 960"
+                                  width="13px"
+                                  fill="white"
+                                >
+                                  <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+                                </svg>
+                              </button>
+                            </td>
+                          )}
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="13" style={{ textAlign: "center" }}>
+                          No hay transacciones disponibles
+                        </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="13" style={{ textAlign: "center" }}>
-                        No hay transacciones disponibles
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
+                    )}
+                  </tbody>
+                )}
               </table>
             </div>
           </div>

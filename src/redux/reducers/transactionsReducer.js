@@ -13,6 +13,11 @@ let initialState = {
 
 const transactionsReducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_TRANSACTIONS_RANGE_DATE:
+      return{
+        ...state,
+        transactions: action.payload
+      }
     case DELETE_TRANSACTION:
       return {
         ...state,

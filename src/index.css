@@ -27,6 +27,15 @@ input[type="email"]:-webkit-autofill,
 input[type="password"]:-webkit-autofill {
   background-color: #fafbfc !important;
 }
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background: url('./assets/date_range_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg') no-repeat center;
+  color: transparent;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  border: none;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

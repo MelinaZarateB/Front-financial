@@ -21,6 +21,7 @@
     "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "date-fns": "^2.30.0",
     "dayjs": "^1.11.13",
     "lucide-react": "^0.453.0",
     "query-string": "^9.1.0",

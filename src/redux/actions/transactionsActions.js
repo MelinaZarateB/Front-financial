@@ -10,13 +10,20 @@ import Swal from "sweetalert2";
 
 /* Actions para transacciones */
 
-export const getTransactionsRangeDate = (subOfficeId, dateFrom, dateTo) => {
+export const getTransactionsRangeDate = (subOfficeId, {dateFrom, dateTo}) => {
+  console.log(subOfficeId, dateFrom, dateTo)
   return async (dispatch) => {
     try {
       const { data } = await axios.get(
         `http://localhost:3000/transactions/${subOfficeId}/dateRange/${dateFrom}/${dateTo}`
       );
-      console.log(data);
+      console.log(data)
+      if(data){
+        dispatch({
+          type: GET_TRANSACTIONS_RANGE_DATE,
+          payload: data
+        })
+      }
     } catch (error) {
       const mensajeError =
         error.response?.data?.message ||
