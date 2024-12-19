@@ -7,7 +7,10 @@ import {
   GET_ALL_MOVEMENTS,
   GET_TRANSACTIONS_AND_MOVEMENTS,
   CLEAN_FILTER,
-  FILTER_MOVEMENTS_FOR_DAY
+  FILTER_MOVEMENTS_FOR_DAY,
+  CLEAN_MESSAGE,
+  TOTAL_MOVEMENTS_FOR_DAY,
+  TOTAL_TRANSACTIONS_FOR_DAY
 } from "../action-types";
 
 let initialState = {
@@ -16,21 +19,39 @@ let initialState = {
   verifyCashRegister: [],
   error: "",
   transactionsAndMovements: [],
+  totalTransactionsForDay: false,
+  totalMovementsForDay :false
 };
 
 const cashRegisterReducer = (state = initialState, action) => {
   switch (action.type) {
-    case FILTER_MOVEMENTS_FOR_DAY:
+
+    case TOTAL_MOVEMENTS_FOR_DAY:
       return{
         ...state,
-        transactionsAndMovements: action.payload
+        totalMovementsForDay: action.payload
       }
+      case TOTAL_TRANSACTIONS_FOR_DAY:
+        return{
+          ...state,
+          totalTransactionsForDay: action.payload
+        }
+    case CLEAN_MESSAGE:
+      return {
+        ...state,
+        openCashRegister: action.payload,
+      };
+    case FILTER_MOVEMENTS_FOR_DAY:
+      return {
+        ...state,
+        transactionsAndMovements: action.payload,
+      };
     case CLEAN_FILTER:
-      return{
+      return {
         ...state,
         transactionsAndMovements: [],
-        verifyCashRegister: []
-      }
+        verifyCashRegister: [],
+      };
     case GET_TRANSACTIONS_AND_MOVEMENTS:
       return {
         ...state,

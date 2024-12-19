@@ -4,7 +4,8 @@ import {
   UPDATE_CURRENCY_SUBOFFICES,
   DELETE_CURRENCY_SUBOFFICES,
   GET_SUBOFFICES,
-  CREATE_SUBOFFICES
+  CREATE_SUBOFFICES,
+  CLEAN_MESSAGE
 } from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -14,7 +15,6 @@ export const createSubOffices = (newSubOffice) => {
   return async (dispatch) => {
     try{
       const { data } = await axios.post('http://localhost:3000/sub_offices', newSubOffice)
-      console.log('subofficina creada', data)
       if(data) {
         dispatch({
           type: CREATE_SUBOFFICES,

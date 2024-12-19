@@ -8,8 +8,8 @@ import {
   openCashRegister,
   updateMultipleStockCurrencies,
   updateMultipleCurrencies,
+  cleanMessage
 } from "@/redux/actions/cashRegisterActions";
-import { getSubOffices } from "../../redux/actions/subOfficesActions";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "@/utils/Spinner/Spinner";
 import Swal from "sweetalert2";
@@ -235,6 +235,9 @@ const CashRegisterOpen = () => {
       setTimeout(() => {
         setIsLoading(false);
       }, 1000);
+    }
+    return () => {
+      dispatch(cleanMessage())
     }
   }, [selectedSubOffice, subOffices]);
 

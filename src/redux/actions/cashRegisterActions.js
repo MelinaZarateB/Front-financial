@@ -9,11 +9,74 @@ import {
   GET_TRANSACTIONS_AND_MOVEMENTS,
   CLEAN_FILTER,
   FILTER_MOVEMENTS_FOR_DAY,
+  CLEAN_MESSAGE,
+  TOTAL_MOVEMENTS_FOR_DAY,
+  TOTAL_TRANSACTIONS_FOR_DAY
 } from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
 
 /* Actions para caja registradora */
+export const totalMovementsForDay = (subOfficeId) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.post(
+        `http://localhost:3000/cash-register/${subOfficeId}/total-movements-for-day`
+      );
+      console.log('TOTAL MOVIMIENTOS POR DIA', data)
+      if(data){
+        dispatch({
+          type: TOTAL_MOVEMENTS_FOR_DAY,
+          payload: data
+        })
+      }
+    } catch (error) {
+      const mensajeError =
+        error.response?.data?.message ||
+        "Ocurrio un error al intentar obtener los movimientos del día.";
+      Swal.fire({
+        title: "Error",
+        text: mensajeError,
+        icon: "error",
+      });
+    }
+  };
+};
+
+export const totalTransactionsForDay = (subOfficeId) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.post(
+        `http://localhost:3000/cash-register/${subOfficeId}/total-transactions-for-day`
+      );
+      console.log('TOTAL TRANSACTIONES POR DIA', data)
+      if(data){
+        dispatch({
+          type: TOTAL_TRANSACTIONS_FOR_DAY,
+          payload: data
+        })
+      }
+    } catch (error) {
+      const mensajeError =
+        error.response?.data?.message ||
+        "Ocurrio un error al intentar obtener las transacciones del día.";
+      Swal.fire({
+        title: "Error",
+        text: mensajeError,
+        icon: "error",
+      });
+    }
+  };
+};
+
+export const cleanMessage = () => {
+  return (dispatch) => {
+    dispatch({
+      type: CLEAN_MESSAGE,
+      payload: false,
+    });
+  };
+};
 
 export const clearTransactionsAndMovements = () => {
   return (dispatch) => {
@@ -23,6 +86,7 @@ export const clearTransactionsAndMovements = () => {
     });
   };
 };
+
 export const filterTransactiosAndMovements = (subOfficeId, filterData) => {
   return async (dispatch) => {
     try {

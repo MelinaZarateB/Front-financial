@@ -234,3 +234,66 @@
   }
 }
 
+
+
+.container-total {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.table-total {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-total th,
+.table-total td {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.875rem;
+}
+
+.table-total th {
+  font-weight: bold;
+  color: #666;
+}
+
+.table-total tr:last-child td {
+  border-bottom: none;
+}
+
+.amount-total {
+  text-align: right;
+}
+
+.total {
+  font-weight: bold;
+}
+
+@media (min-width: 768px) {
+  .container-total {
+    flex-direction: row;
+  }
+
+  .card {
+    flex: 1;
+  }
+}

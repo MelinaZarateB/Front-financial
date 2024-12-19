@@ -3,6 +3,7 @@ import imgArrows from "./../../assets/arrows.svg";
 import imgIncome from "./../../assets/arrowIncome.svg";
 import imgExpense from "./../../assets/arrowExpense.svg";
 import { useState, useEffect } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   closeCashRegister,
@@ -10,14 +11,16 @@ import {
   clearCashRegisterError,
   getTransactionsAndMovements,
   clearTransactionsAndMovements,
-  filterTransactiosAndMovements
+  filterTransactiosAndMovements,
+  totalMovementsForDay,
+  totalTransactionsForDay,
 } from "@/redux/actions/cashRegisterActions";
 import Swal from "sweetalert2";
 import Spinner from "@/utils/Spinner/Spinner";
 import { getAllUsers } from "@/redux/actions/userActions";
 
-
 const fieldFilter = ["Moneda/Cuenta", "Usuario"];
+
 
 const CashRegisterClose = () => {
   const dispatch = useDispatch();
@@ -33,7 +36,6 @@ const CashRegisterClose = () => {
   // const [userRol, setUserRol] = useState("");
 
   const subOffices = useSelector((state) => state.offices.subOffices);
-  console.log("suboficinas cierre de caja", subOffices);
   const transactionsAndMovements = useSelector(
     (state) => state.cashRegister.transactionsAndMovements
   );
@@ -46,10 +48,15 @@ const CashRegisterClose = () => {
   const closedCashRegister = useSelector(
     (state) => state.cashRegister.closedCashRegister
   );
+  const totalTransactions = useSelector(
+    (state) => state.cashRegister.totalTransactionsForDay
+  );
+  const totalMovements = useSelector(
+    (state) => state.cashRegister.totalMovementsForDay
+  );
   const users = useSelector((state) => state.user.users);
   const [isLoadingMovements, setIsLoadingMovements] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
 
   const handleCloseRegister = () => {
     // Obtiene la fecha y hora actual y la formatea en español
@@ -77,7 +84,7 @@ const CashRegisterClose = () => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        // Si el usuario confirma, despacha la acción de cierre de caja
+        // Si el usuario confirma, despacha cada acción por separado
         dispatch(
           closeCashRegister(
             verificatedCashRegisterOpen._id,
@@ -85,6 +92,9 @@ const CashRegisterClose = () => {
             pesoRate
           )
         );
+        dispatch(totalMovementsForDay(verificatedCashRegisterOpen._id));
+        dispatch(totalTransactionsForDay(verificatedCashRegisterOpen._id));
+
         handleCloseRegister();
       }
     });
@@ -234,7 +244,7 @@ const CashRegisterClose = () => {
     } else if (selectedField === "Moneda/Cuenta") {
       filterData = { currencyId: selectedValue };
     }
-    
+
     setIsLoadingMovements(true);
     dispatch(filterTransactiosAndMovements(selectedSubOffice, filterData))
       .then(() => setIsLoadingMovements(false))
@@ -247,8 +257,8 @@ const CashRegisterClose = () => {
     dispatch(getTransactionsAndMovements(selectedSubOffice))
       .then(() => {
         setIsLoadingMovements(false);
-        setSelectedField('');
-        setSelectedValue('');
+        setSelectedField("");
+        setSelectedValue("");
         setValueOptions([]);
       })
       .catch(() => {
@@ -256,7 +266,8 @@ const CashRegisterClose = () => {
         // Manejar error si es necesario
       });
   };
-
+  console.log(totalMovements);
+  console.log(totalTransactions);
   return (
     <section className="container-cash-closing">
       <div className="first-section-cash-close">
@@ -365,6 +376,97 @@ const CashRegisterClose = () => {
           <div>Caja cerrada exitosamente el {closingTime}</div>
         </div>
       )}
+
+      <div style={{width: '100%'}}>
+      {totalMovements && totalTransactions && (
+        <div className="container-total">
+          {isLoading ? (
+            <div style={{ display: "flex", justifyContent: "center", alignItems:'center' }}>
+              <Spinner />
+            </div>
+          ) : (
+            <>
+              <div className="card">
+                <h2 className="card-title">Total de Transacciones</h2>
+                <table className="table-total">
+                  <thead>
+                    <tr>
+                      <th>Concepto</th>
+                      <th className="amount-total">Monto (USD)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Ingresos</td>
+                      <td className="amount-total">
+                       $ {totalTransactions.totalIncomeUSD.toFixed(2)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Gastos</td>
+                      <td className="amount-total">
+                        $ {totalTransactions.totalExpensesUSD.toFixed(2)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Ingresos por Cheques</td>
+                      <td className="amount-total">
+                        $ {totalTransactions.checkIncomeUSD.toFixed(2)}
+                      </td>
+                    </tr>
+                    <tr className="total">
+                      <td>Balance</td>
+                      <td className="amount-total">
+                       $ {
+                          totalTransactions.totalIncomeUSD +
+                            totalTransactions.checkIncomeUSD -
+                            totalTransactions.totalExpensesUSD
+                        }
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="card">
+                <h2 className="card-title">Total de Movimientos</h2>
+                <table className="table-total">
+                  <thead>
+                    <tr>
+                      <th>Concepto</th>
+                      <th className="amount-total">Monto (USD)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Ingresos</td>
+                      <td className="amount-total">
+                       $ {totalMovements.incomeUSD.toFixed(2)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Gastos</td>
+                      <td className="amount-total">
+                       $ {totalMovements.expensesUSD.toFixed(2)}
+                      </td>
+                    </tr>
+                    <tr className="total">
+                      <td>Balance</td>
+                      <td className="amount-total">
+                      $  {
+                          totalMovements.incomeUSD - totalMovements.expensesUSD
+                        }
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+      </div>
+
       {selectedSubOffice && (
         <div>
           <div
@@ -403,7 +505,12 @@ const CashRegisterClose = () => {
                         </option>
                       ))}
                     </select>
-                    <div className="floating-label" style={{backgroundColor: 'white'}}>Campo</div>
+                    <div
+                      className="floating-label"
+                      style={{ backgroundColor: "white" }}
+                    >
+                      Campo
+                    </div>
                   </div>
                 </div>
               </div>
@@ -423,7 +530,11 @@ const CashRegisterClose = () => {
                       }}
                       value={selectedValue}
                       onChange={handleValueChange}
-                      disabled={!selectedField || (selectedField === 'Moneda/Cuenta' && !selectedSubOffice)}
+                      disabled={
+                        !selectedField ||
+                        (selectedField === "Moneda/Cuenta" &&
+                          !selectedSubOffice)
+                      }
                     >
                       <option value="">Seleccione valor</option>
                       {valueOptions?.map((option) => (
@@ -432,11 +543,19 @@ const CashRegisterClose = () => {
                         </option>
                       ))}
                     </select>
-                    <div className="floating-label" style={{backgroundColor: 'white'}}>Valor</div>
+                    <div
+                      className="floating-label"
+                      style={{ backgroundColor: "white" }}
+                    >
+                      Valor
+                    </div>
                   </div>
                 </div>
               </div>
-              <button className="btn-search-users" onClick={handleFilterMovements}>
+              <button
+                className="btn-search-users"
+                onClick={handleFilterMovements}
+              >
                 Buscar{" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -462,103 +581,116 @@ const CashRegisterClose = () => {
               </button>
             </div>
           </div>
-
           <div className="container-table">
             <div className="tbl-container-cash-close">
               {isLoadingMovements ? (
-                <div style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    padding: "20px",
+                  }}
+                >
                   <Spinner />
                 </div>
               ) : (
                 <table className="tbl-cash">
-                <thead>
-                  <tr>
-                    <th>Categoria</th>
-                    <th>Tipo</th>
-                    <th>Usuario</th>
-                    <th>Monto de origen</th>
-                    <th>Paga</th>
-                    <th>T/C</th>
-                    <th>Monto de egreso</th>
-                    <th>Compra</th>
-                    <th>Numero de cheque</th>
-                    <th>Fecha de cheque</th>
-                    <th>Banco emisor</th>
-                    <th>Monto</th>
-                    <th>Moneda</th>
-                    <th>Descripcion</th>
-                    <th>Hora</th>
-                    {/*
+                  <thead>
+                    <tr>
+                      <th>Categoria</th>
+                      <th>Tipo</th>
+                      <th>Usuario</th>
+                      <th>Monto de origen</th>
+                      <th>Paga</th>
+                      <th>T/C</th>
+                      <th>Monto de egreso</th>
+                      <th>Compra</th>
+                      <th>Numero de cheque</th>
+                      <th>Fecha de cheque</th>
+                      <th>Banco emisor</th>
+                      <th>Monto</th>
+                      <th>Moneda</th>
+                      <th>Descripcion</th>
+                      <th>Hora</th>
+                      {/*
                     <th>Sucursal</th>
                     
                     */}
-                    {/*
+                      {/*
                   {userRol === "administrador" && <th>Acciones</th>}
                   */}
-                  </tr>
-                </thead>
-                <tbody>
-                  {transactionsAndMovements &&
-                  transactionsAndMovements.length > 0 ? (
-                    transactionsAndMovements.map((movimiento) => (
-                      <tr key={movimiento._id}>
-                        <td data-table="Categoria">
-                          <span
-                            style={{ display: "flex", alignItems: "center" }}
-                          >
-                            {movimiento.category || "transacción"}{" "}
-                            {getTypeIcon(movimiento.category)}
-                          </span>
-                        </td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {transactionsAndMovements &&
+                    transactionsAndMovements.length > 0 ? (
+                      transactionsAndMovements.map((movimiento) => (
+                        <tr key={movimiento._id}>
+                          <td data-table="Categoria">
+                            <span
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
+                              {movimiento.category || "transacción"}{" "}
+                              {getTypeIcon(movimiento.category)}
+                            </span>
+                          </td>
 
-                        <td data-table="Tipo">{movimiento.type || "N/A"}</td>
-                        <td data-table="Usuario">
-                          <span>{movimiento.user.username}</span>
-                        </td>
-                        <td data-table="Monto">
-                          <span> {movimiento.targetAmount || "N/A"}</span>
-                        </td>
-                        <td data-table="Paga">
-                          <span>{movimiento.sourceCurrencyCode || "N/A"}</span>
-                        </td>
-                        <td data-table="T/C">
-                          <span>{movimiento.exchangeRate || "N/A"}</span>
-                        </td>
-                        <td data-table="Monto de egreso">
-                          {movimiento.targetAmount || "N/A"}
-                        </td>
-                        <td data-table="Compra">
-                          <span>{movimiento.targetCurrencyCode || "N/A"}</span>
-                        </td>
-                        <td data-table="Numero de cheque">
-                          {movimiento.checkNumber || "N/A"}
-                        </td>
-                        <td data-table="Fecha de cheque">
-                          {movimiento.checkDueDate || "N/A"}
-                        </td>
-                        <td data-table="Banco emisor">
-                          {movimiento.bankName || "N/A"}
-                        </td>
-                        <td data-table="Monto">{movimiento.amount || "N/A"}</td>
-                        <td data-table='Moneda'>{movimiento.currency.name || 'N/A'}</td>
-                        <td data-table="Descripcion">
-                          <span style={{ whiteSpace: "wrap" }}>
-                            {movimiento.description || "N/A"}
-                          </span>
-                        </td>
-                        <td data-table="Hora">
-                          <span>
-                            {new Date(movimiento.createdAt).toLocaleString(
-                              "es-ES",
-                              {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                hour12: false,
-                              }
-                            )}
-                          </span>
-                        </td>
-                        {/*
+                          <td data-table="Tipo">{movimiento.type || "N/A"}</td>
+                          <td data-table="Usuario">
+                            <span>{movimiento.user.username}</span>
+                          </td>
+                          <td data-table="Monto">
+                            <span> {movimiento.targetAmount || "N/A"}</span>
+                          </td>
+                          <td data-table="Paga">
+                            <span>
+                              {movimiento.sourceCurrencyCode || "N/A"}
+                            </span>
+                          </td>
+                          <td data-table="T/C">
+                            <span>{movimiento.exchangeRate || "N/A"}</span>
+                          </td>
+                          <td data-table="Monto de egreso">
+                            {movimiento.targetAmount || "N/A"}
+                          </td>
+                          <td data-table="Compra">
+                            <span>
+                              {movimiento.targetCurrencyCode || "N/A"}
+                            </span>
+                          </td>
+                          <td data-table="Numero de cheque">
+                            {movimiento.checkNumber || "N/A"}
+                          </td>
+                          <td data-table="Fecha de cheque">
+                            {movimiento.checkDueDate || "N/A"}
+                          </td>
+                          <td data-table="Banco emisor">
+                            {movimiento.bankName || "N/A"}
+                          </td>
+                          <td data-table="Monto">
+                            {movimiento.amount || "N/A"}
+                          </td>
+                          <td data-table="Moneda">
+                            {movimiento.currency.name || "N/A"}
+                          </td>
+                          <td data-table="Descripcion">
+                            <span style={{ whiteSpace: "wrap" }}>
+                              {movimiento.description || "N/A"}
+                            </span>
+                          </td>
+                          <td data-table="Hora">
+                            <span>
+                              {new Date(movimiento.createdAt).toLocaleString(
+                                "es-ES",
+                                {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: false,
+                                }
+                              )}
+                            </span>
+                          </td>
+                          {/*
                         <td data-table="Sucursal">
                           <span>
                             {movimiento.subOfficeName ||
@@ -567,25 +699,25 @@ const CashRegisterClose = () => {
                         </td>
                         
                         */}
-                        {/*
+                          {/*
                       {userRol === 'administrador' && (
                         <td>
                           <button className="btn-trash">Eliminar</button>
                         </td>
                       )}
                       */}
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="15" style={{ textAlign: "center" }}>
+                          No hay movimientos del día
+                        </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="15" style={{ textAlign: "center" }}>
-                        No hay movimientos del día
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>   
-            )}
+                    )}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>
