@@ -4,7 +4,6 @@ import {
   VERIFY_CASH_REGISTER,
   VERIFY_CASH_REGISTER_ERROR,
   CLEAR_CASH_REGISTER_ERROR,
-  GET_ALL_MOVEMENTS,
   GET_TRANSACTIONS_AND_MOVEMENTS,
   CLEAN_FILTER,
   FILTER_MOVEMENTS_FOR_DAY,
@@ -48,9 +47,13 @@ const cashRegisterReducer = (state = initialState, action) => {
       };
     case CLEAN_FILTER:
       return {
-        ...state,
-        transactionsAndMovements: [],
+        openCashRegister: false,
+        closedCashRegister: false,
         verifyCashRegister: [],
+        error: "",
+        transactionsAndMovements: [],
+        totalTransactionsForDay: false,
+        totalMovementsForDay :false
       };
     case GET_TRANSACTIONS_AND_MOVEMENTS:
       return {

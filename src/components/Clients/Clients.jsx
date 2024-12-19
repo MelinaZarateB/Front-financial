@@ -15,6 +15,7 @@ import {
 import SpinnerSmall from "./../../utils/Spinner/SpinnerSmall";
 import imgPencil from "./../../assets/pencil.svg";
 import { useRef, useCallback } from "react";
+import { getCurrencies } from "@/redux/actions/subOfficesActions";
 import Swal from "sweetalert2";
 
 const Clients = () => {
@@ -34,7 +35,7 @@ const Clients = () => {
   const tableRef = useRef(null);
   const clients = useSelector((state) => state.clients.clients);
   const deleteClient = useSelector((state) => state.clients.deleteClient);
-
+  //const currencies = useSelector((state) => state.offices.currencies);
   const [newClient, setNewClient] = useState({
     name: "",
     lastname: "",
@@ -134,6 +135,7 @@ const Clients = () => {
 
   useEffect(() => {
     dispatch(getClients());
+    // dispatch(getCurrencies())
   }, [deleteClient]);
 
   useEffect(() => {

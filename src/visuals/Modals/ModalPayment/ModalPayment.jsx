@@ -1,8 +1,8 @@
-import {useState} from "react";
+import { useState } from "react";
 import "./ModalPayment.css";
 
 const ModalPayment = ({ isOpen, onClose, onSubmit, clientId }) => {
-    console.log(clientId)
+  console.log(clientId);
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [currency, setCurrency] = useState(""); // Estado para la moneda seleccionada
@@ -24,6 +24,7 @@ const ModalPayment = ({ isOpen, onClose, onSubmit, clientId }) => {
           <input
             className="input-field-dashboard"
             type="text"
+            name="amount"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
@@ -34,6 +35,7 @@ const ModalPayment = ({ isOpen, onClose, onSubmit, clientId }) => {
             Monto
           </label>
         </div>
+        {/*
         <div className="input-box-dashboard">
           <input
             className="input-field-dashboard"
@@ -48,6 +50,9 @@ const ModalPayment = ({ isOpen, onClose, onSubmit, clientId }) => {
             Descripción
           </label>
         </div>
+        */}
+
+        {/*
         <div className="input-box-dashboard">
           <div className={`select-container ${currency ? "has-value" : ""}`}>
             <select
@@ -60,10 +65,13 @@ const ModalPayment = ({ isOpen, onClose, onSubmit, clientId }) => {
                 cursor: "pointer",
               }}
             >
-              <option value="all">Seleccione moneda</option>
-              <option value="USD">USD - Dólar</option>
-              <option value="EUR">EUR - Euro</option>
-              <option value="ARS">ARS - Peso Argentino</option>
+              <option value="">Moneda</option>
+              {currencies?.map((currency) => (
+                <option
+                  key={currency._id}
+                  value={currency._id}
+                >{`${currency.name} - ${currency.code}`}</option>
+              ))}
             </select>
             <div
               className="floating-label"
@@ -73,6 +81,12 @@ const ModalPayment = ({ isOpen, onClose, onSubmit, clientId }) => {
             </div>
           </div>
         </div>
+        
+        
+        
+        */}
+
+
         <div
           className="buttons-container"
           style={{ display: "flex", gap: "5px", justifyContent: "end" }}

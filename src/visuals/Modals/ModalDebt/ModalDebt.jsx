@@ -2,7 +2,7 @@ import "./ModalDebt.css";
 import { useState } from "react";
 
 const ModalDebt = ({ isOpen, onClose, onSubmit, clientId }) => {
-    console.log('modal deuda', clientId)
+  console.log("modal deuda", clientId);
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [currency, setCurrency] = useState(""); // Estado para la moneda seleccionada
@@ -11,7 +11,7 @@ const ModalDebt = ({ isOpen, onClose, onSubmit, clientId }) => {
     onSubmit(amount, description, currency);
     setAmount("");
     setDescription("");
-    setCurrency(""); 
+    setCurrency("");
   };
 
   if (!isOpen) return null;
@@ -22,6 +22,7 @@ const ModalDebt = ({ isOpen, onClose, onSubmit, clientId }) => {
         <div className="input-box-dashboard">
           <input
             className="input-field-dashboard"
+            name="amount"
             type="text"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
@@ -33,6 +34,7 @@ const ModalDebt = ({ isOpen, onClose, onSubmit, clientId }) => {
             Monto
           </label>
         </div>
+        {/*
         <div className="input-box-dashboard">
           <input
             className="input-field-dashboard"
@@ -47,6 +49,9 @@ const ModalDebt = ({ isOpen, onClose, onSubmit, clientId }) => {
             Descripción
           </label>
         </div>
+        */}
+        {/* 
+        
         <div className="input-box-dashboard">
           <div className={`select-container ${currency ? "has-value" : ""}`}>
             <select
@@ -72,6 +77,8 @@ const ModalDebt = ({ isOpen, onClose, onSubmit, clientId }) => {
             </div>
           </div>
         </div>
+        */}
+
         <div
           className="buttons-container"
           style={{ display: "flex", gap: "5px", justifyContent: "end" }}

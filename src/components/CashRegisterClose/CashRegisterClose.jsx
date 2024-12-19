@@ -14,6 +14,8 @@ import {
   filterTransactiosAndMovements,
   totalMovementsForDay,
   totalTransactionsForDay,
+  cleanMessage,
+  cleanFilter
 } from "@/redux/actions/cashRegisterActions";
 import Swal from "sweetalert2";
 import Spinner from "@/utils/Spinner/Spinner";
@@ -45,6 +47,7 @@ const CashRegisterClose = () => {
   const verificatedCashRegisterOpen = useSelector(
     (state) => state.cashRegister.verifyCashRegister
   );
+  console.log('HOLAA',verificatedCashRegisterOpen)
   const closedCashRegister = useSelector(
     (state) => state.cashRegister.closedCashRegister
   );
@@ -266,8 +269,15 @@ const CashRegisterClose = () => {
         // Manejar error si es necesario
       });
   };
-  console.log(totalMovements);
-  console.log(totalTransactions);
+ useEffect(() => {
+
+  return () => {
+    setSelectedSubOffice('')
+    dispatch(cleanFilter())
+
+  }
+
+ }, [])
   return (
     <section className="container-cash-closing">
       <div className="first-section-cash-close">
@@ -349,7 +359,7 @@ const CashRegisterClose = () => {
         </span>
       </div>
 
-      {closedCashRegister && (
+      {closedCashRegister && totalMovements && totalTransactions && (
         <div className="container-balance">
           {isLoading ? (
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -378,7 +388,7 @@ const CashRegisterClose = () => {
       )}
 
       <div style={{width: '100%'}}>
-      {totalMovements && totalTransactions && (
+      {totalMovements && totalTransactions && closedCashRegister &&  (
         <div className="container-total">
           {isLoading ? (
             <div style={{ display: "flex", justifyContent: "center", alignItems:'center' }}>

@@ -3,9 +3,39 @@ import {
   CREATE_CLIENTS,
   DELETE_CLIENTS,
   UPDATE_CLIENTS,
+  ADD_MONEY,
+  SUBTRACT_MONEY
 } from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
+
+
+export const addMoney = (id) => {
+  return async (dispatch) => {
+    try{
+      const { data } = await axios.put(`http://localhost:3000/clients/${id}`)
+      if(data){
+        Swal.fire({
+          text: "Se asigno el pago al cliente.",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+
+    }catch(error){
+      const mensajeError =
+      error.response?.data?.message ||
+      "Ocurrio un error al intentar agregar asignar el pago.";
+    Swal.fire({
+      title: "Error",
+      text: mensajeError,
+      icon: "error",
+    });
+
+    }
+  }
+}
 
 export const updateMoneyClients = ({ id, money }) => {
   return async (dispatch) => {

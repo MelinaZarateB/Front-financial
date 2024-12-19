@@ -68,7 +68,13 @@ export const totalTransactionsForDay = (subOfficeId) => {
     }
   };
 };
-
+export const cleanFilter = () => {
+  return (dispatch) => {
+    dispatch({
+      type: CLEAN_FILTER
+    });
+  };
+}
 export const cleanMessage = () => {
   return (dispatch) => {
     dispatch({
