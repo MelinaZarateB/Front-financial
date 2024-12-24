@@ -1,19 +1,31 @@
-import { CREATE_INCOME, GET_INCOMES, FILTER_INCOME, CLEAN_FILTER } from "../action-types";
+import {
+  CREATE_INCOME,
+  GET_INCOMES,
+  FILTER_INCOME,
+  CLEAN_FILTER,
+  ADD_PAYMENT,
+} from "../action-types";
 
 let initialState = {
   createdIncome: false,
   incomes: [],
   incomesFiltered: [],
+  addPayment: false,
 };
 
 const incomesReducer = (state = initialState, action) => {
   switch (action.type) {
+    case ADD_PAYMENT:
+      return {
+        ...state,
+        addPayment: state.addPayment ? false : action.payload,
+      };
 
     case CLEAN_FILTER:
-      return{
+      return {
         ...state,
-        incomesFiltered: action.payload
-      }
+        incomesFiltered: action.payload,
+      };
 
     case FILTER_INCOME:
       return {

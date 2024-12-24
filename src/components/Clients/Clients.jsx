@@ -20,6 +20,10 @@ import Swal from "sweetalert2";
 
 const Clients = () => {
   const dispatch = useDispatch();
+  const addPaymentClient = useSelector((state) => state.incomes.addPayment);
+  const addDebtClient = useSelector((state) => state.expenses.addDebt)
+  const addMoneyClient = useSelector((state) => state.transactions.addMoney)
+  const clientsUpdate = useSelector((state) => state.clients.clients)
   const [isModalOpen, setModalOpen] = useState(false);
   const [openMenuId, setOpenMenuId] = useState(null); // Estado para manejar el menú por cliente
   const [selectedClient, setSelectedClient] = useState({}); // Estado para manejar el cliente seleccionado
@@ -44,9 +48,9 @@ const Clients = () => {
   });
 
   const handleOpenModal = (modalType, clientId) => {
-    //setSelectedClientId(clientId); // Guarda el ID del cliente en el estado
-    setSelectedModal(modalType); // Establece el tipo de modal
-    setModalOpen(true); // Abre el modal
+    setSelectedClient({ id: clientId });
+    setSelectedModal(modalType);
+    setModalOpen(true);
   };
 
   const handleCloseModal = () => {
@@ -55,7 +59,6 @@ const Clients = () => {
   };
 
   const handleSubmit = (amount, description) => {
-    console.log("Pago confirmado:", amount, description);
     setModalOpen(false); // Cerrar modal después de enviar los datos
   };
 
@@ -68,6 +71,7 @@ const Clients = () => {
     clientName,
     clientLastname,
     clientTransactions,
+    clientMovements,
     clientObservations
   ) => {
     setSelectedClient({
@@ -75,6 +79,7 @@ const Clients = () => {
       name: clientName,
       lastname: clientLastname,
       transactions: clientTransactions,
+      movements: clientMovements,
       observations: clientObservations,
     });
     setShowClientDetail(true); // Cambiar a la vista del detalle del cliente
@@ -136,7 +141,7 @@ const Clients = () => {
   useEffect(() => {
     dispatch(getClients());
     // dispatch(getCurrencies())
-  }, [deleteClient]);
+  }, [deleteClient, addPaymentClient, addDebtClient, addMoneyClient, clientsUpdate]);
 
   useEffect(() => {
     // Obtener información del usuario del localStorage
@@ -302,12 +307,7 @@ const Clients = () => {
                   <button
                     className="btn-search-users"
                     onClick={handleSendInputs}
-                    disabled={
-                      !newClient.name ||
-                      !newClient.lastname ||
-                      !newClient.email ||
-                      !newClient.phone
-                    }
+                    disabled={!newClient.name || !newClient.lastname}
                   >
                     <label htmlFor="submit" className="label">
                       {" "}
@@ -389,6 +389,7 @@ const Clients = () => {
             </div>
             
             */}
+
             <div className="container-table" ref={tableRef}>
               <div className="tbl-container">
                 <table className="tbl">
@@ -400,7 +401,6 @@ const Clients = () => {
                       <th>Email</th>
                       <th>Saldo en guarda</th>
                       <th>Deuda total</th>
-                      <th>Pagos total</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>
@@ -471,25 +471,27 @@ const Clients = () => {
                           <td data-table="Deuda total">
                             <span>{client.totalDebts.toFixed(2)}</span>
                           </td>
-                          <td data-table="Pagos total">
-                            <span>{client.totalPayments.toFixed(2)}</span>
-                          </td>
+{/*
+
+
+
+*/}
                           <td>
-                            {/* Modales */}
+                            {/* Modales 
                             <ModalPayment
                               isOpen={
                                 isModalOpen && selectedModal === "payment"
                               }
                               onClose={handleCloseModal}
                               onSubmit={handleSubmit}
-                              clientId={selectedClient.id} // Pasa clientId al ModalPayment
+                              clientId={selectedClient.id}
                             />
 
                             <ModalDebt
                               isOpen={isModalOpen && selectedModal === "debt"}
                               onClose={handleCloseModal}
                               onSubmit={handleSubmit}
-                              clientId={selectedClient.id} // Pasa clientId al ModalDebt también
+                              clientId={selectedClient.id}
                             />
                             <ModalAssignBalance
                               isOpen={
@@ -509,9 +511,15 @@ const Clients = () => {
                               onSubmit={handleSubmit}
                               clientId={selectedClient.id}
                             />
+                            
+                            
+                            
+                            */}
 
                             <div className="container-buttons-client">
                               <div>
+                                {/*
+                                
                                 <button
                                   className="menu-button"
                                   type="button"
@@ -540,8 +548,9 @@ const Clients = () => {
                                     <circle cx="5" cy="12" r="1"></circle>
                                   </svg>
                                 </button>
+                                */}
 
-                                {/* Menú específico de este cliente */}
+                                {/* Menú específico de este cliente 
                                 {openMenuId === client._id && (
                                   <div
                                     role="menu"
@@ -598,6 +607,10 @@ const Clients = () => {
                                     </div>
                                   </div>
                                 )}
+                                
+                                
+                                
+                                */}
                               </div>
                               <button
                                 className="btn-detail-client"
@@ -607,6 +620,7 @@ const Clients = () => {
                                     client.name,
                                     client.lastname,
                                     client.transactions,
+                                    client.movements,
                                     client.observations
                                   )
                                 } // Establece el cliente al hacer clic
@@ -675,7 +689,7 @@ const Clients = () => {
                     ) : (
                       <tr>
                         <td colSpan="7" style={{ textAlign: "center" }}>
-                          No hay transacciones disponibles
+                          No hay clientes disponibles
                         </td>
                       </tr>
                     )}
@@ -691,3 +705,54 @@ const Clients = () => {
 };
 
 export default Clients;
+
+{
+  /*
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                marginBottom: "3px",
+              }}
+            >
+              <div className="input-box-dashboard">
+                <input
+                  type="text"
+                  className="input-field-dashboard"
+                  name="email"
+                  onChange={handleChange}
+                  value={name}
+                />
+                <label htmlFor="email" className="label-input-dashboard">
+                  Buscar cliente por nombre
+                </label>
+              </div>
+              <button className="btn-search-users">
+                Buscar{" "}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="20px"
+                  viewBox="0 -960 960 960"
+                  width="20px"
+                  fill="#06571f"
+                >
+                  <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+                </svg>
+              </button>
+              <button className="btn-clean">
+                Limpiar{" "}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="20px"
+                  viewBox="0 -960 960 960"
+                  width="20px"
+                  fill="rgba(255, 255, 255, 0.83)"
+                >
+                  <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+                </svg>
+              </button>
+            </div>
+            
+            */
+}

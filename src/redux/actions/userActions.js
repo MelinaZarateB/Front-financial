@@ -22,7 +22,9 @@ export const cleanMessage = () => {
 export const updateUser = (userId, updateField) => {
   return async (dispatch) => {
     try{
-      const { data } = await axios.put(`http://localhost:3000/users/update-user/${userId}`, updateField)
+      const { data } = await axios.put(
+        //`http://localhost:3000/users/update-user/${userId}`, 
+         `https://back-financiera.up.railway.app/users/update-user/${userId}`,updateField)
       if(data){
         dispatch({
           type: UPDATE_USER,
@@ -51,7 +53,9 @@ export const updateUser = (userId, updateField) => {
 export const registerUser = (newUser) => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.post(`http://localhost:3000/users`, newUser);
+      const { data } = await axios.post(
+        //`http://localhost:3000/users`, 
+        `https://back-financiera.up.railway.app/users`,newUser);
       if (data) {
         dispatch({
           type: REGISTER_USER_SUCCESS,
@@ -84,7 +88,8 @@ export const deleteUser = (userId) => {
       const token = localStorage.getItem("token");
       if (token) {
         const { data } = await axios.delete(
-          `http://localhost:3000/users/delete-user/${userId}`,
+          //`http://localhost:3000/users/delete-user/${userId}`,
+          `https://back-financiera.up.railway.app/users/delete-user/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -128,7 +133,9 @@ export const cleanFilterUserByEmail = () => {
 export const getAllUsers = () => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get("http://localhost:3000/users/");
+      const { data } = await axios.get(
+        //"http://localhost:3000/users/"
+        "https://back-financiera.up.railway.app/users/");
       if (data) {
         dispatch({
           type: GET_ALL_USERS,
@@ -153,7 +160,8 @@ export const searchUserByEmail = (email) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.get(
-        `http://localhost:3000/users/email/${email}`
+        //`http://localhost:3000/users/email/${email}`
+        `https://back-financiera.up.railway.app/users/email/${email}`
       );
       if (data) {
         dispatch({

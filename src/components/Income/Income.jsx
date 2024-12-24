@@ -4,6 +4,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import TextField from "@mui/material/TextField";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../utils/theme";
+import { Switch } from "../ui/switch";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createIncome,
@@ -17,7 +18,11 @@ import Swal from "sweetalert2";
 
 const Income = () => {
   const dispatch = useDispatch();
+  const [hasGuardedBalance, setHasGuardedBalance] = useState(false);
+  const clients = useSelector((state) => state.clients.clients);
+  const [clientSelected, setClientSelected] = useState({});
   const subOffices = useSelector((state) => state.offices.subOffices);
+
   const createdIncome = useSelector((state) => state.incomes.createdIncome);
   const incomesFiltered = useSelector((state) => state.incomes.incomesFiltered);
   const incomes = useSelector((state) => state.incomes.incomes);
@@ -102,7 +107,7 @@ const Income = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await dispatch(createIncome(newIncome));
+      await dispatch(createIncome(newIncome, clientSelected._id));
     } catch (error) {
       console.error(error);
     } finally {
@@ -143,6 +148,17 @@ const Income = () => {
         dispatch(deleteMovement(idMovement));
       }
     });
+  };
+  const [searchClient, setSearchClient] = useState("");
+  const [balanceInCustody, setbalanceInCustody] = useState("");
+
+  const handleBalanceInCustody = () => {
+    console.log(balanceInCustody);
+    if (balanceInCustody) {
+      dispatch(updateMoneyClients(balanceInCustody));
+    }
+    setbalanceInCustody("");
+    setClientSelected({});
   };
 
   return (
@@ -292,6 +308,136 @@ const Income = () => {
                   </div>
                 </div>
               </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "5px",
+                  marginBottom: "5px",
+                }}
+              >
+                <Switch
+                  id="guarded-balance"
+                  checked={hasGuardedBalance}
+                  onCheckedChange={(checked) => {
+                    setHasGuardedBalance(checked);
+                    if (!checked) {
+                      setClientSelected({});
+                    }
+                  }}
+                />
+                <label htmlFor="">Registrar Pago a Cliente</label>
+              </div>
+              {hasGuardedBalance && (
+                <div className="space-y-4 border-t pt-4">
+                  <div
+                  // style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    {/*
+                    <div className="container-input-btn">
+                      <div className="input-box-dashboard">
+                        <input
+                          type="text"
+                          className="input-field-dashboard"
+                          name="client"
+                          value={searchClient}
+                          onChange={""}
+                        />
+                        <label
+                          className="label-input-dashboard"
+                          style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                        >
+                          Buscar cliente por nombre
+                        </label>
+                      </div>
+                      <div>
+                        <button
+                          className="btn-new-client"
+                     
+                        >
+                          <span>Nuevo cliente</span>
+                       
+                        </button>
+                      </div>
+                    </div>
+                    
+                    
+                    */}
+
+                    {/*
+                                                <div>
+                                                  <span
+                                                    style={{
+                                                      fontSize: "14px",
+                                                      color: "rgb(31, 151, 243)",
+                                                      display: "flex",
+                                                      cursor: "pointer",
+                                                    }}
+                                                  >
+                                                    Ver clientes <img src={arrow} alt="" />
+                                                  </span>
+                                                </div>
+                                                */}
+                  </div>
+                  <div className="container-client-first-section">
+                    {clients?.map((client) => (
+                      <div
+                        key={client._id}
+                        className="container-client-saldo"
+                        onClick={() => setClientSelected(client)}
+                        style={{
+                          backgroundColor:
+                            clientSelected._id === client._id ? "#EFF6FF" : "",
+                          border:
+                            clientSelected._id === client._id
+                              ? "1px solid #1F97F3"
+                              : "",
+                        }}
+                      >
+                        <span>{client.name}</span>{" "}
+                        <span>{client.lastname}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {/*
+                  {clientSelected.name && (
+                    <div>
+                      <div className="input-box-dashboard">
+                        <input
+                          type="text"
+                          className="input-field-dashboard"
+                          value={balanceInCustody.money || ""}
+                          onChange={(e) =>
+                            setbalanceInCustody({
+                              id: clientSelected._id, // ID del cliente seleccionado
+                              money: e.target.value, // Valor del input
+                            })
+                          }
+                        />
+                        <label
+                          className="label-input-dashboard"
+                          style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                        >
+                          Ingrese monto en guarda
+                        </label>
+                      </div>
+                      <p
+                        style={{
+                          color: "rgb(107 114 128)",
+                          fontSize: "14px",
+                          marginTop: "5px",
+                        }}
+                      >
+                        Este monto quedará registrado como saldo en guarda para{" "}
+                        {clientSelected.name} {clientSelected.lastname}
+                      </p>
+                    </div>
+                  )}
+                  
+                  
+                  */}
+                </div>
+              )}
 
               <div
                 style={{ display: "flex", gap: "5px", justifyContent: "end" }}
@@ -421,7 +567,7 @@ const Income = () => {
                         <td data-table="Monto">
                           <span>$ {income.amount.toFixed(2)}</span>
                         </td>
-                        <td data-table='Moneda'>{income.currency.name}</td>
+                        <td data-table="Moneda">{income.currency.name}</td>
                         <td data-table="Fecha">
                           <span>
                             {new Date(income.date)

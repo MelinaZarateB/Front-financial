@@ -14,7 +14,9 @@ import Swal from "sweetalert2";
 export const createSubOffices = (newSubOffice) => {
   return async (dispatch) => {
     try{
-      const { data } = await axios.post('http://localhost:3000/sub_offices', newSubOffice)
+      const { data } = await axios.post(
+        //'http://localhost:3000/sub_offices',
+        "https://back-financiera.up.railway.app/sub_offices", newSubOffice)
       if(data) {
         dispatch({
           type: CREATE_SUBOFFICES,
@@ -49,7 +51,8 @@ export const createCurrencies = (currency) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.post(
-        `http://localhost:3000/currencies`,
+        //`http://localhost:3000/currencies`,
+        `https://back-financiera.up.railway.app/currencies`,
         currency
       );
       if (data) {
@@ -77,7 +80,9 @@ export const createCurrencies = (currency) => {
 export const getCurrencies = () => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get("http://localhost:3000/currencies");
+      const { data } = await axios.get(
+        //"http://localhost:3000/currencies"
+         "https://back-financiera.up.railway.app/currencies");
       if (data) {
         dispatch({
           type: GET_CURRENCIES,
@@ -102,7 +107,8 @@ export const deleteCurrency = (idCurrency) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.delete(
-        `http://localhost:3000/currencies/${idCurrency}`
+        //`http://localhost:3000/currencies/${idCurrency}`
+        `https://back-financiera.up.railway.app/currencies/${idCurrency}`
       );
       if (data) {
         dispatch({
@@ -136,7 +142,8 @@ export const updateStockCurrency = (currencyId, subOfficeId) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.put(
-        `http://localhost:3000/sub_offices/${subOfficeId}/currencies/${currencyId}`
+        //`http://localhost:3000/sub_offices/${subOfficeId}/currencies/${currencyId}`
+        `https://back-financiera.up.railway.app/sub_offices/${subOfficeId}/currencies/${currencyId}`
       );
       if (data) {
         dispatch({
@@ -168,8 +175,9 @@ export const updateStockCurrency = (currencyId, subOfficeId) => {
 export const getSubOffices = () => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get("http://localhost:3000/sub_offices");
-      console.log("sub sucursales", data);
+      const { data } = await axios.get(
+        //"http://localhost:3000/sub_offices"
+        "https://back-financiera.up.railway.app/sub_offices");
       if (data) {
         dispatch({
           type: GET_SUBOFFICES,
@@ -192,9 +200,9 @@ export const deleteCurrencySubOffice = (currencyId, subOfficeId) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.delete(
-        `http://localhost:3000/sub_offices/${subOfficeId}/currencies/${currencyId}`
+       // `http://localhost:3000/sub_offices/${subOfficeId}/currencies/${currencyId}`
+       `https://back-financiera.up.railway.app/sub_offices/${subOfficeId}/currencies/${currencyId}`
       );
-      console.log(data);
       if (data) {
         dispatch({
           type: DELETE_CURRENCY_SUBOFFICES,

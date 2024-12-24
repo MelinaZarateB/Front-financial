@@ -11,7 +11,7 @@ import {
   FILTER_MOVEMENTS_FOR_DAY,
   CLEAN_MESSAGE,
   TOTAL_MOVEMENTS_FOR_DAY,
-  TOTAL_TRANSACTIONS_FOR_DAY
+  TOTAL_TRANSACTIONS_FOR_DAY,
 } from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -21,14 +21,14 @@ export const totalMovementsForDay = (subOfficeId) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.post(
-        `http://localhost:3000/cash-register/${subOfficeId}/total-movements-for-day`
+        // `http://localhost:3000/cash-register/${subOfficeId}/total-movements-for-day`
+        `https://back-financiera.up.railway.app/cash-register/${subOfficeId}/total-movements-for-day`
       );
-      console.log('TOTAL MOVIMIENTOS POR DIA', data)
-      if(data){
+      if (data) {
         dispatch({
           type: TOTAL_MOVEMENTS_FOR_DAY,
-          payload: data
-        })
+          payload: data,
+        });
       }
     } catch (error) {
       const mensajeError =
@@ -47,14 +47,14 @@ export const totalTransactionsForDay = (subOfficeId) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.post(
-        `http://localhost:3000/cash-register/${subOfficeId}/total-transactions-for-day`
+        // `http://localhost:3000/cash-register/${subOfficeId}/total-transactions-for-day`
+        `https://back-financiera.up.railway.app/cash-register/${subOfficeId}/total-transactions-for-day`
       );
-      console.log('TOTAL TRANSACTIONES POR DIA', data)
-      if(data){
+      if (data) {
         dispatch({
           type: TOTAL_TRANSACTIONS_FOR_DAY,
-          payload: data
-        })
+          payload: data,
+        });
       }
     } catch (error) {
       const mensajeError =
@@ -71,10 +71,10 @@ export const totalTransactionsForDay = (subOfficeId) => {
 export const cleanFilter = () => {
   return (dispatch) => {
     dispatch({
-      type: CLEAN_FILTER
+      type: CLEAN_FILTER,
     });
   };
-}
+};
 export const cleanMessage = () => {
   return (dispatch) => {
     dispatch({
@@ -97,7 +97,8 @@ export const filterTransactiosAndMovements = (subOfficeId, filterData) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.post(
-        `http://localhost:3000/cash-register/${subOfficeId}/transaction-and-movements-for-day`,
+        // `http://localhost:3000/cash-register/${subOfficeId}/transaction-and-movements-for-day`,
+        `https://back-financiera.up.railway.app/cash-register/${subOfficeId}/transaction-and-movements-for-day`,
         filterData
       );
       if (data) {
@@ -122,7 +123,8 @@ export const getTransactionsAndMovements = (subOfficeId) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.post(
-        `http://localhost:3000/cash-register/${subOfficeId}/transaction-and-movements-for-day`
+        //`http://localhost:3000/cash-register/${subOfficeId}/transaction-and-movements-for-day`
+        `https://back-financiera.up.railway.app/cash-register/${subOfficeId}/transaction-and-movements-for-day`
       );
       if (data) {
         dispatch({
@@ -150,7 +152,10 @@ export const clearCashRegisterError = () => ({
 export const getCurrencies = () => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get("http://localhost:3000/currencies");
+      const { data } = await axios.get(
+        //"http://localhost:3000/currencies"
+        "https://back-financiera.up.railway.app/currencies"
+      );
       if (data) {
         dispatch({
           type: GET_CURRENCIES,
@@ -171,10 +176,10 @@ export const updateMultipleStockCurrencies = (subOfficeId, updates) => {
     try {
       const payload = { updates };
       const { data } = await axios.put(
-        `http://localhost:3000/sub_offices/${subOfficeId}/currencies/`,
+        //`http://localhost:3000/sub_offices/${subOfficeId}/currencies/`,
+        `https://back-financiera.up.railway.app/sub_offices/${subOfficeId}/currencies/`,
         payload
       );
-      console.log("Monedas actualizadas:", data);
     } catch (err) {
       console.error(
         "Error actualizando monedas:",
@@ -188,7 +193,8 @@ export const updateMultipleCurrencies = (updates) => {
     try {
       const payload = { updates };
       const { data } = await axios.put(
-        `http://localhost:3000/currencies/multiple`,
+        //`http://localhost:3000/currencies/multiple`,
+        `https://back-financiera.up.railway.app/currencies/multiple`,
         payload
       );
     } catch (err) {
@@ -208,7 +214,8 @@ export const deleteCurrency = (idCurrency) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.delete(
-        `http://localhost:3000/currencies/${idCurrency}`
+       // `http://localhost:3000/currencies/${idCurrency}`
+       `https://back-financiera.up.railway.app/currencies/${idCurrency}`
       );
       if (data) {
         dispatch({
@@ -236,7 +243,8 @@ export const verifyCashRegisterOpen = (idSubOffice) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.get(
-        `http://localhost:3000/cash-register/current/${idSubOffice}`
+        //`http://localhost:3000/cash-register/current/${idSubOffice}`
+        `https://back-financiera.up.railway.app/cash-register/current/${idSubOffice}`
       );
       if (data) {
         dispatch({
@@ -248,7 +256,6 @@ export const verifyCashRegisterOpen = (idSubOffice) => {
       const mensajeError =
         err.response?.data?.message ||
         "No hay cajas abiertas para esta sucursal.";
-      console.log("mensaje error caja", mensajeError);
       dispatch({
         type: VERIFY_CASH_REGISTER_ERROR,
         payload: mensajeError,
@@ -267,7 +274,8 @@ export const closeCashRegister = (idCashRegister, usdRate, arsRate) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.put(
-        `http://localhost:3000/cash-register/close/${idCashRegister}`,
+       // `http://localhost:3000/cash-register/close/${idCashRegister}`,
+       `https://back-financiera.up.railway.app/cash-register/close/${idCashRegister}`,
         {
           usd_rate: usdRate,
           ars_rate: arsRate,
@@ -297,7 +305,8 @@ export const openCashRegister = (dataOpen) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.post(
-        `http://localhost:3000/cash-register/start`,
+       // `http://localhost:3000/cash-register/start`,
+       `https://back-financiera.up.railway.app/cash-register/start`,
         dataOpen
       );
       if (data) {

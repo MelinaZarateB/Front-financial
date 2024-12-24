@@ -1,16 +1,25 @@
 import "./ModalWithdrawBalance.css";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { subtractMoney } from "@/redux/actions/clientsActions";
 
 const ModalWithdrawBalance = ({ isOpen, onClose, onSubmit, clientId }) => {
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
-  const [currency, setCurrency] = useState(""); // Estado para la moneda seleccionada
+  const dispatch = useDispatch();
+  const [amount, setAmount] = useState(0);
+ // const [description, setDescription] = useState("");
+  //const [currency, setCurrency] = useState(""); // Estado para la moneda seleccionada
 
   const handleSubmit = () => {
-    onSubmit(amount, description, currency);
-    setAmount("");
-    setDescription("");
-    setCurrency(""); // Restablecer la moneda a USD al enviar
+    if (amount) {
+      dispatch(
+        subtractMoney(clientId,{
+          subtractMoney: amount,
+        })
+      );
+    }
+    setAmount(0);
+    //setDescription("");
+    //setCurrency(""); // Restablecer la moneda a USD al enviar
   };
 
   if (!isOpen) return null;
@@ -22,8 +31,9 @@ const ModalWithdrawBalance = ({ isOpen, onClose, onSubmit, clientId }) => {
           <input
             className="input-field-dashboard"
             type="text"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            name="amount"
+            onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
+            value={amount || ''}
           />
           <label
             className="label-input-dashboard"
@@ -32,6 +42,7 @@ const ModalWithdrawBalance = ({ isOpen, onClose, onSubmit, clientId }) => {
             Monto
           </label>
         </div>
+        {/*
         <div className="input-box-dashboard">
           <input
             className="input-field-dashboard"
@@ -46,6 +57,9 @@ const ModalWithdrawBalance = ({ isOpen, onClose, onSubmit, clientId }) => {
             Descripción
           </label>
         </div>
+        */}
+
+        {/*
         <div className="input-box-dashboard">
           <div className={`select-container ${currency ? "has-value" : ""}`}>
             <select
@@ -58,10 +72,13 @@ const ModalWithdrawBalance = ({ isOpen, onClose, onSubmit, clientId }) => {
                 cursor: "pointer",
               }}
             >
-              <option value="all">Seleccione moneda</option>
-              <option value="USD">USD - Dólar</option>
-              <option value="EUR">EUR - Euro</option>
-              <option value="ARS">ARS - Peso Argentino</option>
+              <option value="">Moneda</option>
+              {currencies?.map((currency) => (
+                <option
+                  key={currency._id}
+                  value={currency._id}
+                >{`${currency.name} - ${currency.code}`}</option>
+              ))}
             </select>
             <div
               className="floating-label"
@@ -71,6 +88,11 @@ const ModalWithdrawBalance = ({ isOpen, onClose, onSubmit, clientId }) => {
             </div>
           </div>
         </div>
+        
+        
+        
+        */}
+
         <div
           className="buttons-container"
           style={{ display: "flex", gap: "5px", justifyContent: "end" }}

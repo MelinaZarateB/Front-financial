@@ -16,7 +16,8 @@ export const filterMovement = (typeMovement) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/movements/filter",
+       // "http://localhost:3000/movements/filter",
+       "https://back-financiera.up.railway.app/movements/filter",
         { type: typeMovement }
       );
       if (data) {
@@ -42,7 +43,9 @@ export const filterMovement = (typeMovement) => {
 export const getAllMovements = () => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get("http://localhost:3000/movements");
+      const { data } = await axios.get(//
+      // "http://localhost:3000/movements"
+      "https://back-financiera.up.railway.app/movements");
       if (data) {
         dispatch({
           type: GET_ALL_MOVEMENTS,
@@ -65,7 +68,8 @@ export const deleteMovement = (movementId) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.delete(
-        `http://localhost:3000/movements/${movementId}`
+        //`http://localhost:3000/movements/${movementId}`
+        `https://back-financiera.up.railway.app/movements/${movementId}`
       );
       if (data) {
         dispatch({

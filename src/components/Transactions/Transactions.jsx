@@ -171,11 +171,11 @@ const Transactions = () => {
       setNewTransaction({ ...newTransaction, [name]: value });
     }
   };
-  const handleNewTransaction = async (e) => {
-    e.preventDefault();
+  const handleNewTransaction = async () => {
+    //e.preventDefault();
     setIsSubmitting(true);
     try {
-      await dispatch(createTransactions(newTransaction));
+      await dispatch(createTransactions(newTransaction, clientSelected._id));
     } catch (error) {
       console.error(error);
     } finally {
@@ -579,6 +579,9 @@ const Transactions = () => {
                   <div
                   // style={{ display: "flex", justifyContent: "space-between" }}
                   >
+                    {/*
+                    
+                    
                     <div className="container-input-btn">
                       <div className="input-box-dashboard">
                         <input
@@ -605,6 +608,7 @@ const Transactions = () => {
                         </button>
                       </div>
                     </div>
+                    */}
 
                     {/*
                     <div>
@@ -641,6 +645,9 @@ const Transactions = () => {
                       </div>
                     ))}
                   </div>
+                  {/*
+                  
+                  
                   {clientSelected.name && (
                     <div>
                       <div className="input-box-dashboard">
@@ -674,6 +681,7 @@ const Transactions = () => {
                       </p>
                     </div>
                   )}
+                  */}
                 </div>
               )}
               <ModalNewClient isOpen={isModalOpen} onClose={handleCloseModal} />

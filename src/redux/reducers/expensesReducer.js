@@ -1,19 +1,31 @@
-import { CREATE_EXPENSE, GET_EXPENSES, FILTER_EXPENSE, CLEAN_FILTER } from "../action-types";
+import {
+  CREATE_EXPENSE,
+  GET_EXPENSES,
+  FILTER_EXPENSE,
+  CLEAN_FILTER,
+  ADD_DEBT,
+} from "../action-types";
 
 let initialState = {
   createdExpense: false,
   expenses: [],
   expensesFiltered: [],
+  addDebt: false,
 };
 
 const expensesReducer = (state = initialState, action) => {
   switch (action.type) {
+    case ADD_DEBT:
+      return {
+        ...state,
+        addDebt: state.addDebt ? false : action.payload,
+      };
 
     case CLEAN_FILTER:
-      return{
+      return {
         ...state,
-        expensesFiltered: action.payload
-      }
+        expensesFiltered: action.payload,
+      };
     case FILTER_EXPENSE:
       return {
         ...state,

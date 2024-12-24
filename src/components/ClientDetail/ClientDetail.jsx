@@ -1,11 +1,12 @@
 import "./ClientDetail.css";
 import { useState } from "react";
 import ClientTransactions from "../ClientsTransaction/ClientTransactions";
+import ClientMovements from "../ClientMovements/ClientMovements";
 import ClientObservations from "../ClientObservations/ClientObservations";
 
 const ClientDetail = ({ onGoBack, selectedClient}) => {
-  const { id, name, lastname, transactions, observations } = selectedClient;
-  console.log('id del cliente', id)
+  const { id, name, lastname, transactions, movements, observations } = selectedClient;
+  console.log('MOVIMIENTOS DEL DETALLE DE CLIENTES',selectedClient.movements)
   const [activeTab, setActiveTab] = useState("transacciones"); // El valor inicial es 'transacciones'
 
   return (
@@ -36,6 +37,14 @@ const ClientDetail = ({ onGoBack, selectedClient}) => {
           Transacciones
         </button>
         <button
+          className={`tab ${activeTab === "movimientos" ? "active" : ""}`}
+          onClick={() => setActiveTab("movimientos")}
+          aria-selected={activeTab === "movimientos"}
+          aria-controls="movimientos-content"
+        >
+          Movimientos
+        </button>
+        <button
           className={`tab ${activeTab === "observaciones" ? "active" : ""}`}
           onClick={() => setActiveTab("observaciones")}
           aria-selected={activeTab === "observaciones"}
@@ -47,6 +56,7 @@ const ClientDetail = ({ onGoBack, selectedClient}) => {
       </div>
       <div className="tab-content">
         {activeTab === "transacciones" && <ClientTransactions transactions={transactions} id={id}/>}
+        {activeTab === "movimientos" && <ClientMovements movements={movements}/>}
         {activeTab === "observaciones" && <ClientObservations observations={observations} id={id}/>}
       </div>
       </div>

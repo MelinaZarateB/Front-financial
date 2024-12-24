@@ -4,6 +4,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import TextField from "@mui/material/TextField";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../utils/theme";
+import { Switch } from "../ui/switch";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createExpense,
@@ -26,11 +27,15 @@ const typeExpenses = [
   "impuestos y tasas",
   "gastos administrativos",
   "seguros",
+  "deuda cliente",
   "varios",
 ];
 
 const Expense = () => {
   const dispatch = useDispatch();
+  const [hasGuardedBalance, setHasGuardedBalance] = useState(false);
+  const clients = useSelector((state) => state.clients.clients);
+  const [clientSelected, setClientSelected] = useState({});
   const subOffices = useSelector((state) => state.offices.subOffices);
   const createdExpense = useSelector((state) => state.expenses.createdExpense);
   const expenses = useSelector((state) => state.expenses.expenses);
@@ -126,7 +131,7 @@ const Expense = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await dispatch(createExpense(newExpense));
+      await dispatch(createExpense(newExpense, clientSelected._id));
     } catch (error) {
       console.error(error);
     } finally {
@@ -160,15 +165,26 @@ const Expense = () => {
       }
     });
   };
-  
+
   const handleFilterType = () => {
     dispatch(filterExpense(selectType));
   };
   const handleCleanFilter = () => {
     dispatch(cleanFilter());
-    setSelectType('');
+    setSelectType("");
   };
 
+  const [searchClient, setSearchClient] = useState("");
+  const [balanceInCustody, setbalanceInCustody] = useState("");
+
+  const handleBalanceInCustody = () => {
+    console.log(balanceInCustody);
+    if (balanceInCustody) {
+      dispatch(updateMoneyClients(balanceInCustody));
+    }
+    setbalanceInCustody("");
+    setClientSelected({});
+  };
   // Calcular el total de los montos
   //const total = expensesArray.reduce((acc, expense) => acc + expense.monto, 0);
 
@@ -333,6 +349,137 @@ const Expense = () => {
                   </div>
                 </div>
               </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "5px",
+                  marginBottom: "5px",
+                }}
+              >
+                <Switch
+                  id="guarded-balance"
+                  checked={hasGuardedBalance}
+                  onCheckedChange={(checked) => {
+                    setHasGuardedBalance(checked);
+                    if (!checked) {
+                      setClientSelected({});
+                    }
+                  }}
+                />
+                <label htmlFor="">Registrar Deuda a Cliente</label>
+              </div>
+              {hasGuardedBalance && (
+                <div className="space-y-4 border-t pt-4">
+                  <div
+                  // style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    {/*
+                    <div className="container-input-btn">
+                      <div className="input-box-dashboard">
+                        <input
+                          type="text"
+                          className="input-field-dashboard"
+                          name="client"
+                          value={searchClient}
+                          onChange={""}
+                        />
+                        <label
+                          className="label-input-dashboard"
+                          style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                        >
+                          Buscar cliente por nombre
+                        </label>
+                      </div>
+                      <div>
+                        <button
+                          className="btn-new-client"
+                     
+                        >
+                          <span>Nuevo cliente</span>
+                       
+                        </button>
+                      </div>
+                    </div>
+                    
+                    
+                    */}
+
+                    {/*
+                                                <div>
+                                                  <span
+                                                    style={{
+                                                      fontSize: "14px",
+                                                      color: "rgb(31, 151, 243)",
+                                                      display: "flex",
+                                                      cursor: "pointer",
+                                                    }}
+                                                  >
+                                                    Ver clientes <img src={arrow} alt="" />
+                                                  </span>
+                                                </div>
+                                                */}
+                  </div>
+                  <div className="container-client-first-section">
+                    {clients?.map((client) => (
+                      <div
+                        key={client._id}
+                        className="container-client-saldo"
+                        onClick={() => setClientSelected(client)}
+                        style={{
+                          backgroundColor:
+                            clientSelected._id === client._id ? "#EFF6FF" : "",
+                          border:
+                            clientSelected._id === client._id
+                              ? "1px solid #1F97F3"
+                              : "",
+                        }}
+                      >
+                        <span>{client.name}</span>{" "}
+                        <span>{client.lastname}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/*
+                  {clientSelected.name && (
+                    <div>
+                      <div className="input-box-dashboard">
+                        <input
+                          type="text"
+                          className="input-field-dashboard"
+                          value={balanceInCustody.money || ""}
+                          onChange={(e) =>
+                            setbalanceInCustody({
+                              id: clientSelected._id, // ID del cliente seleccionado
+                              money: e.target.value, // Valor del input
+                            })
+                          }
+                        />
+                        <label
+                          className="label-input-dashboard"
+                          style={{ backgroundColor: "rgba(255, 255, 255)" }}
+                        >
+                          Ingrese monto en guarda
+                        </label>
+                      </div>
+                      <p
+                        style={{
+                          color: "rgb(107 114 128)",
+                          fontSize: "14px",
+                          marginTop: "5px",
+                        }}
+                      >
+                        Este monto quedará registrado como saldo en guarda para{" "}
+                        {clientSelected.name} {clientSelected.lastname}
+                      </p>
+                    </div>
+                  )}
+                  
+                  */}
+                </div>
+              )}
 
               <div
                 className="buttons-container"
@@ -515,7 +662,7 @@ const Expense = () => {
                       <td data-table="Monto">
                         <span> $ {expense.amount.toFixed(2)}</span>
                       </td>
-                      <td data-table='Moneda'>{expense.currency.name}</td>
+                      <td data-table="Moneda">{expense.currency.name}</td>
                       <td data-table="Fecha">
                         <span>
                           {new Date(expense.date)
@@ -539,7 +686,15 @@ const Expense = () => {
                             className="btn-trash"
                             onClick={() => handleDeleteMovement(expense._id)}
                           >
-                           <svg xmlns="http://www.w3.org/2000/svg" height="13px" viewBox="0 -960 960 960" width="13px" fill="white"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="13px"
+                              viewBox="0 -960 960 960"
+                              width="13px"
+                              fill="white"
+                            >
+                              <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
+                            </svg>
                           </button>
                         </td>
                       )}

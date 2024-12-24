@@ -8,7 +8,7 @@ import {
   openCashRegister,
   updateMultipleStockCurrencies,
   updateMultipleCurrencies,
-  cleanMessage
+  cleanMessage,
 } from "@/redux/actions/cashRegisterActions";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "@/utils/Spinner/Spinner";
@@ -30,6 +30,7 @@ const CashRegisterOpen = () => {
   const [updates, setUpdates] = useState([]);
   const [stockUpdates, setStockUpdates] = useState([]);
   const [exchangeRate, setExchangeRate] = useState(1); // Nuevo estado para la tasa de cambio en dólares
+  console.log("TASA DE CAMBIO DEFINIDA PARA LA APERTURA", exchangeRate);
 
   // Hooks de Redux
   const dispatch = useDispatch();
@@ -104,6 +105,10 @@ const CashRegisterOpen = () => {
             date: fechaActual,
             sub_office: selectedSubOffice,
             opening_balance: totalDolarizado,
+            rates: {
+              usd: exchangeRate,
+              ars: 1,
+            },
           })
         );
         if (updates) {
@@ -237,8 +242,8 @@ const CashRegisterOpen = () => {
       }, 1000);
     }
     return () => {
-      dispatch(cleanMessage())
-    }
+      dispatch(cleanMessage());
+    };
   }, [selectedSubOffice, subOffices]);
 
   useEffect(() => {

@@ -1,0 +1,76 @@
+.tbl-container-cash-close {
+  padding: 0 1.2rem 1.2rem;
+  max-height: 450px;
+  overflow-y: auto;
+}
+
+.tbl-cash {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 4px;
+}
+
+.tbl-cash th,
+.tbl-cash td {
+  border: 1px solid #ccc;
+  padding: 5px;
+  text-align: left;
+  max-width: 200px;
+  vertical-align: middle;
+  font-size: 12px;
+  line-height: 1.428571429;
+}
+
+.tbl-cash tbody tr td {
+  color: #666;
+  border-top: 1px solid #ddd;
+}
+
+.tbl-cash tbody tr {
+  transition: background 0.2s ease;
+}
+
+.tbl-cash tbody tr:hover {
+  background-color: #eff6ff;
+}
+
+.tbl-cash tr:nth-child(even) {
+  background-color: #f3f3f3;
+}
+
+@media screen and (max-width: 800px) {
+  .container-cash-closing {
+    padding: 2%;
+  }
+
+  .tbl-container-cash-close {
+    padding: 1rem;
+  }
+
+  .tbl-cash thead {
+    display: none;
+  }
+
+  .tb-cash tr,
+  .tbl-cash td {
+    display: block;
+    width: 100%;
+  }
+
+  .tbl-cash tr {
+    margin-bottom: 1rem;
+  }
+
+  .tbl-cash tbody tr td {
+    position: relative;
+    text-align: right;
+  }
+
+  .tbl-cash td::before {
+    content: attr(data-table);
+    position: absolute;
+    left: 0;
+    width: 50%;
+    text-align: left;
+  }
+}

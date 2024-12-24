@@ -68,3 +68,5 @@ export const DELETE_CLIENTS = "DELETE_CLIENTS";
 export const UPDATE_CLIENTS = "UPDATE_CLIENTS";
 export const ADD_MONEY = "ADD_MONEY";
 export const SUBTRACT_MONEY = "SUBTRACT_MONEY";
+export const ADD_PAYMENT = 'ADD_PAYMENT';
+export const ADD_DEBT = 'ADD_DEBT';

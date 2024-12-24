@@ -2,28 +2,35 @@ import {
   GET_TRANSACTIONS,
   CREATE_TRANSACTIONS,
   DELETE_TRANSACTION,
-  GET_TRANSACTIONS_RANGE_DATE
+  GET_TRANSACTIONS_RANGE_DATE,
+  ADD_MONEY,
 } from "../action-types";
 
 let initialState = {
   transactions: [],
   createTransactionsSuccess: false,
   deleteTransactionsSuccess: false,
+  addMoney: false,
 };
 
 const transactionsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_TRANSACTIONS_RANGE_DATE:
-      return{
+    case ADD_MONEY:
+      return {
         ...state,
-        transactions: action.payload
-      }
+        addMoney: state.addMoney ? false : action.payload,
+      };
+    case GET_TRANSACTIONS_RANGE_DATE:
+      return {
+        ...state,
+        transactions: action.payload,
+      };
     case DELETE_TRANSACTION:
       return {
         ...state,
         deleteTransactionsSuccess: state.deleteTransactionsSuccess
-        ? false // Si es true, primero lo seteas a false
-        : action.payload, // Luego, lo actualizas con action.payload
+          ? false // Si es true, primero lo seteas a false
+          : action.payload, // Luego, lo actualizas con action.payload
       };
     case GET_TRANSACTIONS:
       return {

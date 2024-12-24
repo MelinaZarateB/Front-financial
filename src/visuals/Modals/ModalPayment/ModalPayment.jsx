@@ -1,17 +1,27 @@
 import { useState } from "react";
 import "./ModalPayment.css";
+import { useDispatch } from "react-redux";
+import { addPayment } from "@/redux/actions/clientsActions";
 
 const ModalPayment = ({ isOpen, onClose, onSubmit, clientId }) => {
-  console.log(clientId);
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
-  const [currency, setCurrency] = useState(""); // Estado para la moneda seleccionada
+  console.log('ID DEL CLIENTE',clientId);
+  const dispatch = useDispatch();
+  const [amount, setAmount] = useState(0);
+ // const [description, setDescription] = useState("");
+  //const [currency, setCurrency] = useState(""); // Estado para la moneda seleccionada
 
   const handleSubmit = () => {
-    onSubmit(amount, description, currency);
-    setAmount("");
-    setDescription("");
-    setCurrency(""); // Restablecer la moneda a USD al enviar
+    if (amount) {
+      dispatch(
+        addPayment(clientId,{
+          totalPayments: amount,
+          money: amount
+        })
+      );
+    }
+    setAmount(0);
+    //setDescription("");
+    //setCurrency(""); // Restablecer la moneda a USD al enviar
   };
 
   if (!isOpen) return null;
@@ -25,8 +35,8 @@ const ModalPayment = ({ isOpen, onClose, onSubmit, clientId }) => {
             className="input-field-dashboard"
             type="text"
             name="amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
+            value={amount || ''}
           />
           <label
             className="label-input-dashboard"
@@ -85,7 +95,6 @@ const ModalPayment = ({ isOpen, onClose, onSubmit, clientId }) => {
         
         
         */}
-
 
         <div
           className="buttons-container"
