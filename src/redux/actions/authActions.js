@@ -6,7 +6,7 @@ import {
   CLEAN_MESSAGE,
   CHANGE_PASSWORD_SUCCESS,
   CHANGE_PASSWORD_FAILURE,
-  LOG_OUT
+  LOG_OUT,
 } from "../action-types";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -15,8 +15,8 @@ export const signUp = (newUser) => {
   return async (dispatch) => {
     try {
       const response = await axios.post(
-       // `http://localhost:3000/auth/register`,
-       `https://back-financiera.up.railway.app/auth/register`,
+        // `http://localhost:3000/auth/register`,
+        `https://back-financiera.up.railway.app/auth/register`,
         newUser
       );
       if (response) {
@@ -42,8 +42,8 @@ export const login = (user) => {
   return async (dispatch) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/auth/login`,
-       //`https://back-financiera.up.railway.app/auth/login`,
+        //`http://localhost:3000/auth/login`,
+        `https://back-financiera.up.railway.app/auth/login`,
         user
       );
 
@@ -85,8 +85,8 @@ export const restorePassword = (email) => {
   return async () => {
     try {
       const response = axios.post(
-       // `http://localhost:3000/auth/forgot-password`,
-       `https://back-financiera.up.railway.app/auth/forgot-password`,
+        // `http://localhost:3000/auth/forgot-password`,
+        `https://back-financiera.up.railway.app/auth/forgot-password`,
         email
       );
     } catch (error) {
@@ -103,8 +103,8 @@ export const changePasswordAction = (token, password) => {
   return async (dispatch) => {
     try {
       const response = await axios.post(
-       // `http://localhost:3000/auth/reset-password?token=${token}`,
-       `https://back-financiera.up.railway.app/auth/reset-password?token=${token}`,
+        // `http://localhost:3000/auth/reset-password?token=${token}`,
+        `https://back-financiera.up.railway.app/auth/reset-password?token=${token}`,
         {
           password: password,
         }
@@ -135,21 +135,20 @@ export const activateAccount = (token) => {
   return async (dispatch) => {
     try {
       const response = axios.get(
-       // `http://localhost:3000/auth/activate?token=${token}`
-       `https://back-financiera.up.railway.app/auth/activate?token=${token}`
+        // `http://localhost:3000/auth/activate?token=${token}`
+        `https://back-financiera.up.railway.app/auth/activate?token=${token}`
       );
     } catch (error) {
       const message = error.response && error.response.data.message;
       error.response && error.response.data.message
         ? error.response.data.message
         : "Ocurrio un error inesperado";
-
     }
   };
 };
 
 export const logOut = (dispatch) => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('userInfo');
+  localStorage.removeItem("token");
+  localStorage.removeItem("userInfo");
   dispatch({ type: LOG_OUT });
-}
+};
