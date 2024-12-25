@@ -1,7 +1,6 @@
 import "./ClientTransactions.css";
 
 const ClientTransactions = ({ transactions, id }) => {
-  console.log("TRANSACCIONES DEL CLIENNTE", transactions);
   return (
     <section>
       <div className="container-table">
@@ -21,6 +20,7 @@ const ClientTransactions = ({ transactions, id }) => {
                 <th>Banco emisor</th>
                 <th>Fecha</th>
                 <th>Sucursal</th>
+                <th>T/C apertura caja</th>
               </tr>
             </thead>
             <tbody>
@@ -69,6 +69,7 @@ const ClientTransactions = ({ transactions, id }) => {
                       </span>
                     </td>
                     <td>{transaction.subOfficeName}</td>
+                    <td>{transaction.cashRegisterExchangeRate || 'N/A'}</td>
                   </tr>
                 ))
               ) : (

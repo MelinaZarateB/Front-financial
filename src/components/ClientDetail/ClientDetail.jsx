@@ -6,7 +6,6 @@ import ClientObservations from "../ClientObservations/ClientObservations";
 
 const ClientDetail = ({ onGoBack, selectedClient}) => {
   const { id, name, lastname, transactions, movements, observations } = selectedClient;
-  console.log('MOVIMIENTOS DEL DETALLE DE CLIENTES',selectedClient.movements)
   const [activeTab, setActiveTab] = useState("transacciones"); // El valor inicial es 'transacciones'
 
   return (
