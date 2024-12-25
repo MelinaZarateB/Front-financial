@@ -10,9 +10,7 @@ const validationsLogin = (inputs) => {
   } else if (!regexEmail.test(inputs.email)) {
     errors.email = "Email inválido";
   }
-  if (!regexPassword.test(inputs.password)) {
-    errors.password = "Campo requerido";
-  }
+ 
   return errors;
 };
 const validationsSignUp = (inputs) => {
