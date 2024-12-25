@@ -301,8 +301,7 @@ const AdminUsers = () => {
                   !newUser.username ||
                   !newUser.lastname ||
                   !newUser.email ||
-                  !newUser.password ||
-                  !newUser.phone
+                  !newUser.password 
                 }
               >
                 <label htmlFor="submit" className="label">

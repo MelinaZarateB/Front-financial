@@ -695,6 +695,14 @@ const Transactions = () => {
                     handleNewTransaction();
                     handleBalanceInCustody();
                   }}
+                  disabled={
+                    !newTransaction.subOffice ||
+                    !newTransaction.type ||
+                    !newTransaction.exchangeRate ||
+                    !newTransaction.amount ||
+                    !newTransaction.sourceCurrency ||
+                    !newTransaction.targetCurrency
+                  }
                 >
                   <label htmlFor="submit" className="label">
                     {" "}
