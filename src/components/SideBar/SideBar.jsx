@@ -1,5 +1,5 @@
 import "./SideBar.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logOut } from "@/redux/actions/authActions";
@@ -10,6 +10,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
   const [sideBarClose, setSideBarClose] = useState(false);
   const [closedSide, setClosedSide] = useState(false);
   const [isActive, setIsActive] = useState(false);
+  const [userRole, setUserRole] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -51,6 +52,14 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
     navigate("/"); // Cambia "/logout" por la ruta deseada
     dispatch(logOut());
   };
+  useEffect(() => {
+    // Obtener información del usuario del localStorage
+    const userInfoString = localStorage.getItem("userInfo");
+    if (userInfoString) {
+      const userInfo = JSON.parse(userInfoString);
+      setUserRole(userInfo.role);
+    }
+  }, [dispatch]);
   return (
     <aside id="sidebar">
       <ul>
@@ -143,7 +152,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               fill="#5f6368"
               style={{
                 fill:
-                  selectedNavItem === "opening" || selectedNavItem === 'close'
+                  selectedNavItem === "opening" || selectedNavItem === "close"
                     ? "white"
                     : "rgba(255, 255, 255, 0.7)",
               }}
@@ -151,7 +160,11 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
               <path d="M280-640q-33 0-56.5-23.5T200-720v-80q0-33 23.5-56.5T280-880h400q33 0 56.5 23.5T760-800v80q0 33-23.5 56.5T680-640H280Zm0-80h400v-80H280v80ZM160-80q-33 0-56.5-23.5T80-160v-40h800v40q0 33-23.5 56.5T800-80H160ZM80-240l139-313q10-22 30-34.5t43-12.5h376q23 0 43 12.5t30 34.5l139 313H80Zm260-80h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm0-80h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm0-80h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm120 160h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm0-80h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm0-80h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm120 160h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm0-80h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Zm0-80h40q8 0 14-6t6-14q0-8-6-14t-14-6h-40q-8 0-14 6t-6 14q0 8 6 14t14 6Z" />
             </svg>
             <span
-             className={selectedNavItem === "opening" ||  selectedNavItem === 'close' ? "spannn" : ""}
+              className={
+                selectedNavItem === "opening" || selectedNavItem === "close"
+                  ? "spannn"
+                  : ""
+              }
             >
               Caja
             </span>
@@ -180,7 +193,7 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
                 </a>
               </li>
               <li>
-              <a
+                <a
                   href=""
                   onClick={(e) => {
                     e.stopPropagation(); // Detener la propagación del evento
@@ -200,9 +213,17 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
         </li>
         <li onClick={(e) => onNavItemChange(e, "incomes")}>
           <a href="">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"   style={{
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 -960 960 960"
+              width="24px"
+              style={{
                 fill: selectedNavItem === "incomes" ? "white" : "",
-              }}><path d="M200-200v-400h80v264l464-464 56 56-464 464h264v80H200Z"/></svg>
+              }}
+            >
+              <path d="M200-200v-400h80v264l464-464 56 56-464 464h264v80H200Z" />
+            </svg>
             <span className={selectedNavItem === "incomes" ? "spannn" : ""}>
               Ingresos
             </span>
@@ -210,15 +231,23 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
         </li>
         <li onClick={(e) => onNavItemChange(e, "expenses")}>
           <a href="">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"   style={{
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 -960 960 960"
+              width="24px"
+              style={{
                 fill: selectedNavItem === "expenses" ? "white" : "",
-              }}><path d="m216-160-56-56 464-464H360v-80h400v400h-80v-264L216-160Z"/></svg>
+              }}
+            >
+              <path d="m216-160-56-56 464-464H360v-80h400v400h-80v-264L216-160Z" />
+            </svg>
             <span className={selectedNavItem === "expenses" ? "spannn" : ""}>
               Egresos
             </span>
           </a>
         </li>
-   
+
         <li onClick={(e) => onNavItemChange(e, "movements")}>
           <a href="">
             <svg
@@ -280,48 +309,53 @@ const SideBar = ({ onNavItemChange, selectedNavItem }) => {
             </span>
           </a>
         </li>
-        <li onClick={(e) => onNavItemChange(e, "offices")}>
-          <a href="">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24px"
-              viewBox="0 -960 960 960"
-              width="24px"
-              style={{
-                fill:
-                  selectedNavItem === "offices"
-                    ? "white"
-                    : "rgba(255, 255, 255, 0.7)",
-              }}
-            >
-              <path d="M120-120v-560h160v-160h400v320h160v400H520v-160h-80v160H120Zm80-80h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 320h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 480h80v-80h-80v80Zm0-160h80v-80h-80v80Z" />
-            </svg>
-            <span className={selectedNavItem === "offices" ? "spannn" : ""}>
-              Sucursales
-            </span>
-          </a>
-        </li>
-        <li onClick={(e) => onNavItemChange(e, "users")}>
-          <a href="">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24px"
-              viewBox="0 -960 960 960"
-              width="24px"
-              style={{
-                fill:
-                  selectedNavItem === "users"
-                    ? "white"
-                    : "rgba(255, 255, 255, 0.7)",
-              }}
-            >
-              <path d="M0-240v-63q0-43 44-70t116-27q13 0 25 .5t23 2.5q-14 21-21 44t-7 48v65H0Zm240 0v-65q0-32 17.5-58.5T307-410q32-20 76.5-30t96.5-10q53 0 97.5 10t76.5 30q32 20 49 46.5t17 58.5v65H240Zm540 0v-65q0-26-6.5-49T754-397q11-2 22.5-2.5t23.5-.5q72 0 116 26.5t44 70.5v63H780Zm-455-80h311q-10-20-55.5-35T480-370q-55 0-100.5 15T325-320ZM160-440q-33 0-56.5-23.5T80-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T160-440Zm640 0q-33 0-56.5-23.5T720-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T800-440Zm-320-40q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T600-600q0 50-34.5 85T480-480Zm0-80q17 0 28.5-11.5T520-600q0-17-11.5-28.5T480-640q-17 0-28.5 11.5T440-600q0 17 11.5 28.5T480-560Zm1 240Zm-1-280Z" />
-            </svg>
-            <span className={selectedNavItem === "users" ? "spannn" : ""}>
-              Usuarios
-            </span>
-          </a>
-        </li>
+
+        {userRole === "administrador" && (
+          <li onClick={(e) => onNavItemChange(e, "offices")}>
+            <a href="">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24px"
+                viewBox="0 -960 960 960"
+                width="24px"
+                style={{
+                  fill:
+                    selectedNavItem === "offices"
+                      ? "white"
+                      : "rgba(255, 255, 255, 0.7)",
+                }}
+              >
+                <path d="M120-120v-560h160v-160h400v320h160v400H520v-160h-80v160H120Zm80-80h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 320h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 480h80v-80h-80v80Zm0-160h80v-80h-80v80Z" />
+              </svg>
+              <span className={selectedNavItem === "offices" ? "spannn" : ""}>
+                Sucursales
+              </span>
+            </a>
+          </li>
+        )}
+        {userRole === "administrador" && (
+          <li onClick={(e) => onNavItemChange(e, "users")}>
+            <a href="">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24px"
+                viewBox="0 -960 960 960"
+                width="24px"
+                style={{
+                  fill:
+                    selectedNavItem === "users"
+                      ? "white"
+                      : "rgba(255, 255, 255, 0.7)",
+                }}
+              >
+                <path d="M0-240v-63q0-43 44-70t116-27q13 0 25 .5t23 2.5q-14 21-21 44t-7 48v65H0Zm240 0v-65q0-32 17.5-58.5T307-410q32-20 76.5-30t96.5-10q53 0 97.5 10t76.5 30q32 20 49 46.5t17 58.5v65H240Zm540 0v-65q0-26-6.5-49T754-397q11-2 22.5-2.5t23.5-.5q72 0 116 26.5t44 70.5v63H780Zm-455-80h311q-10-20-55.5-35T480-370q-55 0-100.5 15T325-320ZM160-440q-33 0-56.5-23.5T80-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T160-440Zm640 0q-33 0-56.5-23.5T720-520q0-34 23.5-57t56.5-23q34 0 57 23t23 57q0 33-23 56.5T800-440Zm-320-40q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T600-600q0 50-34.5 85T480-480Zm0-80q17 0 28.5-11.5T520-600q0-17-11.5-28.5T480-640q-17 0-28.5 11.5T440-600q0 17 11.5 28.5T480-560Zm1 240Zm-1-280Z" />
+              </svg>
+              <span className={selectedNavItem === "users" ? "spannn" : ""}>
+                Usuarios
+              </span>
+            </a>
+          </li>
+        )}
         <li style={{ marginTop: "15px" }} onClick={handleExit}>
           <a href="" className="exit">
             <svg

@@ -42,8 +42,8 @@ export const login = (user) => {
   return async (dispatch) => {
     try {
       const response = await axios.post(
-       // `http://localhost:3000/auth/login`,
-       `https://back-financiera.up.railway.app/auth/login`,
+        `http://localhost:3000/auth/login`,
+       //`https://back-financiera.up.railway.app/auth/login`,
         user
       );
 
